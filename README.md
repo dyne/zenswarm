@@ -1,5 +1,5 @@
 # Consensusroom
-Protototype of Zenroom based consensus
+Protototype of Zenroom based, client server consensus application
 
 # Requirements
 * node 16
