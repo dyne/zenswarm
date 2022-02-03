@@ -5,7 +5,23 @@ Protototype of Zenroom based consensus
 * node 16
 * redis running on port 6379
 
-# APIs
+# How to run the server
+
+Clone, go into ./server and:
+
+## How to run locally
+Run **exportRestroom.sh* to install locally
+
+## How to run in Docker
+Run
+
+**docker build --tag dyne/restroom_mw:latest .**
+
+and
+
+**docker run -d -p 3300:3300 -p 3301:3301 dyne/restroom_mw:latest**
+
+## APIs
 * ***/consensusroom-initIdentities***  needs no parameter, stores (and overwrites!) in redis a list of mock identities 
 * ***/consensusroom-get-listOfIdentities*** needs no parameter, returns the full list of identities stored
 * ***/consensusroom-get-3RandomIdentities*** needs no parameter, returns 3 random identities picked from the list of identities
