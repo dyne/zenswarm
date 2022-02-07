@@ -1,0 +1,77 @@
+# NOTE
+# pass it the paramater:
+# "Consensus": 3
+# or
+# # "Consensus": 6
+
+
+Rule caller restroom-mw
+Given I have a valid redis connection on 'redis://localhost:6379'
+Given I read from redis the data under the key 'listOfIdentities' and save the output into 'redisResult'
+Given I have a 'string dictionary' named 'redisResult'
+Given I have a 'number' named 'Consensus'
+
+
+When I create the copy of 'identities' from dictionary 'redisResult'
+When I rename the 'copy' to 'identities'
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'randomIdentities'
+
+When I set 'consensus3' to '3' as 'number'
+When I set 'consensus6' to '6' as 'number'
+
+# When I create the length of 'identities'
+# When I rename the 'length' to 'howManyNodes'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '1'
+When I insert '1' in 'randomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '2'
+When I insert '2' in 'randomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '3'
+When I insert '3' in 'randomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '4'
+When I insert '4' in 'randomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '5'
+When I insert '5' in 'randomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '6'
+When I insert '6' in 'randomIdentities'
+
+If I verify 'Consensus' is equal to 'consensus3'
+When I remove the '4' from 'randomIdentities'
+When I remove the '5' from 'randomIdentities'
+When I remove the '6' from 'randomIdentities'
+Then print 'randomIdentities'
+Then print string 'Consensus with 3 nodes was chosen'
+Endif 
+
+If I verify 'Consensus' is equal to 'consensus6'
+Then print 'randomIdentities'
+Then print string 'Consensus with 6 nodes was chosen'
+Endif 
+
+If I verify 'Consensus' is not equal to 'consensus6'
+If I verify 'Consensus' is not equal to 'consensus3'
+Then print string 'STOCAZZO!'
+Endif 
+
+# Then print 'howManyNodes'
+
+

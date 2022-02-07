@@ -1,0 +1,9 @@
+{
+	"1": {
+		"endpoint": "/endpointV1"
+	},
+	"2": {
+		"endpointPart1": "/endpointp1V2",
+		"endpointPart2": "/endpointp2V2"
+	},
+}
