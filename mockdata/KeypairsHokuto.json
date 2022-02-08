@@ -35,10 +35,11 @@
 
   "Rei": {
     "keypair": {
-      "private_key": "pC1zll1o4bhkaeSJmOM40gu8jOlzOFFidGsoEEgAVrs=",
-      "public_key": "BH0wdFPEVGLeHukXJoxmZ5eJAzybOUchXszA1UNma4gZdbDWErVnMMdK7tYtPv+QSnzJfA6X2HumQ22RtjjRtOA="
+      "private_key": "2iBNEjam5UavTgis6cHs0zuTb72uRTNMZC1DF4I2Va8=",
+      "public_key": "BLQWijG60cudq9uXErzowuBXP4fOWxFUkIfJxg6hnbDBQXa+nJWEd0WzFP8WMuTeUn5lsialbIltF1z1WLpW4eg="
     }
   },
+
 
   "Fudo": {
     "keypair": {
