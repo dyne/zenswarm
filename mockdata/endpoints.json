@@ -6,8 +6,8 @@
 		"listOfIdentities":"https://apiroom.net/api/dyneorg/consensusroom-get-listOfIdentities"
 },
 	"instance": { 
-	"announce": "consensusroom-announce"
-		
+		"announce": "/consensusroom-announce",
+		"get-6-timestamps": "/consensusroom-get-6-timestamps"
 	}
 
 }
