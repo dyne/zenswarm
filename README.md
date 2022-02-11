@@ -19,6 +19,25 @@ and
 
 **docker run -d -p 3300:3300 -p 3301:3301 dyne/restroom_mw:latest**
 
+
+# MERMAID
+
+``` mermaid
+sequenceDiagram
+    participant R as Register
+    participant C1 as Random Client
+    participant Cn as N-Clients
+    C1->>C1: CREATE ID
+    Cn->>Cn: CREATE ID
+    C1->>R: ANNOUNCE ID
+    Cn->>R: ANNOUNCE IDs
+    C1->>R: ASK 6 random IDs
+    R->>C1: REPLY 6 random IDs
+    C1->>Cn: ASK 6 timestamps (x6)
+    Cn->>C1: REPLY 6 timestamps (array)
+    C1->>C1: CALCULATE average timestamp (WIP)
+```
+
 ## APIs
 
 ### All
