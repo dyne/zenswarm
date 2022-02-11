@@ -1,0 +1,58 @@
+---
+- name: install consensusroom
+  hosts: consensusroom
+  remote_user: root
+  tasks:
+    - name: "Update Repository cache"
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+        force_apt_get: true
+    - name: install package dependencies
+      ansible.builtin.package:
+        name:
+          - ntpdate
+          - npm
+          - yarnpkg
+          - curl
+          - git
+          - tree
+          - tmux
+          - jq
+        state: latest
+    - name: Create a login user
+      user:
+        name: "app"
+        state: present
+        shell: /bin/bash
+        uid: 1000
+        home: /home/app
+    - name: copy ssh keys from root to app
+      shell:
+        cp -ra ~/.ssh /home/app/ \
+        && chown -R app:app /home/app/.ssh
+
+    - name: Check nvm
+      stat:
+        path: /home/app/.nvm
+      register: nvm_installed
+    - name: Install nvm
+      become: true
+      become_user: "app"
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+        creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
+      when: not nvm_installed.stat.exists
+    - name: Install node and set version 14
+      become: true
+      become_user: "app"
+      shell: >
+        /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 14 && nvm alias default 14"
+        creates=/home/{{ ansible_user_id }}/.nvm/alias
+      when: not nvm_installed.stat.exists
+    - name: Install yarn
+      command: npm i -g yarn
+
+    - name: Install instances
+      ansible.builtin.script: ../services/instance.sh
