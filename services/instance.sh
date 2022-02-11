@@ -15,9 +15,6 @@ echo "   "
 # Installing restroom
 npx degit dyne/restroom-template restroom-mw --force
 
-# get hostname
-# find an available port 
-# create file.keys 
 
 # setup docker
 cd ./restroom-mw
