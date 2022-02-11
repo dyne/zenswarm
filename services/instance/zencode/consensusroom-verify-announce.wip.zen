@@ -1,0 +1,13 @@
+Rule caller restroom-mw
+
+
+Given I have a 'string dictionary' named 'identity'
+Given I have a 'string dictionary' named 'output'
+
+When I create the copy of 'identities' from dictionary 'output'
+When I rename the 'copy' to 'identities'
+
+# When the content of 'identity' is found in 'identities'
+
+
+ Then print data

@@ -1,0 +1,11 @@
+{
+	"consensusServer": {
+		"base":"https://apiroom.net/api/dyneorg/",
+		"add-identity": "https://apiroom.net/api/dyneorg/consensusroom-server-add-identity",
+		"6-random-identities": "https://apiroom.net/api/dyneorg/consensusroom-get-6RandomIdentities",
+		"3-or-6-random-identities": "https://apiroom.net/api/dyneorg/consensusroom-server-get-3or6RandomIdentities",
+		"listOfIdentities":"https://apiroom.net/api/dyneorg/consensusroom-server-get-listOfIdentities",
+		"initIdentities":"https://apiroom.net/api/dyneorg/consensusroom-server-initIdentities"
+		"initIdentities":"https://apiroom.net/api/dyneorg/consensusroom-get-timestamp"
+}
+}

@@ -1,0 +1,30 @@
+Rule caller restroom-mw
+Given I have a valid redis connection on 'redis://localhost:6379'
+Given I read from redis the data under the key 'listOfIdentities' and save the output into 'redisResult'
+Given I have a 'string dictionary' named 'redisResult'
+
+Given I have a 'string dictionary' named 'identity'
+
+When I create the copy of 'identities' from dictionary 'redisResult'
+When I rename the 'copy' to 'identities'
+
+When I copy contents of 'identity' in 'identities'
+
+
+Then print the 'identities'
+Then I write all data into redis under the key 'listOfIdentities'
+
+# expects
+
+# {
+# 	"identity": {
+# 		"Pepero": {
+# 			"baseUrl": "http://192.168.0.100:3030",
+# 			"ip": "192.168.0.100",
+# 			"public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+# 			"timeServer": "http://localhost:3312",
+# 			"uid": "Kenshiro",
+# 			"version": "1"
+# 		}
+# 	}
+# }

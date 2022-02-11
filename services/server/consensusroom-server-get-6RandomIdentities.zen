@@ -1,0 +1,43 @@
+Rule caller restroom-mw
+Given I have a valid redis connection on 'redis://localhost:6379'
+Given I read from redis the data under the key 'listOfIdentities' and save the output into 'redisResult'
+Given I have a 'string dictionary' named 'redisResult'
+
+
+When I create the copy of 'identities' from dictionary 'redisResult'
+When I rename the 'copy' to 'identities'
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '1'
+When I insert '1' in '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '2'
+When I insert '2' in '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '3'
+When I insert '3' in '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '4'
+When I insert '4' in '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '5'
+When I insert '5' in '6RandomIdentities'
+
+When I pick the random object in 'identities'
+When I remove the 'random object' from 'identities'
+When I rename the 'random object' to '6'
+When I insert '6' in '6RandomIdentities'
+
+Then print the '6RandomIdentities'

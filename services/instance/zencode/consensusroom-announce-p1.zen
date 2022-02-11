@@ -1,0 +1,21 @@
+
+Given I have a 'string dictionary' named 'consensusMaster'
+Given I have a 'string dictionary' named 'identity'
+
+
+When I create the copy of 'add-identity' from dictionary 'consensusMaster'
+When I rename the 'copy' to 'add-identity'
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'data'
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'post'
+
+When I insert 'identity' in 'data'
+When I insert 'data' in 'post'
+
+# When I insert 'identity' in 'identities'
+
+# Then print the 'identities'
+Then print 'post'
