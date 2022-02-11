@@ -15,10 +15,36 @@ echo "   "
 # Installing restroom
 npx degit dyne/restroom-template restroom-mw --force
 
-
+# get hostname
+# find an available port 
+# create file.keys 
 
 # setup docker
 cd ./restroom-mw
+
+
+# TO BE IMPLEMENTED
+# - get the hostname
+# - create string "baserUrl": "hostname:3300"
+# - generate keypair
+# - create string "uid": "random"
+# - insert it in mySelf.keys, based on: 
+
+
+
+# {
+# 	"identity": {
+# 		"Kenshiro": {
+# 			"baseUrl": "http://192.168.0.100:3030",
+# 			"public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+# 			"version": "1",
+# 			"uid": "Kenshiro",
+# 			"announce": "/api/consensusroom-announce",
+# 			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+# 			"timestampAPI": "/api/consensusroom-get-timestamp"
+# 		}
+# 	}
+# }
 
 touch .env
 echo 'ZENCODE_DIR=./zencode
