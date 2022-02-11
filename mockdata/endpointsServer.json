@@ -6,6 +6,6 @@
 		"3-or-6-random-identities": "https://apiroom.net/api/dyneorg/consensusroom-server-get-3or6RandomIdentities",
 		"listOfIdentities":"https://apiroom.net/api/dyneorg/consensusroom-server-get-listOfIdentities",
 		"initIdentities":"https://apiroom.net/api/dyneorg/consensusroom-server-initIdentities"
-		"initIdentities":"https://apiroom.net/api/dyneorg/consensusroom-get-timestamp"
+		"timestamp":"https://apiroom.net/api/dyneorg/consensusroom-get-timestamp"
 }
 }
