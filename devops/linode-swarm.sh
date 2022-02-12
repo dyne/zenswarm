@@ -62,12 +62,17 @@ case $cmd in
 	ips=(`linode-cli linodes list | awk ''"/${group}/"' {print $14}'`)
 	rm -f hosts.toml
 	echo "[$group]" | tee -a hosts.toml
-	for i in ${ips[@]}; do echo "$i ansible_ssh_private_key_file=${sshkey}" | tee -a hosts.toml; done
+	for i in ${ips[@]}; do
+	    # echo "$i ansible_ssh_private_key_file=${sshkey}" | tee -a hosts.toml
+	    echo "$i" | tee -a hosts.toml
+	done
 	;;
 
-    install)
+    install|install.yaml)
 	shift 1
-	ansible-playbook install.yaml --private-key ${sshkey} --inventory hosts.toml $*
+	ANSIBLE_HOST_KEY_CHECKING=False \
+        ansible-playbook install.yaml \
+	--private-key ${sshkey} --inventory hosts.toml $*
 	;;
     *)
 	info "usage: $0 [ one-up/down | all-up/down | inventory ]"

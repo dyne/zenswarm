@@ -9,6 +9,9 @@
         upgrade: dist
         cache_valid_time: 3600
         force_apt_get: true
+        install_recommends: false
+        autoclean: true
+        autoremove: true
     - name: install package dependencies
       ansible.builtin.package:
         name:
@@ -20,6 +23,8 @@
           - tree
           - tmux
           - jq
+          - g++
+          - cmake
         state: latest
     - name: Create a login user
       user:
@@ -54,5 +59,15 @@
     - name: Install yarn
       command: npm i -g yarn
 
-    - name: Install instances
-      ansible.builtin.script: ../services/instance.sh
+    - name: Check installation
+      stat:
+        path: /home/app/resroom-mw
+      register: restroom_installed
+    - name: Upload setup script
+      copy: src=../services/instance.sh dest=/home/app/instance.sh owner=app
+      when: not restroom_installed.stat.exists
+    - name: Launch install script
+      become: true
+      become_user: "app"
+      shell: cd /home/app && bash ./instance.sh
+      when: not restroom_installed.stat.exists
