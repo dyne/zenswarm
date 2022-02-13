@@ -1,9 +1,12 @@
 #!/bin/bash
 
 info() { echo >&2 "$1"; }
-group=consensusroom
-nodetype=g6-nanode-1
-rootpass=`openssl rand -base64 32`
+
+# env defined by called makefile:
+# group=consensusroom
+# nodetype=g6-nanode-1
+# rootpass=`openssl rand -base64 32`
+# sshkey := ${HOME}/sshkey-${group}
 
 sshkey=`pwd`/sshkey-${group}
 if ! [ -r ${sshkey} ]; then ssh-keygen -t ed25519 -f ${sshkey} -q -N ''; fi
@@ -12,7 +15,7 @@ if ! [ -r ${sshkey} ]; then ssh-keygen -t ed25519 -f ${sshkey} -q -N ''; fi
 regions=(ap-west ca-central ap-southeast us-central us-west us-southeast us-east eu-west ap-south eu-central ap-northeast)
 
 linode-up() { linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys "$(cat ${sshkey}.pub)";}
-linode-up-dry() { echo "linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys \"`cat ${sshkey}.pub`\"" ; }
+linode-up-dry() { info "linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys \"`cat ${sshkey}.pub`\"" ; }
 
 # linode-cli linodes list format
 #   2    4       6        8      10      12        14
@@ -62,8 +65,11 @@ case $cmd in
 	ips=(`linode-cli linodes list | awk ''"/${group}/"' {print $14}'`)
 	rm -f hosts.toml
 	echo "[$group]" | tee -a hosts.toml
+	if [ ${#ips} = 0 ]; then 
+	    info "Zero nodes found."
+	    exit 1
+	fi
 	for i in ${ips[@]}; do
-	    # echo "$i ansible_ssh_private_key_file=${sshkey}" | tee -a hosts.toml
 	    echo "$i" | tee -a hosts.toml
 	done
 	;;

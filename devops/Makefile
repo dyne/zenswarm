@@ -1,23 +1,56 @@
-
+R ?= $(shell pwd)
 REGION ?= eu-west
+rootpass := $(shell openssl rand -base64 32)
+nodetype := g6-nanode-1
+group := consensusroom
+sshkey := ${R}/sshkey-${group}
+export
 
-inventory:
-	./linode-swarm.sh inventory
+##@ General
+help: ## Display this help.
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' Makefile
 
-all-up: inventory
-	./linode-swarm.sh all-up
+inventory: ## update and show list of active nodes
+	@./linode-swarm.sh inventory
 
-all-down: inventory
-	./linode-swarm.sh all-down
+regions: ## list available regions
+	@curl -sL https://api.linode.com/v4/regions \
+	| jq . | awk '/id.:/ {print $$2} /country.:/ {print $$2"\n"}'
 
-one-up:
-	./linode-swarm.sh one-up ${REGION}
+ssh-keygen: ## generate a dedicated ssh keypair here
+	$(if $(wildcard ${sshkey}),,\
+		$(info Generating ssh keypair) \
+		&& ssh-keygen -t ed25519 -f ${sshkey} -q -N '')
 
-one-down:
-	./linode-swarm.sh one-down ${REGION}
+##@ Node lifecycle
 
-ansible/install: inventory
-	./linode-swarm.sh install.yaml
+all-up: ## create 11 active nodes, one for each linode region
+	$(info Creating active nodes in all available regions)
+	@./linode-swarm.sh all-up
 
-ssh:
-	./linode-swarm.sh ssh
+all-down: inventory ## destroy all active nodes
+	$(info Destroying existing nodes in all regions)
+	@./linode-swarm.sh all-down
+
+one-up: ## create one active node in REGION (eu-west is default)
+	$(info Creating one node in region ${REGION})
+	@./linode-swarm.sh one-up ${REGION}
+
+one-down: ## destroy one active node in REGION (eu-west is default)
+	$(info Destroying one node in region ${REGION})
+	@./linode-swarm.sh one-down ${REGION} 
+
+##@ Node operations
+install: inventory ssh-keygen ## install the zencode api server on all available nodes
+	$(info Installing all nodes)
+	@./linode-swarm.sh install.yaml
+
+ssh: ssh-keygen ## log into a node in REGION via ssh (eu-west is default)
+	$(info Logging into node via ssh on region ${REGION})
+	@./linode-swarm.sh ssh ${REGION}
+
+uptime: inventory ## show uptime of all running nodes
+	$(info Showing uptime for all running nodes)
+	ANSIBLE_HOST_KEY_CHECKING=False \
+	ansible-playbook uptime.yaml \
+	--private-key ${sshkey} --inventory hosts.toml
