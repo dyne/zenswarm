@@ -2,7 +2,8 @@ zenchain: 1.0
 start: id_0
 blocks:
   id_0:
-    zenFile: ./zencode/consensusroom-announce-p1
+    zenFile: ./consensusroom-announce-p1.zen
+    keysFile: ./consensusroom-announce-p1.keys
     next: id_1
   id_1:
-    zenFile: ./zencode/consensusroom-announce-p2
+    zenFile: ./consensusroom-announce-p2.zen

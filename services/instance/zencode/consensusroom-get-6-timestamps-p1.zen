@@ -2,12 +2,31 @@
 # Always use 'Rule caller restroom-mw' when using Restroom
 Rule caller restroom-mw
 
-Given I have a 'string dictionary' named '1'
-Given I have a 'string dictionary' named '2'
-Given I have a 'string dictionary' named '3'
-Given I have a 'string dictionary' named '4'
-Given I have a 'string dictionary' named '5'
-Given I have a 'string dictionary' named '6'
+Given that I have an endpoint named 'endpoint' 
+
+Given I connect to 'endpoint' and save the output into '6RandomIdentities'
+
+Given I have a 'string dictionary' named '6RandomIdentities'
+
+
+When I create the copy of 'r1' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '1'
+
+When I create the copy of 'r2' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '2'
+
+When I create the copy of 'r3' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '3'
+
+When I create the copy of 'r4' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '4'
+
+When I create the copy of 'r5' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '5'
+
+When I create the copy of 'r6' from dictionary '6RandomIdentities'
+When I rename the 'copy' to '6'
+
 
 
 When I create the copy of 'baseUrl' from dictionary '1'
@@ -40,12 +59,12 @@ When I create the copy of 'timestampAPI' from dictionary '5'
 When I rename the 'copy' to 'api5'
 When I append 'api5' to 'ts5' 
 
+
 When I create the copy of 'baseUrl' from dictionary '6'
 When I rename the 'copy' to 'ts6'
 When I create the copy of 'timestampAPI' from dictionary '6'
 When I rename the 'copy' to 'api6'
 When I append 'api6' to 'ts6' 
-
 
 Then print '1'
 Then print '2'
@@ -61,4 +80,5 @@ Then print 'ts3'
 Then print 'ts4'
 Then print 'ts5'
 Then print 'ts6'
+
 

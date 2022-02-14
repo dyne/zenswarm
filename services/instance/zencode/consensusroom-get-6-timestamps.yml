@@ -2,7 +2,8 @@ zenchain: 1.0
 start: id_0
 blocks:
   id_0:
-    zenFile: ./zencode/consensusroom-get-6-timestamps-p1
+    zenFile: ./consensusroom-get-6-timestamps-p1.zen
+    keysFile: ./consensusroom-get-6-timestamps-p1.keys
     next: id_1
   id_1:
-    zenFile: ./zencode/consensusroom-get-6-timestamps-p2
+    zenFile: ./consensusroom-get-6-timestamps-p2.zen

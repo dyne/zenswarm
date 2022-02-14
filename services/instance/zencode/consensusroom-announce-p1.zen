@@ -19,3 +19,4 @@ When I insert 'data' in 'post'
 
 # Then print the 'identities'
 Then print 'post'
+Then print the 'add-identity'

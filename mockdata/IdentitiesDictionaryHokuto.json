@@ -110,7 +110,7 @@
 		},
 		"Yuda": {
 			"ip": "192.168.0.112",
-			"baseUrl": "http://192.168.0.112:3030",
+			"baseUrl": "http://192.168.0.113:3030",
 			"public_key": "BGCVU+TbYaaSSYYElVpHALuC8M7vmTdTUZsBrk1XB5WAOjK6knjHXF3g1CXx3nQeekMfTl963HvjXEaJitHLgI8=",
 			"version": "1",
 			"uid": "Yuda",
