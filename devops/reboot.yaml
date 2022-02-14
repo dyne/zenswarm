@@ -1,0 +1,7 @@
+---
+- name: reboot all nodes
+  hosts: consensusroom
+  remote_user: root
+  tasks:
+    - name: Reboot
+      shell: init 6

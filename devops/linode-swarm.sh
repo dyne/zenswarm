@@ -14,7 +14,7 @@ if ! [ -r ${sshkey} ]; then ssh-keygen -t ed25519 -f ${sshkey} -q -N ''; fi
 
 # regions=(ap-west ca-central ap-southeast us-central us-west us-southeast us-east eu-west ap-south eu-central ap-northeast)
 # only 5
-regions=(ca-central us-west us-east eu-west eu-central)
+regions=(ca-central us-west us-east eu-central ap-west)
 
 linode-up() { linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys "$(cat ${sshkey}.pub)";}
 linode-up-dry() { info "linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys \"`cat ${sshkey}.pub`\"" ; }
@@ -50,6 +50,24 @@ case $cmd in
 	    fi
 	done
 	;;
+
+    announce)
+	info "Announce all nodes"
+	ids=(`linode-cli linodes list | awk "/${group}/"' {print $14}'`)
+	for i in ${ids[@]}; do
+	    curl -X 'POST' "http://${i}:3300/api/consensusroom-announce.chain"
+	done
+	;;
+
+    reboot)
+	info "Reboot all nodes"
+	ids=(`linode-cli linodes list | awk "/${group}/"' {print $14}'`)
+	for i in ${ids[@]}; do
+	    info "reboot ${i}"
+	    ssh -i ${sshkey} root@${i} -c 'init 6'
+	done
+	;;
+
     all-up)
 	for reg in ${regions[@]}; do
 	    linode-up

@@ -1,6 +1,6 @@
 ---
 - name: show stats of running nodes
-  hosts: consensuroom
+  hosts: consensusroom
   remote_user: root
   tasks:
     - name: Read uptime

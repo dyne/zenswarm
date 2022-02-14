@@ -7,7 +7,7 @@ info "Installing restroom"
 info "Node version: `node -v`"
 info '#'
 
-npx --yes degit dyne/restroom-template restroom-mw --force
+npx --yes degit dyne/restroom-template-minimal restroom-mw --force
 
 cd ./restroom-mw
 

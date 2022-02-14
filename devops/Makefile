@@ -49,6 +49,9 @@ deploy: inventory ssh-keygen ## install the zencode api server on all available 
 	$(info Installing all nodes)
 	@./linode-swarm.sh deploy.yaml
 
+announce: inventory
+	./linode-swarm.sh announce
+
 ssh: ssh-login ?= app
 ssh: ssh-keygen ## log into a node in REGION via ssh (eu-west is default)
 	$(info Logging into node via ssh on region ${REGION})
@@ -58,4 +61,12 @@ uptime: inventory ## show uptime of all running nodes
 	$(info Showing uptime for all running nodes)
 	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook uptime.yaml \
+	--private-key ${sshkey} --inventory hosts.toml
+
+reboot: inventory
+	ansible-playbook ${MAKECMDGOALS}.yaml \
+	--private-key ${sshkey} --inventory hosts.toml
+
+restart: inventory
+	ansible-playbook ${MAKECMDGOALS}.yaml \
 	--private-key ${sshkey} --inventory hosts.toml

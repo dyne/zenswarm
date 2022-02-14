@@ -23,4 +23,4 @@
       become: true
       become_user: "app"
       shell: >
-        sed -i -e 's/192.168.0.100/{{ ipv4.stdout }}/g' -e 's/Kenshiro/{{ macid.stdout }}/g' /home/app/restroom-mw/zencode/consensusroom-announce-p1.keys
+        sed -i -e 's/192.168.0.100/{{ ipv4.stdout }}/g' -e 's/Kenshiro/{{ macid.stdout }}/g' -e 's/3030/3300/g' /home/app/restroom-mw/zencode/consensusroom-announce-p1.keys
