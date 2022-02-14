@@ -5,17 +5,14 @@
   tasks:
     - name: Check zencode
       delegate_to: localhost
-      stat:
-        path: install.zip
+      shell: cd ../services/instance/ && zip -9 install.zip *
       register: zencode_found
     - name: Upload zencode
-      copy: src=install.zip dest=/home/app/install.zip owner=app
-      when: zencode_found.stat.exists
+      copy: src=../services/instance/install.zip dest=/home/app/install.zip owner=app
     - name: Publish zencode on-line
       become: true
       become_user: "app"
       shell: cd /home/app && unzip -o install.zip -d restroom-mw/zencode/
-      when: zencode_found.stat.exists
     - name: Find own IP
       shell: hostname -I | awk '{print $1}'
       register: ip
