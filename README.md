@@ -7,6 +7,23 @@ Protototype of Zenroom based, client server consensus application
 
 # How to run 
 
+Have ansible and GNU make installed
+
+configure the token in linode-cli
+
+`make all-up`
+
+`make install`
+
+`make deploy` - update all zencode scripts
+
+`make announce` - announce all nodes
+
+`make restart` - force reload of zencode scripts
+
+
+
+
 For the server: Clone, run **server.sh* to install locally
 For the instance: Clone, run **instance.sh* to install locally
 

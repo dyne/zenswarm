@@ -43,11 +43,15 @@ one-down: ## destroy one active node in REGION (eu-west is default)
 ##@ Node operations
 install: inventory ssh-keygen ## install the zencode api server on all available nodes
 	$(info Installing all nodes)
-	@./linode-swarm.sh install.yaml
+	ANSIBLE_HOST_KEY_CHECKING=False \
+        ansible-playbook ${MAKECMDGOALS}.yaml \
+	--private-key ${sshkey} --inventory hosts.toml $*
 
 deploy: inventory ssh-keygen ## install the zencode api server on all available nodes
 	$(info Installing all nodes)
-	@./linode-swarm.sh deploy.yaml
+	ANSIBLE_HOST_KEY_CHECKING=False \
+        ansible-playbook ${MAKECMDGOALS}.yaml \
+	--private-key ${sshkey} --inventory hosts.toml $*
 
 announce: inventory
 	./linode-swarm.sh announce
@@ -60,13 +64,15 @@ ssh: ssh-keygen ## log into a node in REGION via ssh (eu-west is default)
 uptime: inventory ## show uptime of all running nodes
 	$(info Showing uptime for all running nodes)
 	ANSIBLE_HOST_KEY_CHECKING=False \
-	ansible-playbook uptime.yaml \
+	ansible-playbook ${MAKECMDGOALS}.yaml \
 	--private-key ${sshkey} --inventory hosts.toml
 
 reboot: inventory
+	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook ${MAKECMDGOALS}.yaml \
 	--private-key ${sshkey} --inventory hosts.toml
 
 restart: inventory
+	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook ${MAKECMDGOALS}.yaml \
 	--private-key ${sshkey} --inventory hosts.toml
