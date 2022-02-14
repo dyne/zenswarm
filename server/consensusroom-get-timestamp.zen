@@ -1,4 +1,0 @@
-Rule caller restroom-mw
-Given I have a 'string' named 'myTimestamp'
-Given I fetch the local timestamp and store it into 'myTimestamp'
-Then print 'myTimestamp'

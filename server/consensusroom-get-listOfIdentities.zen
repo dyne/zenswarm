@@ -1,8 +1,0 @@
-Rule caller restroom-mw
-Given I have a valid redis connection on 'redis://localhost:6379'
-Given I read from redis the data under the key 'listOfIdentities' and save the output into 'redisResult'
-Given I have a 'string dictionary' named 'redisResult'
-
-When I create the copy of 'identities' from dictionary 'redisResult'
-When I rename the 'copy' to 'identities'
-Then print the 'identities'

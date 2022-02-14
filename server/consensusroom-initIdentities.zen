@@ -1,8 +1,0 @@
-# This script creates a list of mock identities for testing purposes
-# It will overwrite your existing "listOfIdentities", so use it with caution
-
-Rule caller restroom-mw
-Given I have a valid redis connection on 'redis://localhost:6379'
-Given I have a 'string dictionary' named 'identities'
-Then print the 'identities'
-Then I write all data into redis under the key 'listOfIdentities'
