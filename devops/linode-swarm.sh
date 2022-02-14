@@ -12,7 +12,9 @@ sshkey=`pwd`/sshkey-${group}
 if ! [ -r ${sshkey} ]; then ssh-keygen -t ed25519 -f ${sshkey} -q -N ''; fi
 #curl -sL https://api.linode.com/v4/regions | jq . | awk '/id.:/ {print $2}' | xargs
 
-regions=(ap-west ca-central ap-southeast us-central us-west us-southeast us-east eu-west ap-south eu-central ap-northeast)
+# regions=(ap-west ca-central ap-southeast us-central us-west us-southeast us-east eu-west ap-south eu-central ap-northeast)
+# only 5
+regions=(ca-central us-west us-east eu-west eu-central)
 
 linode-up() { linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys "$(cat ${sshkey}.pub)";}
 linode-up-dry() { info "linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group ${group} --label ${group}-${reg} --region ${reg} --authorized_keys \"`cat ${sshkey}.pub`\"" ; }
@@ -26,24 +28,24 @@ case $cmd in
 	reg=${2:-eu-west}
 	linode-up
 	;;
-    ssh)
+    ip)
 	reg=${2:-eu-west}
 	ids=(`linode-cli linodes list | awk "/${group}/"' {print $6","$14}'`)
 	for i in ${ids[@]}; do
 	    f=(${i//,/ })
 	    if [ "$reg" = "${f[0]}" ]; then
-		ssh -l root -i ${sshkey} ${f[1]}
+		echo ${f[1]}
 		exit 0
 	    fi
 	done
 	;;
-    one-down)
+    id)
 	reg=${2:-eu-west}
 	ids=(`linode-cli linodes list | awk "/${group}/"' {print $2","$6","$14}'`)
 	for i in ${ids[@]}; do
 	    f=(${i//,/ })
 	    if [ "$reg" = "${f[1]}" ]; then
-		linode-cli linodes delete ${f[0]}
+		echo ${f[0]}
 		exit 0
 	    fi
 	done
@@ -53,6 +55,7 @@ case $cmd in
 	    linode-up
 	done
 	;;
+
     all-down)
 	ids=(`linode-cli linodes list | awk ''"/${group}/"' {print $2","$4","$14}'`)
 	for i in ${ids[@]}; do
@@ -78,6 +81,13 @@ case $cmd in
 	shift 1
 	ANSIBLE_HOST_KEY_CHECKING=False \
         ansible-playbook install.yaml \
+	--private-key ${sshkey} --inventory hosts.toml $*
+	;;
+
+    deploy|deploy.yaml)
+	shift 1
+	ANSIBLE_HOST_KEY_CHECKING=False \
+        ansible-playbook deploy.yaml \
 	--private-key ${sshkey} --inventory hosts.toml $*
 	;;
     *)

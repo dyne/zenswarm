@@ -1,5 +1,5 @@
 ---
-- name: install consensusroom
+- name: Deploy Zenswarm
   hosts: consensusroom
   remote_user: root
   tasks:
@@ -10,11 +10,15 @@
         cache_valid_time: 3600
         force_apt_get: true
         install_recommends: false
+        state: latest
+    - name: "Install APT packages"
+      apt:
+        force_apt_get: true
+        install_recommends: false
         autoclean: true
         autoremove: true
-    - name: install package dependencies
-      ansible.builtin.package:
-        name:
+        state: latest
+        pkg:
           - ntpdate
           - npm
           - yarnpkg
@@ -25,7 +29,8 @@
           - jq
           - g++
           - cmake
-        state: latest
+          - unzip
+
     - name: Create a login user
       user:
         name: "app"
@@ -59,15 +64,33 @@
     - name: Install yarn
       command: npm i -g yarn
 
-    - name: Check installation
+    - name: Install restroom-installation
       stat:
         path: /home/app/resroom-mw
       register: restroom_installed
     - name: Upload setup script
-      copy: src=../services/instance.sh dest=/home/app/instance.sh owner=app
+      copy: src=install.sh dest=/home/app/install.sh owner=app
       when: not restroom_installed.stat.exists
-    - name: Launch install script
+    - name: Launch restroom-mw install script
       become: true
       become_user: "app"
-      shell: cd /home/app && bash ./instance.sh
+      shell: cd /home/app && sh ./install.sh
       when: not restroom_installed.stat.exists
+
+    - name: Check zencode
+      delegate_to: localhost
+      stat:
+        path: install.zip
+      register: zencode_found
+    - name: Upload zencode
+      copy: src=install.zip dest=/home/app/install.zip owner=app
+      when: zencode_found.stat.exists
+    - name: Publish zencode on-line
+      become: true
+      become_user: "app"
+      shell: cd /home/app && unzip install.zip -d restroom-mw/zencode/
+      when: zencode_found.stat.exists
+    - name: Patch zencode with node values
+      become: true
+      become_user: "app"
+      shell: sed -i -e "s/192.168.0.100/`hostname -I| awk '{print $1}'`/g" restroom-mw/zencode consensusroom-announce-p1.keys

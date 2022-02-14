@@ -34,20 +34,25 @@ all-down: inventory ## destroy all active nodes
 
 one-up: ## create one active node in REGION (eu-west is default)
 	$(info Creating one node in region ${REGION})
-	@./linode-swarm.sh one-up ${REGION}
+	@./linode-swarm.sh $(shell ./linode-swarm.sh id) ${REGION}
 
 one-down: ## destroy one active node in REGION (eu-west is default)
 	$(info Destroying one node in region ${REGION})
-	@./linode-swarm.sh one-down ${REGION} 
+	@linode-cli linodes delete $(shell linode-swarm.sh id) ${REGION} 
 
 ##@ Node operations
 install: inventory ssh-keygen ## install the zencode api server on all available nodes
 	$(info Installing all nodes)
 	@./linode-swarm.sh install.yaml
 
+deploy: inventory ssh-keygen ## install the zencode api server on all available nodes
+	$(info Installing all nodes)
+	@./linode-swarm.sh deploy.yaml
+
+ssh: ssh-login ?= app
 ssh: ssh-keygen ## log into a node in REGION via ssh (eu-west is default)
 	$(info Logging into node via ssh on region ${REGION})
-	@./linode-swarm.sh ssh ${REGION}
+	ssh -l ${ssh-login} -i ${sshkey} $(shell ./linode-swarm.sh ip)
 
 uptime: inventory ## show uptime of all running nodes
 	$(info Showing uptime for all running nodes)
