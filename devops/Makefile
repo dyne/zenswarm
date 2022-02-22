@@ -20,7 +20,7 @@ regions: ## list available regions
 ssh-keygen: ## generate a dedicated ssh keypair here
 	$(if $(wildcard ${sshkey}),,\
 		$(info Generating ssh keypair) \
-		&& ssh-keygen -t ed25519 -f ${sshkey} -q -N '')
+		ssh-keygen -t ed25519 -f ${sshkey} -q -N '')
 
 ##@ Node lifecycle
 
@@ -45,12 +45,14 @@ install: inventory ssh-keygen ## install the zencode api server on all available
 	$(info Installing all nodes)
 	ANSIBLE_HOST_KEY_CHECKING=False \
         ansible-playbook ${MAKECMDGOALS}.yaml \
+	--ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' \
 	--private-key ${sshkey} --inventory hosts.toml $*
 
 deploy: inventory ssh-keygen ## install the zencode api server on all available nodes
 	$(info Installing all nodes)
 	ANSIBLE_HOST_KEY_CHECKING=False \
         ansible-playbook ${MAKECMDGOALS}.yaml \
+	--ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' \
 	--private-key ${sshkey} --inventory hosts.toml $*
 
 announce: inventory
@@ -65,14 +67,17 @@ uptime: inventory ## show uptime of all running nodes
 	$(info Showing uptime for all running nodes)
 	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook ${MAKECMDGOALS}.yaml \
+	--ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' \
 	--private-key ${sshkey} --inventory hosts.toml
 
 reboot: inventory
 	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook ${MAKECMDGOALS}.yaml \
+	--ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' \
 	--private-key ${sshkey} --inventory hosts.toml
 
 restart: inventory
 	ANSIBLE_HOST_KEY_CHECKING=False \
 	ansible-playbook ${MAKECMDGOALS}.yaml \
+	--ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' \
 	--private-key ${sshkey} --inventory hosts.toml
