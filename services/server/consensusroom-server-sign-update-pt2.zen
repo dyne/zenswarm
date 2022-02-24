@@ -1,0 +1,10 @@
+Given I have a 'string dictionary' named 'update'
+Given I have a 'string dictionary' named 'update.signature'
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'updateInfo'
+
+When I insert 'update' in 'updateInfo'
+When I insert 'update.signature' in 'updateInfo'
+
+Then print 'updateInfo'

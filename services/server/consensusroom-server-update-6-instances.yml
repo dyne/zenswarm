@@ -1,0 +1,16 @@
+zenchain: 1.0
+start: id_3
+blocks:
+  id_0:
+    zenFile: dyneorg/consensusroom-server-update-6-instances-pt1.zen
+    keysFile: dyneorg/consensusroom-server-update-6-instances-pt1.keys
+    next: id_1
+  id_1:
+    zenFile: dyneorg/consensusroom-server-update-6-instances-pt2.zen
+  id_3:
+    zenFile: dyneorg/consensusroom-server-sign-update-pt1.zen
+    keysFile: dyneorg/consensusroom-server-sign-update-pt1.keys
+    next: id_4
+  id_4:
+    zenFile: dyneorg/consensusroom-server-sign-update-pt2.zen
+    next: id_0

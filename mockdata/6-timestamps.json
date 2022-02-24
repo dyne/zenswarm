@@ -1,0 +1,62 @@
+{
+  "1": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://50.116.53.12:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787666",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "c633408f9d364740bec696456d5f1ae2",
+    "version": "1"
+  },
+  "2": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://172.105.83.46:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787611",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "c1da19c60b7a4bf7a66f60825bec7a82",
+    "version": "1"
+  },
+  "3": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://212.71.234.197:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787367",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "cc95dbf6a3d340fb95452f452a23aa40",
+    "version": "1"
+  },
+  "4": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://192.46.209.107:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787754",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "3d0fa08a6d034d01a820ea05cbf93831",
+    "version": "1"
+  },
+  "5": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://172.105.18.196:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787679",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "3794a7c3d1734dc8abcb57c82c972549",
+    "version": "1"
+  },
+  "6": {
+    "announce": "/api/consensusroom-announce",
+    "baseUrl": "http://45.79.92.158:3300",
+    "get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+    "myTimestamp": "1644878787692",
+    "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+    "timestampAPI": "/api/consensusroom-get-timestamp",
+    "uid": "11e06cf7615a43f08ebd31c97e1ef9cb",
+    "version": "1"
+  }
+}

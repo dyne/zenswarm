@@ -1,0 +1,22 @@
+
+
+Scenario 'ecdh': create the signature of an object 
+Given I am 'Apiroom' 
+Given I have my 'keypair' 
+Given that I have a 'string dictionary' named 'update' 
+
+# Here we are creating 3 signatures and renaming them afterwards, once with a string,
+# once with an array and once with a complex object such as the keypair
+# a signature is a schema containing two base64 key-values: 'r' and 's', read more about ECDSA at 
+# https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
+
+
+When I create the signature of 'update' 
+When I rename the 'signature' to 'update.signature' 
+
+# Here we are printing out the signatures  
+
+
+
+Then print the 'update' 
+Then print the 'update.signature' 

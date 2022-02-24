@@ -1,0 +1,86 @@
+
+# Always use 'Rule caller restroom-mw' when using Restroom
+Rule caller restroom-mw
+
+Given that I have an endpoint named 'endpoint' 
+
+Given I connect to 'endpoint' and save the output into '6Identities'
+
+Given I have a 'string dictionary' named '6Identities'
+
+When I create the copy of 'r1' from dictionary '6Identities'
+When I rename the 'copy' to 'r1'
+
+When I create the copy of 'r2' from dictionary '6Identities'
+When I rename the 'copy' to 'r2'
+
+When I create the copy of 'r3' from dictionary '6Identities'
+When I rename the 'copy' to 'r3'
+
+When I create the copy of 'r4' from dictionary '6Identities'
+When I rename the 'copy' to 'r4'
+
+When I create the copy of 'r5' from dictionary '6Identities'
+When I rename the 'copy' to 'r5'
+
+When I create the copy of 'r6' from dictionary '6Identities'
+When I rename the 'copy' to 'r6'
+
+
+When I create the copy of 'baseUrl' from dictionary 'r1'
+When I rename the 'copy' to 'base1'
+When I create the copy of 'updateAPI' from dictionary 'r1'
+When I rename the 'copy' to 'api1'
+When I append 'api1' to 'base1'
+
+When I create the copy of 'baseUrl' from dictionary 'r2'
+When I rename the 'copy' to 'base2'
+When I create the copy of 'updateAPI' from dictionary 'r2'
+When I rename the 'copy' to 'api2'
+When I append 'api2' to 'base2'
+
+When I create the copy of 'baseUrl' from dictionary 'r3'
+When I rename the 'copy' to 'base3'
+When I create the copy of 'updateAPI' from dictionary 'r3'
+When I rename the 'copy' to 'api3'
+When I append 'api3' to 'base3' 
+
+When I create the copy of 'baseUrl' from dictionary 'r4'
+When I rename the 'copy' to 'base4'
+When I create the copy of 'updateAPI' from dictionary 'r4'
+When I rename the 'copy' to 'api4'
+When I append 'api4' to 'base4' 
+
+When I create the copy of 'baseUrl' from dictionary 'r5'
+When I rename the 'copy' to 'base5'
+When I create the copy of 'updateAPI' from dictionary 'r5'
+When I rename the 'copy' to 'api5'
+When I append 'api5' to 'base5' 
+
+
+When I create the copy of 'baseUrl' from dictionary 'r6'
+When I rename the 'copy' to 'base6'
+When I create the copy of 'updateAPI' from dictionary 'r6'
+When I rename the 'copy' to 'api6'
+When I append 'api6' to 'base6' 
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'updateEndpointList'
+
+
+Then print 'r1'
+Then print 'r2'
+Then print 'r3'
+Then print 'r4'
+Then print 'r5'
+Then print 'r6'
+
+
+Then print 'base1'
+Then print 'base2'
+Then print 'base3'
+Then print 'base4'
+Then print 'base5'
+Then print 'base6'
+
+

@@ -13,7 +13,7 @@ node -v
 echo "   "
 echo "   "
 # Installing restroom
-npx degit dyne/restroom-template restroom-mw --force
+npx create-restroom --all restroom-mw
 
 
 
