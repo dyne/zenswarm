@@ -13,7 +13,8 @@
          "uid":"Kenshiro",
          "announce":"/api/consensusroom-announce",
          "get-6-timestamps":"/api/consensusroom-get-6-timestamps",
-         "timestampAPI":"/api/consensusroom-get-timestamp"
+         "timestampAPI":"/api/consensusroom-get-timestamp",
+		 "updateAPI":"/api/consensusroom-update"
       }
    }
 }
