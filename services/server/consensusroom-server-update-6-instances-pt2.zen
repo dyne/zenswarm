@@ -7,14 +7,14 @@ Given I have a 'string' named 'base4'
 Given I have a 'string' named 'base5'
 Given I have a 'string' named 'base6'
 
-Given I have a 'string dictionary' named 'updateInfo'
+Given I have a 'string dictionary' named 'output'
 
 
-Given I connect to 'base1' and pass it the content of 'updateInfo' and save the output into 'result1'
-Given I connect to 'base2' and pass it the content of 'updateInfo' and save the output into 'result2'
-Given I connect to 'base3' and pass it the content of 'updateInfo' and save the output into 'result3'
-Given I connect to 'base4' and pass it the content of 'updateInfo' and save the output into 'result4'
-Given I connect to 'base5' and pass it the content of 'updateInfo' and save the output into 'result5'
-Given I connect to 'base6' and pass it the content of 'updateInfo' and save the output into 'result6'
+Given I connect to 'base1' and pass it the content of 'output' and save the output into 'result1'
+Given I connect to 'base2' and pass it the content of 'output' and save the output into 'result2'
+Given I connect to 'base3' and pass it the content of 'output' and save the output into 'result3'
+Given I connect to 'base4' and pass it the content of 'output' and save the output into 'result4'
+Given I connect to 'base5' and pass it the content of 'output' and save the output into 'result5'
+Given I connect to 'base6' and pass it the content of 'output' and save the output into 'result6'
 
 Then print data

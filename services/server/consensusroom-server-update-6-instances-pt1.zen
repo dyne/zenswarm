@@ -8,6 +8,8 @@ Given I connect to 'endpoint' and save the output into '6Identities'
 
 Given I have a 'string dictionary' named '6Identities'
 
+Given I have a 'string dictionary' named 'output'
+
 When I create the copy of 'r1' from dictionary '6Identities'
 When I rename the 'copy' to 'r1'
 
@@ -68,12 +70,12 @@ When I create the 'string dictionary'
 When I rename the 'string dictionary' to 'updateEndpointList'
 
 
-Then print 'r1'
-Then print 'r2'
-Then print 'r3'
-Then print 'r4'
-Then print 'r5'
-Then print 'r6'
+# Then print 'r1'
+# Then print 'r2'
+# Then print 'r3'
+# Then print 'r4'
+# Then print 'r5'
+# Then print 'r6'
 
 
 Then print 'base1'
@@ -83,4 +85,5 @@ Then print 'base4'
 Then print 'base5'
 Then print 'base6'
 
+Then print 'output'
 
