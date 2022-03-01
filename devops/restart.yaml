@@ -1,7 +1,0 @@
----
-- name: restart restroom on all nodes
-  hosts: consensusroom
-  remote_user: root
-  tasks:
-    - name: Restart
-      shell: supervisorctl restart startup:restroom
