@@ -1,0 +1,83 @@
+{
+  "Kenshiro": {
+    "keypair": {
+      "private_key": "RHGAsM1Z+at6qZmJI/VPU021S1M2hfAQr6zjDbOl7UA=",
+      "public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU="
+    }
+  },
+  "Toki": {
+    "keypair": {
+      "private_key": "Hc0mtDGJ64F62xREI9w2lHLwLq5/Tf/cJbGp+CbPffA=",
+      "public_key": "BHzW7Y2wTfMsL0IYRwue8MTBVJX5vEH1xgCs0ayC033MZ2BRNXFU92YLF7GwW0IpFzPgl1YlMepTWD26vlMwWr8="
+    }
+  },
+
+  "Raoul": {
+    "keypair": {
+      "private_key": "0J5BGnRFTLGP0hEX/BUw7Ec/iQMFmtOOO0y0riiruPs=",
+      "public_key": "BD4TvvylaYTtahyKLGARzKervHaQxE6jxqXguYf4LfZDRxFC1qOBKloDkkO1+86EqAdh4Bpxx2w0I1y9DPgCVMM="
+    }
+  },
+  
+  "Jagger": {
+    "keypair": {
+      "private_key": "fh6nTrMxdiRIhd2gbu742FGzsDwhDuZ+JENABBF2Wws=",
+      "public_key": "BESKGbFfv5V2W+/p22ESRb6g4cz8hIdKEh/KGfiZ6jjlFh9XZN7Rz93qiAeCqJlQ6HdyuzF64Gu8dj1zlmNK2fU="
+    }
+  },
+
+  "Ryuken": {
+    "keypair": {
+      "private_key": "pC1zll1o4bhkaeSJmOM40gu8jOlzOFFidGsoEEgAVrs=",
+      "public_key": "BH0wdFPEVGLeHukXJoxmZ5eJAzybOUchXszA1UNma4gZdbDWErVnMMdK7tYtPv+QSnzJfA6X2HumQ22RtjjRtOA="
+    }
+  },
+
+  "Rei": {
+    "keypair": {
+      "private_key": "2iBNEjam5UavTgis6cHs0zuTb72uRTNMZC1DF4I2Va8=",
+      "public_key": "BLQWijG60cudq9uXErzowuBXP4fOWxFUkIfJxg6hnbDBQXa+nJWEd0WzFP8WMuTeUn5lsialbIltF1z1WLpW4eg="
+    }
+  },
+
+
+  "Fudo": {
+    "keypair": {
+      "private_key": "4WKrmP4geuwjMN2GZ3mFrzvLPf6dBzJKhfeI4HczGnQ=",
+      "public_key": "BDCgK49Ow7+AparlUmnZxo0i1+urG/zGXcjyPoM7miskpncr01HfWp4CecJE2bvYDuHkVvTSLDCruBJCNTUK+ss="
+    }
+  },
+  "Julia": {
+    "keypair": {
+      "private_key": "vxFOWXEuRGoXDd0dFgPmc1A0OUodO0BKjqhICtg6AOA=",
+      "public_key": "BHCJefNXQZUfzh/uu6RBr5qN/QE5zyxXlayeBP5Bd4zR8aYHh0QWMMQS5skWYSuDolWFFjjvgKYHHmUdaCaXqZk="
+    }
+  },
+
+  "Souther": {
+    "keypair": {
+      "private_key": "WVLUY5/gWrekCL2GoKVksurxQYu9l+3qhNwjAQ1S2Tw=",
+      "public_key": "BH4DAzUaA3GXJ4blwyX14J8ZzExD8XZI1mU3VuS7MH+xrGJafIbjRZcEJ0t0SVDTK9OgiYbn3x3vPhlGbqwbJd8="
+    }
+  },
+
+  "Burt": {
+    "keypair": {
+      "private_key": "xyIAYj09HZW2sICuVku39XXYCbRvIS8YYSpNHAlVnv8=",
+      "public_key": "BHZtsy1qifMCrXzF5nD1RFB4YY0SdbnHA1Pu4i0DfYIfNetlXgIQ9p7b7zzGJyP0XuJtQKA619MR3OIxDRheAV0="
+    }
+  },
+  
+  "Lynn": {
+    "keypair": {
+      "private_key": "XIuq0m6I/mMvdKILeuR7clMvjNBdJzvOLqUYvOrtr8E=",
+      "public_key": "BC/DiN9hGAD5Ff5AKDd3DiYhXPD0bk37nmw48f1mNYoVs9O9koTHH7ResvhpVcPXr8XIw5ank+hni9LLwKTW5gQ="
+    }
+  },
+  "Yuda": {
+    "keypair": {
+      "private_key": "RLo3ked4NQhSc5MgdgBOawsqzb9jmtZc/ImhYq9Jxo4=",
+      "public_key": "BGCVU+TbYaaSSYYElVpHALuC8M7vmTdTUZsBrk1XB5WAOjK6knjHXF3g1CXx3nQeekMfTl963HvjXEaJitHLgI8="
+    }
+  }
+}

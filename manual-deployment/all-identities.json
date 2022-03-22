@@ -1,0 +1,122 @@
+{
+	"identities": {
+		"Kenshiro": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3300",
+			"public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
+			"version": "1",
+			"uid": "Kenshiro",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Toki": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3301",
+			"public_key": "BHzW7Y2wTfMsL0IYRwue8MTBVJX5vEH1xgCs0ayC033MZ2BRNXFU92YLF7GwW0IpFzPgl1YlMepTWD26vlMwWr8=",
+			"version": "1",
+			"uid": "Toki",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Raoul": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3302",
+			"public_key": "BD4TvvylaYTtahyKLGARzKervHaQxE6jxqXguYf4LfZDRxFC1qOBKloDkkO1+86EqAdh4Bpxx2w0I1y9DPgCVMM=",
+			"version": "1",
+			"uid": "Raoul",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Jagger": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3303",
+			"public_key": "BESKGbFfv5V2W+/p22ESRb6g4cz8hIdKEh/KGfiZ6jjlFh9XZN7Rz93qiAeCqJlQ6HdyuzF64Gu8dj1zlmNK2fU=",
+			"version": "1",
+			"uid": "Jagger",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Ryuken": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3304",
+			"public_key": "BH0wdFPEVGLeHukXJoxmZ5eJAzybOUchXszA1UNma4gZdbDWErVnMMdK7tYtPv+QSnzJfA6X2HumQ22RtjjRtOA=",
+			"version": "1",
+			"uid": "Ryuken",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Rei": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3305",
+			"public_key": "BLQWijG60cudq9uXErzowuBXP4fOWxFUkIfJxg6hnbDBQXa+nJWEd0WzFP8WMuTeUn5lsialbIltF1z1WLpW4eg=",
+			"version": "1",
+			"uid": "Rei",
+			"announce": "/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Fudo": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3306",
+			"public_key": "BDCgK49Ow7+AparlUmnZxo0i1+urG/zGXcjyPoM7miskpncr01HfWp4CecJE2bvYDuHkVvTSLDCruBJCNTUK+ss=",
+			"version": "1",
+			"uid": "Fudo",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Julia": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3306",
+			"public_key": "BHCJefNXQZUfzh/uu6RBr5qN/QE5zyxXlayeBP5Bd4zR8aYHh0QWMMQS5skWYSuDolWFFjjvgKYHHmUdaCaXqZk=",
+			"version": "1",
+			"uid": "Julia",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Souther": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3307",
+			"public_key": "BH4DAzUaA3GXJ4blwyX14J8ZzExD8XZI1mU3VuS7MH+xrGJafIbjRZcEJ0t0SVDTK9OgiYbn3x3vPhlGbqwbJd8=",
+			"version": "1",
+			"uid": "Souther",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Burt": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3308",
+			"public_key": "BHZtsy1qifMCrXzF5nD1RFB4YY0SdbnHA1Pu4i0DfYIfNetlXgIQ9p7b7zzGJyP0XuJtQKA619MR3OIxDRheAV0=",
+			"version": "1",
+			"uid": "Burt",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Lynn": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3309",
+			"public_key": "BC/DiN9hGAD5Ff5AKDd3DiYhXPD0bk37nmw48f1mNYoVs9O9koTHH7ResvhpVcPXr8XIw5ank+hni9LLwKTW5gQ=",
+			"version": "1",
+			"uid": "Lynn",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		},
+		"Yuda": {
+			"ip": "217.61.22.76",
+			"baseUrl": "http://217.61.22.76:3310",
+			"public_key": "BGCVU+TbYaaSSYYElVpHALuC8M7vmTdTUZsBrk1XB5WAOjK6knjHXF3g1CXx3nQeekMfTl963HvjXEaJitHLgI8=",
+			"version": "1",
+			"uid": "Yuda",
+			"announce": "/api/consensusroom-announce",
+			"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
+			"timestampAPI": "/api/consensusroom-get-timestamp"
+		}
+	}
+}
