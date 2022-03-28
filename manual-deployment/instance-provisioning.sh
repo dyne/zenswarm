@@ -21,6 +21,7 @@ cd "./restroom-mw-$i"
 
 pnpm install  
 
+mkdir contracts
 
 read LOWERPORT UPPERPORT < /proc/sys/net/ipv4/ip_local_port_range
 while :
@@ -339,14 +340,14 @@ blocks:
     keysFile: consensusroom-create-identity-p2.keys
 
 "> ./contracts/consensusroom-create-identity.yml
-echo ✔ Imported consensusroom-create-identity.yml
+echo ✔ Imported consensusroom-create-identity.yml 
 
 
 ######### END MANUALLY SAVED FILES
 
 
 # instructions 
-echo \\nTo launch restroom-mw, type\\n:
+echo "To launch restroom-mw, type:"
 
 red=`tput setaf 1`
 echo "${red}cd restroom-mw-$i"
