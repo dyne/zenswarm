@@ -2,7 +2,7 @@
 
 instances=3
 
-command pnpm || curl -fsSL https://get.pnpm.io/install.sh | sh -
+command pnpm || (curl -fsSL https://get.pnpm.io/install.sh | sh -)
 command pm2 || npm install pm2@latest -g
 
 echo "\\nMake sure you have node 16, the version you have is\\n" 
@@ -49,7 +49,7 @@ CHAIN_EXT=chain
 YML_EXT=yml"> .env
 
 
-echo "{\"identity\":{\"uid\":\"random\",\"ip\":\"`hostname-I`\",\"baseUrl\":\"http://`hostname-I`\",\"port_http\":\"$PORT_HTTP\",\"port_https\":\"$PORT_HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announceAPI\":\"/api/consensusroom-announce\",\"get-6-timestampsAPI\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\",\"tracker\":\"https://apiroom.net/\"}}"
+echo "{\"identity\":{\"uid\":\"random\",\"ip\":\"`hostname -I`\",\"baseUrl\":\"http://`hostname -I`\",\"port_http\":\"$PORT_HTTP\",\"port_https\":\"$PORT_HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announceAPI\":\"/api/consensusroom-announce\",\"get-6-timestampsAPI\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\",\"tracker\":\"https://apiroom.net/\"}}"
 
 > ./contracts/identity.keys
 
