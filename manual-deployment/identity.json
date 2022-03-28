@@ -7,9 +7,9 @@
 		"port_https": "$PORT_HTTPS",
 		"public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
 		"version": "2",
-		"announce": "/api/consensusroom-announce",
-		"get-6-timestamps": "/api/consensusroom-get-6-timestamps",
-		"timestampAPI": "/api/consensusroom-get-timestamp"
+		"announceAPI": "/api/consensusroom-announce",
+		"get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
+		"timestampAPI": "/api/consensusroom-get-timestamp",
+		"tracker": "https://apiroom.net/"
 		}
 }
-

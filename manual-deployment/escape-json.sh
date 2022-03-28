@@ -1,1 +1,1 @@
-cat identity.json | tr -d '\n \t' | sed 's/"/\\"/g' > identity-escaped.json
+cat identity.json | tr -d ' \n\r\t' |  sed 's/"/\\"/g' > identity-escaped.json

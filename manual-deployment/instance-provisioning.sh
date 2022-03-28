@@ -1,16 +1,25 @@
 #!/usr/bin/env bash 
 
+instances=3
+
+command pnpm || curl -fsSL https://get.pnpm.io/install.sh | sh -
+command pm2 || npm install pm2@latest -g
 
 echo "\\nMake sure you have node 16, the version you have is\\n" 
 node -v
 
+for i in $(seq $instances)
+do
+
+
+
 # Installing restroom
-npx create-restroom --all restroom-mw
 
-# setup docker
-cd ./restroom-mw
+npx degit https://github.com/dyne/restroom-template-minimal/ "restroom-mw-$i" 
 
+cd "./restroom-mw-$i"
 
+pnpm install  
 
 
 read LOWERPORT UPPERPORT < /proc/sys/net/ipv4/ip_local_port_range
@@ -32,47 +41,40 @@ echo $PORT_HTTPS
 
 echo "CUSTOM_404_MESSAGE=nothing to see here
 HTTP_PORT=$PORT_HTTP
-HTTPS_PORT=$PORT_HTTPS" > .env
+HTTPS_PORT=$PORT_HTTPS 
+FILES_DIR=$(pwd)
+CHAIN_EXT=chain
+# OPENAPI=true
+YML_EXT=yml"> .env
 
 
-echo "
-{\"identity\":{\"uid\":\"random\",\"ip\":\"`hostname -I`\",\"baseUrl\":\"http://`hostname -I`\",\"port_http\":\"$PORT_HTTP\",\"port_https\":\"$PORT_HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announce\":\"/api/consensusroom-announce\",\"get-6-timestamps\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\"}}"
+echo "{\"identity\":{\"uid\":\"random\",\"ip\":\"`hostname-I`\",\"baseUrl\":\"http://`hostname-I`\",\"port_http\":\"$PORT_HTTP\",\"port_https\":\"$PORT_HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announceAPI\":\"/api/consensusroom-announce\",\"get-6-timestampsAPI\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\",\"tracker\":\"https://apiroom.net/\"}}"
 
 > ./contracts/identity.keys
 
 echo ✔ Imported identity.keys
 
-
+######### MANUALLY SAVED FILES 
 
 echo "
 Rule caller restroom-mw
-Scenario 'ecdh': verifies the signature from Apiroom 
-Given I have a 'string dictionary' named 'updateInfo'
-Given I have a 'string dictionary' named 'update' inside 'updateInfo'
-Given I have a 'base64 dictionary' named 'update.signature' inside 'updateInfo'
-# Given I have a 'string' named 'myFile' inside 'update'
-Given I have a 'string' named 'myFolder' 
 
-# Given I have a 'signature' named 'update.signature' 
-Given I have a 'public key' from 'Apiroom' 
+Given I have a 'string' named 'add-identity'
+Given I have a 'string dictionary' named 'post'
+# Given I have a 'string dictionary' named 'output'
+Given I have a 'string dictionary' named 'output'
+Given I connect to 'add-identity' and pass it the content of 'post' and save the output into 'output'
 
-When I verify the 'update' has a signature in 'update.signature' by 'Apiroom' 
 
-When I create the copy of 'myFile' from dictionary 'update'
-When I rename the 'copy' to 'myFile'
+Then print the 'output'
 
-Then print the string 'Zenroom verified the Apiroom signature are all correct!' 
-Then print the 'myFile'
-Then print the 'myFolder'
 
-Then I download the 'myFile' and extract it into 'myFolder'
-"> ./contracts/consensusroom-update.zen
-echo ✔ Imported consensusroom-update.zen
 
-echo "
-{"Apiroom":{"public_key":"BPMbqmvEwUJsB6MmrswxKxza5+Lt82X20mAjcmknT7E7RysW6fACs/L3sXEOEh8qYxHKNAvcBCAetcIEuIEUVC4="},"myFolder":"/home/app/restroom-template-minimal/zencode/"}
-"> ./contracts/consensusroom-update.keys
-echo ✔ Imported consensusroom-update.keys
+"> ./contracts/consensusroom-announce.zen
+echo ✔ Imported consensusroom-announce.zen
+
+echo "{}" > ./contracts/consensusroom-announce.keys
+echo ✔ Imported consensusroom-announce.keys
 
 echo "
 
@@ -83,25 +85,25 @@ Given that I have an endpoint named 'endpoint'
 
 Given I connect to 'endpoint' and save the output into 'result'
 
-Given I have a 'string dictionary' named 'result'
+Given I have a 'string array' named 'result'
 
 
 When I create the copy of 'identities' from dictionary 'result'
 When I rename the 'copy' to 'identities'
 
-
+When I create the 'string array'
+When I rename the 'string array' to 'timestamp-endpoints'
 
 
 Then print the 'identities'
+Then print the 'timestamp-endpoints'
 
 
 
 "> ./contracts/consensusroom-get-6-timestamps-p1.zen
 echo ✔ Imported consensusroom-get-6-timestamps-p1.zen
 
-echo "
-{"endpoint":"https://apiroom.net/api/dyneorg/consensusroom-server-get-6RandomIdentities"}
-"> ./contracts/consensusroom-get-6-timestamps-p1.keys
+echo "{\"endpoint\":\"https://apiroom.net/api/dyneorg/consensusroom-server-get-6RandomIdentities\"}" > ./contracts/consensusroom-get-6-timestamps-p1.keys
 echo ✔ Imported consensusroom-get-6-timestamps-p1.keys
 
 echo "
@@ -223,54 +225,88 @@ echo ✔ Imported consensusroom-get-6-timestamps-p2.zen
 
 
 echo "
+Rule caller restroom-mw
 
-Given I have a 'string dictionary' named 'consensusMaster'
+
 Given I have a 'string dictionary' named 'identity'
+Given I have a 'string dictionary' named 'keypair'
+Given I have a 'string' named  'uid' in 'identity'
+
+Given I have a 'string' named  'public key' in 'keypair'
+Given I have a 'string' named  'private key' in 'keypair'
+
+Given I have a 'string' named  'myRandom'
+Given I have a 'string' named  'keypair.json' 
+Given I have a 'string' named  'identity.json' 
+Given I have a 'string' named  'consensusroom-announce.json' 
+
+When I set 'separator' to '|' as 'string'
+
+When I append 'separator' to 'uid'
+
+When I append 'myRandom' to 'uid'
 
 
-When I create the copy of 'add-identity' from dictionary 'consensusMaster'
-When I rename the 'copy' to 'add-identity'
+When I insert 'public key' in 'identity' 
+When I insert 'uid' in 'identity' 
 
-When I create the 'string dictionary'
-When I rename the 'string dictionary' to 'data'
+Then print the 'identity'
+Then print the 'keypair'
+Then print the 'keypair.json'
+Then print the 'identity.json'
+Then print the 'consensusroom-announce.json'
 
-When I create the 'string dictionary'
-When I rename the 'string dictionary' to 'post'
+Then store 'keypair' in the file 'keypair.json'
+Then store 'identity' in the file 'identity.json'
+Then store 'identity' in the file 'consensusroom-announce.json'
 
-When I insert 'identity' in 'data'
-When I insert 'data' in 'post'
+"> ./contracts/consensusroom-create-identity-p1.zen
+echo ✔ Imported consensusroom-create-identity-p1.zen
 
-# When I insert 'identity' in 'identities'
-
-# Then print the 'identities'
-Then print 'post'
-Then print the 'add-identity'
-
-"> ./contracts/consensusroom-announce-p1.zen
-echo ✔ Imported consensusroom-announce-p1.zen
-
-echo "
-{}
-"> ./contracts/consensusroom-announce-p1.keys
-echo ✔ Imported consensusroom-announce-p1.keys
 
 echo "
 Rule caller restroom-mw
 
-Given I have a 'string' named 'add-identity'
-Given I have a 'string dictionary' named 'post'
-# Given I have a 'string dictionary' named 'output'
-Given I have a 'string dictionary' named 'output'
-Given I connect to 'add-identity' and pass it the content of 'post' and save the output into 'output'
+
+Given I have a 'string dictionary' named 'identity'
+Given I have a 'string dictionary' named 'keypair'
+Given I have a 'string' named  'uid' in 'identity'
+
+Given I have a 'string' named  'public key' in 'keypair'
+Given I have a 'string' named  'private key' in 'keypair'
+
+Given I have a 'string' named  'myRandom'
+Given I have a 'string' named  'keypair.json' 
+Given I have a 'string' named  'identity.json' 
+Given I have a 'string' named  'consensusroom-announce.json' 
+
+When I set 'separator' to '|' as 'string'
+
+When I append 'separator' to 'uid'
+
+When I append 'myRandom' to 'uid'
 
 
-Then print the 'output'
+When I insert 'public key' in 'identity' 
+When I insert 'uid' in 'identity' 
 
+# Then print data
 
+Then print the 'identity'
+Then print the 'keypair'
+Then print the 'keypair.json'
+Then print the 'identity.json'
+Then print the 'consensusroom-announce.json'
 
-"> ./contracts/consensusroom-announce-p2.zen
-echo ✔ Imported consensusroom-announce-p2.zen
+Then store 'keypair' in the file 'keypair.json'
+Then store 'identity' in the file 'identity.json'
+Then store 'identity' in the file 'consensusroom-announce.json'
 
+"> ./contracts/consensusroom-create-identity-p2.zen
+echo ✔ Imported consensusroom-create-identity-p2.zen
+
+echo "{\"keypair.json\":\"./keypair.json\",\"identity.json\":\"./identity.json\",\"consensusroom-announce.json\":\"./consensusroom-announce.json\"}" > ./contracts/consensusroom-create-identity-p2.keys
+echo ✔ Imported consensusroom-create-identity-p2.keys
 
 
 echo "
@@ -296,18 +332,33 @@ zenchain: 1.0
 start: id_0
 blocks:
   id_0:
-    zenFile: consensusroom-announce-p1.zen
-    keysFile: consensusroom-announce-p1.keys
+    zenFile: consensusroom-create-identity-p1.zen
     next: id_1
   id_1:
-    zenFile: consensusroom-announce-p2.zen
+    zenFile: consensusroom-create-identity-p2.zen
+    keysFile: consensusroom-create-identity-p2.keys
 
-"> ./contracts/consensusroom-announce.yml
-echo ✔ Imported consensusroom-announce.yml
+"> ./contracts/consensusroom-create-identity.yml
+echo ✔ Imported consensusroom-create-identity.yml
+
+
+######### END MANUALLY SAVED FILES
+
 
 # instructions 
 echo \\nTo launch restroom-mw, type\\n:
 
 red=`tput setaf 1`
-echo "${red}cd restroom-mw"
+echo "${red}cd restroom-mw-$i"
 echo "${red}yarn start"
+
+# Curl to create-identity
+
+pm2 start ./src/app.js --name "restroom-mw-$i" --time
+
+curl "https://localhost:$PORT_HTTP/api/consensusroom-create-identity.chain" -H "accept: application/json" -H "Content-Type: application/json" -d "$(cat ./identity.json)"
+
+
+cd ..
+
+done
