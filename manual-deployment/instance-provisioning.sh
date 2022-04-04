@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # TWEAK SETTINGS
-NODES=10
-REPO=https://github.com/dyne/restroom-template-minimal
+NODES=4
+REPO=https://github.com/dyne/restroom-vmlet-template
 CONTRACTS=saved_files.sh
 
 # UTILITIES
@@ -35,6 +35,7 @@ link_build bitauth/libauth
 link_build cryptocoinjs/secp256k1-node
 link_build protobufjs/protobuf.js
 link_build mapbox/node-sqlite3
+link_build PeculiarVentures/pkcs11js
 
 # PORTS
 get_available_ports() {
@@ -62,31 +63,40 @@ PORTS=( $(get_available_ports) )
 parallel_job() {
   local i=$1
   NODE=restroom-mw-$i
-  WD=$BASEPATH/tmp/$NODE
+  WD=$BASEPATH/vmlets/$NODE
   HTTP=${PORTS[$i*2-2]}
   HTTPS=${PORTS[$i*2-1]}
 
   if ! test -d $WD; then
     npx degit $REPO $WD
+    cd $WD
+    yarn link @bitauth/libauth
+    yarn link sqlite3
+    yarn link protobufjs
+    yarn link pkcs11js
+    yarn link secp256k1
+    yarn add zeromq@5 --zmq-external
+    yarn
+
+    if ! test -d contracts; then
+      mkdir contracts
+    fi
+    bash $BASEPATH/$CONTRACTS
+    echo "{\"identity\":{\"uid\":\"random\",\"ip\":\"$HOST\",\"baseUrl\":\"http://$HOST\",\"port_http\":\"$HTTP\",\"port_https\":\"$HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announceAPI\":\"/api/consensusroom-announce\",\"get-6-timestampsAPI\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\",\"tracker\":\"https://apiroom.net/\"}}" > ./contracts/identity.keys
+    echo ✔ Imported identity.keys
+    echo "CUSTOM_404_MESSAGE=nothing to see here
+    HTTP_PORT=$HTTP
+    HTTPS_PORT=$HTTPS
+    FILES_DIR=$(pwd)
+    CHAIN_EXT=chain
+    # OPENAPI=true
+    YML_EXT=yml"> .env
+    cd ..
   fi
+
   cd $WD
-  if ! test -d contracts; then
-    mkdir contracts
-  fi
-  bash $BASEPATH/$CONTRACTS
-  yarn link @bitauth/libauth
-  yarn link sqlite3
-  yarn link protobufjs
-  yarn link secp256k1
-  yarn add zeromq@5 --zmq-external
-  yarn
-
-  echo "{\"identity\":{\"uid\":\"random\",\"ip\":\"$HOST\",\"baseUrl\":\"http://$HOST\",\"port_http\":\"$HTTP\",\"port_https\":\"$HTTPS\",\"public_key\":\"BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=\",\"version\":\"2\",\"announceAPI\":\"/api/consensusroom-announce\",\"get-6-timestampsAPI\":\"/api/consensusroom-get-6-timestamps\",\"timestampAPI\":\"/api/consensusroom-get-timestamp\",\"tracker\":\"https://apiroom.net/\"}}"
-
-> ./contracts/identity.keys
-
-echo ✔ Imported identity.keys
-  pm2 start yarn --name $NODE -- start
+  pm2 delete $NODE || true
+  pm2 start yarn --update-env --name $NODE --time -- start
 }
 
 for i in $(seq $NODES); do
