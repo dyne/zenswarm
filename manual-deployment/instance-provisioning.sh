@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -exuo pipefail
 
 # TWEAK SETTINGS
 NODES=4
@@ -8,17 +8,19 @@ CONTRACTS=saved_files.sh
 
 # UTILITIES
 BASEPATH=$(pwd)
-HOST=$(hostname -I)
+# HOST=$(hostname -I)
+# changed to (hostname) cause the current staging uses a shared ip
+HOST=$(hostname)
 PORTS=()
 
 # DEPENDENCIES
-command -v python || (apt install -y python)
-command -v git || (apt install -y git)
+command -v python || (sudo apt install -y python)
+command -v git || (sudo apt install -y git)
 command -v yarn || (npm install --global yarn)
-command -v npx || (curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y nodejs)
-command -v make || (apt install -y build-essential)
+command -v npx || (curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && sudo apt-get install -y nodejs)
+command -v make || (sudo apt install -y build-essential)
 command -v pm2 || (yarn global add pm2)
-dpkg -l libczmq-dev &> /dev/null || (apt install -y libczmq-dev)
+dpkg -l libczmq-dev &> /dev/null || (sudo apt install -y libczmq-dev)
 npm install -g node-gyp-cache
 npm config set node_gyp node-gyp-cache
 
