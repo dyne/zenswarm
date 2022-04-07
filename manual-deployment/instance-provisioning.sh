@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # TWEAK SETTINGS
-NODES=42
+NODES=2
 REPO=https://github.com/dyne/restroom-vmlet-template
 CONTRACTS=saved_files.sh
 
@@ -66,7 +66,7 @@ parallel_job() {
   CHAIN_EXT=chain
   # OPENAPI=true
   HOST=$HOST
-  PRIVATE_ZENCODE_DIR="$BASEPATH/private_zencode_dir"
+  PRIVATE_ZENCODE_DIR="$BASEPATH/private-contracts"
   YML_EXT=yml"> .env
 
   pm2 delete $NODE || true

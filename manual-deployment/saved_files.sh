@@ -283,26 +283,6 @@ blocks:
 "> ./contracts/consensusroom-create-identity.yml
 echo ✔ Imported consensusroom-create-identity.yml 
 
-
-echo "
-Scenario 'ecdh': Create the keypair
-Scenario 'ethereum': Create the keypair
-Scenario 'reflow': Create the keypair
-Scenario 'schnorr': Create the keypair
-
-Given nothing
-When I create the ecdh key
-When I create the ethereum key
-When I create the reflow key
-When I create the schnorr key
-When I create the bitcoin key
-
-Then print data
-
-"> ./private_zencode_dir/consensusroom-generate-all-private-keys.zen
-echo ✔ Imported consensusroom-generate-all-private-keys.zen
-
-
 echo "
 
 Scenario 'ecdh': Create the keypair
@@ -314,14 +294,15 @@ Given I have the 'keys'
 When I create the ecdh public key
 When I create the reflow public key
 When I create the schnorr public key
-When I create the bitcoin public key
 
+When I create the bitcoin address
 When I create the ethereum address
+
 Then print the 'ecdh public key'
 Then print the 'reflow public key'
 Then print the 'schnorr public key'
-Then print the 'bitcoin public key'
 
+Then print the 'bitcoin address'
 Then print the 'ethereum address'
 
 "> ./contracts/consensusroom-generate-all-public-keys.zen
