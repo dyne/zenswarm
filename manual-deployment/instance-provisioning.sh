@@ -73,6 +73,7 @@ parallel_job() {
   pm2 start yarn --update-env --name $NODE --time -- start
 }
 
+pm2 kill
 for i in $(seq $NODES); do
   parallel_job $i &
 done
