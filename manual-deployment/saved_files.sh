@@ -308,3 +308,30 @@ Then print the 'ethereum address'
 "> ./contracts/consensusroom-generate-all-public-keys.zen
 echo ✔ Imported consensusroom-generate-all-public-keys.zen
 
+echo "
+Rule caller restroom-mw
+Scenario 'ecdh': verifies the signature from Apiroom 
+Given I have a 'string dictionary' named 'updateInfo'
+Given I have a 'string dictionary' named 'update' inside 'updateInfo'
+Given I have a 'base64 dictionary' named 'update.signature' inside 'updateInfo'
+# Given I have a 'string' named 'myFile' inside 'update'
+Given I have a 'string' named 'myFolder' 
+
+# Given I have a 'signature' named 'update.signature' 
+Given I have a 'ecdh public key' from 'Apiroom' 
+
+When I verify the 'update' has a signature in 'update.signature' by 'Apiroom' 
+
+When I create the copy of 'myFile' from dictionary 'update'
+When I rename the 'copy' to 'myFile'
+
+Then print the string 'Zenroom verified the Apiroom signature are all correct!' 
+Then print the 'myFile'
+Then print the 'myFolder'
+
+Then I download the 'myFile' and extract it into 'myFolder'
+"> ./contracts/consensusroom-update.zen
+echo ✔ Imported consensusroom-update.zen
+
+echo "{\"Apiroom\":{\"ecdh_public_key\":\"BPMbqmvEwUJsB6MmrswxKxza5+Lt82X20mAjcmknT7E7RysW6fACs/L3sXEOEh8qYxHKNAvcBCAetcIEuIEUVC4=\"},\"myFolder\":\"./contracts\"}" > ./contracts/consensusroom-update.keys
+echo ✔ Imported consensusroom-update.keys
