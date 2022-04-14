@@ -53,7 +53,7 @@ parallel_job() {
     # yarn link pkcs11js
     # yarn link secp256k1
     # yarn add zeromq@5 --zmq-external
-    sed -i 's/restroom-vmlet-template/${NODE}/g' package.json
+    sed -ie "s/restroom-vmlet-template/${NODE}/g" package.json
     yarn
 
   fi
