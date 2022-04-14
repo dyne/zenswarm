@@ -10,7 +10,7 @@ CONTRACTS=saved_files.sh
 BASEPATH=$(pwd)
 # HOST=$(hostname -I)
 # changed to (hostname) cause the current staging uses a shared ip
-HOST=$(hostname -I)
+HOST=$(hostname)
 
 # DEPENDENCIES
 command -v python || (sudo apt install -y python)
