@@ -18,152 +18,6 @@ echo ✔ Imported consensusroom-announce.zen
 echo "{}" > ./contracts/consensusroom-announce.keys
 echo ✔ Imported consensusroom-announce.keys
 
-echo "
-
-# Always use 'Rule caller restroom-mw' when using Restroom
-Rule caller restroom-mw
-
-Given that I have an endpoint named 'endpoint' 
-
-Given I connect to 'endpoint' and save the output into 'result'
-
-Given I have a 'string array' named 'result'
-
-
-When I create the copy of 'identities' from dictionary 'result'
-When I rename the 'copy' to 'identities'
-
-When I create the 'string array'
-When I rename the 'string array' to 'timestamp-endpoints'
-
-
-Then print the 'identities'
-Then print the 'timestamp-endpoints'
-
-
-
-"> ./contracts/consensusroom-get-6-timestamps-p1.zen
-echo ✔ Imported consensusroom-get-6-timestamps-p1.zen
-
-echo "{\"endpoint\":\"https://apiroom.net/api/dyneorg/consensusroom-server-get-6RandomIdentities\"}" > ./contracts/consensusroom-get-6-timestamps-p1.keys
-echo ✔ Imported consensusroom-get-6-timestamps-p1.keys
-
-echo "
-Given I have a 'string dictionary' named 'temp'
-
-When I create the copy of 'baseUrl' from dictionary 'temp'
-When I rename the 'copy' to 'timestampEndpoint'
-When I create the copy of 'timestampAPI' from dictionary 'temp'
-When I rename the 'copy' to 'api'
-When I append 'api' to 'timestampEndpoint'
-
-When I insert 'timestampEndpoint' in 'temp'
-
-Then print the 'temp'
-
-"> ./contracts/consensusroom-get-6-timestamps-fe-pt2.zen
-echo ✔ Imported consensusroom-get-6-timestamps-fe-pt2.zen
-
-
-echo "
-
-# Always use 'Rule caller restroom-mw' when using Restroom
-Rule caller restroom-mw
-
-
-Given I have a 'string dictionary' named '1'
-Given I have a 'string dictionary' named '2'
-Given I have a 'string dictionary' named '3'
-Given I have a 'string dictionary' named '4'
-Given I have a 'string dictionary' named '5'
-Given I have a 'string dictionary' named '6'
-
-Given I have a 'string' named 'ts1'
-Given I have a 'string' named 'ts2'
-Given I have a 'string' named 'ts3'
-Given I have a 'string' named 'ts4'
-Given I have a 'string' named 'ts5'
-Given I have a 'string' named 'ts6'
-
-Given I have a 'string dictionary' named 'timestamps'
-
-Given I execute parallel GET to 'ts1' and save the result named 'timestamp1' within the object 'timestamps'
-Given I execute parallel GET to 'ts2' and save the result named 'timestamp2' within the object 'timestamps'
-Given I execute parallel GET to 'ts3' and save the result named 'timestamp3' within the object 'timestamps'
-Given I execute parallel GET to 'ts4' and save the result named 'timestamp4' within the object 'timestamps'
-Given I execute parallel GET to 'ts5' and save the result named 'timestamp5' within the object 'timestamps'
-Given I execute parallel GET to 'ts6' and save the result named 'timestamp6' within the object 'timestamps'
-
-
-# When I create the copy of 'timeServer' from dictionary '1'
-# When I rename the 'copy' to 'ts1'
-
-When I create the copy of 'timestamp1' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp1'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp1'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '1'
-
-
-When I create the copy of 'timestamp2' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp2'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp2'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '2'
-
-
-When I create the copy of 'timestamp3' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp3'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp3'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '3'
-
-
-When I create the copy of 'timestamp4' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp4'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp4'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '4'
-
-
-When I create the copy of 'timestamp5' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp5'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp5'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '5'
-
-
-When I create the copy of 'timestamp6' from dictionary 'timestamps'
-When I rename the 'copy' to 'timestamp6'
-When I create the copy of 'myTimestamp' from dictionary 'timestamp6'
-When I rename the 'copy' to 'myTimestamp'
-When I insert 'myTimestamp' in '6'
-
-
-
-
-
-Then print '1'
-Then print '2'
-Then print '3'
-Then print '4'
-Then print '5'
-Then print '6'
-
-
-### NOTE
-# The execute parallel needs to be done in Given
-
-
-
-
-
-
-
-
-
-"> ./contracts/consensusroom-get-6-timestamps-p2.zen
-echo ✔ Imported consensusroom-get-6-timestamps-p2.zen
 
 
 echo "
@@ -251,24 +105,7 @@ echo "{\"keypair.json\":\"./keypair.json\",\"identity.json\":\"./identity.json\"
 echo ✔ Imported consensusroom-create-identity-p2.keys
 
 
-echo "
-zenchain: 1.0
-start: id_0
-blocks:
-  id_0:
-    zenFile: consensusroom-get-6-timestamps-p1.zen
-    keysFile: consensusroom-get-6-timestamps-p1.keys
-    next: id_1
-  id_1:
-    forEach: identities
-    index: temp
-    zenFile: consensusroom-get-6-timestamps-fe-pt2.zen
-    next: id_2
-  id_2:
-    zenFile: consensusroom-get-6-timestamps-p2.zen
 
-"> ./contracts/consensusroom-get-6-timestamps.yml
-echo ✔ Imported consensusroom-get-6-timestamps.yml
 echo "
 zenchain: 1.0
 start: id_0
@@ -335,3 +172,11 @@ echo ✔ Imported consensusroom-update.zen
 
 echo "{\"Apiroom\":{\"ecdh_public_key\":\"BPMbqmvEwUJsB6MmrswxKxza5+Lt82X20mAjcmknT7E7RysW6fACs/L3sXEOEh8qYxHKNAvcBCAetcIEuIEUVC4=\"},\"myFolder\":\"./contracts\"}" > ./contracts/consensusroom-update.keys
 echo ✔ Imported consensusroom-update.keys
+
+echo "
+Rule caller restroom-mw
+Given I have a 'string' named 'myTimestamp'
+Given I fetch the local timestamp and store it into 'myTimestamp'
+Then print 'myTimestamp'
+"> ./contracts/consensusroom-get-timestamp.zen
+echo ✔ Imported consensusroom-get-timestamp.zen
