@@ -47,12 +47,13 @@ parallel_job() {
   if ! test -d $WD; then
     npx degit $REPO $WD
     cd $WD
-    yarn link @bitauth/libauth
-    yarn link sqlite3
-    yarn link protobufjs
-    yarn link pkcs11js
-    yarn link secp256k1
-    yarn add zeromq@5 --zmq-external
+    # yarn link @bitauth/libauth
+    # yarn link sqlite3
+    # yarn link protobufjs
+    # yarn link pkcs11js
+    # yarn link secp256k1
+    # yarn add zeromq@5 --zmq-external
+    sed -i 's/restroom-vmlet-template/${NODE}/g' package.json
     yarn
 
   fi
