@@ -32,11 +32,12 @@ link_build() {
   fi
 }
 
-link_build bitauth/libauth
-link_build cryptocoinjs/secp256k1-node
-link_build protobufjs/protobuf.js
-link_build mapbox/node-sqlite3
-link_build PeculiarVentures/pkcs11js
+# link_build bitauth/libauth
+# link_build cryptocoinjs/secp256k1-node
+# link_build protobufjs/protobuf.js
+# link_build mapbox/node-sqlite3
+# link_build PeculiarVentures/pkcs11js
+yarn
 
 parallel_job() {
   local i=$1
