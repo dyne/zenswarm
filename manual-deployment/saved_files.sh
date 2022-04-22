@@ -92,7 +92,11 @@ Then print the 'dataFromEndpoint'
 "> ./contracts/consensusroom-http-post.zen
 echo ✔ Imported consensusroom-http-post.zen
 
-
+echo "
+Given nothing
+Then print the string 'I am alive!'
+"> ./contracts/consensusroom-ping.zen
+echo ✔ Imported consensusroom-ping.zen
 
 
 
