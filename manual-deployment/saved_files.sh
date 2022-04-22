@@ -29,7 +29,7 @@ Scenario 'ethereum': Create the keypair
 Scenario 'reflow': Create the keypair
 Scenario 'schnorr': Create the keypair
 
-Given I have the 'keys'
+Given I have the 'keyring'
 When I create the ecdh public key
 When I create the reflow public key
 When I create the schnorr public key
