@@ -98,5 +98,10 @@ Then print the string 'I am alive!'
 "> ./contracts/consensusroom-ping.zen
 echo ✔ Imported consensusroom-ping.zen
 
-
-
+echo "
+ledgers:
+  ping:
+    interval: 5
+    contract: consensusroom-ping
+"> ./contracts/L1.yaml
+echo ✔ Imported L1.yaml
