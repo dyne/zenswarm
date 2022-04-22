@@ -82,3 +82,17 @@ Given I fetch the local timestamp and store it into 'myTimestamp'
 Then print 'myTimestamp'
 "> ./contracts/consensusroom-get-timestamp.zen
 echo ✔ Imported consensusroom-get-timestamp.zen
+
+
+echo "
+Rule unknown ignore
+Given I connect to 'endpoint' and pass it the content of 'myDataToPOST' and save the output into 'dataFromEndpoint'
+Given I have a 'string dictionary' named 'dataFromEndpoint'
+Then print the 'dataFromEndpoint'
+"> ./contracts/consensusroom-http-post.zen
+echo ✔ Imported consensusroom-http-post.zen
+
+
+
+
+
