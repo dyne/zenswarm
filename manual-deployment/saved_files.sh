@@ -105,3 +105,12 @@ ledgers:
     contract: consensusroom-ping
 "> ./L1.yaml
 echo ✔ Imported L1.yaml
+
+
+echo "
+Rule caller restroom-mw
+Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'output'
+Given I have a 'string dictionary' named 'output'
+Then print the 'output'
+"> ./contracts/consensusroom-http-post.zen
+echo ✔ Imported onsensusroom-http-post.zen
