@@ -101,7 +101,7 @@ echo ✔ Imported consensusroom-ping.zen
 echo "
 ledgers:
   ping:
-    interval: 5
+    interval: 300
     contract: consensusroom-ping
-"> ./contracts/L1.yaml
+"> ./L1.yaml
 echo ✔ Imported L1.yaml
