@@ -1,3 +1,5 @@
+![Zenswarm](docs/zenswarm.svg)
+
 # Zenswarm
 Protototype of Zenroom based Swarm of Oracles 
 
