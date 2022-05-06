@@ -238,7 +238,7 @@ json```
 
 The instances now have update mechanism, triggered via an API (currently working only with 6 instances). The update flow to the instances is triggered by the API:
 
-https://apiroom.net/api/dyneorg/consensusroom-server-update-6-instances.chain
+https://apiroom.net/api/dyneorg/consensusroom-update-all-instances
 
 The API needs no parameter.
 
