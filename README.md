@@ -4,15 +4,20 @@
 Protototype of Zenroom based Swarm of Oracles 
 
 # Requirements
+* a Debian based machine (the provisioning script uses apt)
 * node 14
 * (Server only) redis running on port 6379
 * pm2
+* the hostname on the host machine, must be reachable from the internet (can be an IP), the oracle use the hostname to announce their identities to the tracker
+* ports between the 25000 and 30000 must be open on the host machine
 
 # How to run
 
-- execute ./manual-deployment/instance-provisioning.sh
+* clone the repo
+* configure the amount of instances to be installed by modifiying the parameter **NODES** inside the file **./manual-deployment/instance-provisioning.sh**
+* execute **./manual-deployment/instance-provisioning.sh**
 
-do **pm2 list ** to see how many instances of restroom_mw are running 
+use **pm2 list** to see how many instances of restroom_mw are running 
 
 # MERMAID
 
@@ -27,9 +32,9 @@ sequenceDiagram
     Cn->>R: ANNOUNCE IDs
     C1->>R: ASK 6 random IDs
     R->>C1: REPLY 6 random IDs
-    C1->>Cn: ASK 6 timestamps (x6)
-    Cn->>C1: REPLY 6 timestamps (array)
-    C1->>C1: CALCULATE average timestamp (WIP)
+    C1->>Cn: ASK to execute POST  (x6)
+    Cn->>C1: REPLY result of 6 POST (array)
+    C1->>C1: Verify the output of the 6 POST (WIP)
 ```
 
 ## APIs
