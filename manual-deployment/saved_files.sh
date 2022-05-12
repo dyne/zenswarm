@@ -222,3 +222,9 @@ blocks:
 "> ./contracts/zenswarm-oracle-key-issuance.yml
 echo ✔ Imported zenswarm-oracle-key-issuance.yml
 
+echo "{\"Issuer\":{\"ecdh_public_key\":\"BE7M0w9jugjgxyLn5C4ws6tnViv5rRc1zVSz+sm0M2NJUaZPaweefY3p6di7Da24TazNZ0HYVHcOEnVYlSZevqY=\"}}" > ./contracts/pubkeys.json
+echo ✔ Imported pubkeys.json
+
+
+
+
