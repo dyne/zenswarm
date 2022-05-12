@@ -79,5 +79,5 @@ parallel_job() {
 
 pm2 kill
 for i in $(seq $NODES); do
-  parallel_job $i &
+  parallel_job $i
 done
