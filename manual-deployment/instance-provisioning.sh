@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # TWEAK SETTINGS
+COUNTRY="IT"
 NODES=2
 REPO=https://github.com/dyne/restroom-vmlet-template
 CONTRACTS=saved_files.sh
