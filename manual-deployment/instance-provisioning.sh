@@ -68,6 +68,7 @@ parallel_job() {
   FILES_DIR=$(pwd)
   CHAIN_EXT=chain
   # OPENAPI=true
+  COUNTRY=$COUNTRY
   HOST=$HOST
   PRIVATE_ZENCODE_DIR="$BASEPATH/private-contracts"
   YML_EXT=yml"> .env
