@@ -117,11 +117,12 @@ echo ✔ Imported onsensusroom-http-post.zen
 
 
 echo "
+Rule caller restroom-mw
 Scenario 'ecdh': ecdh
 Scenario 'schnorr': ecdh
 
-Given I read the content of 'identity.keys'
-Given I read the content of 'pubkeys.json'
+Given I read the content of 'contracts/identity.keys'
+Given I read the content of 'contracts/pubkeys.json'
 
 
 # Given I have a 'keyring'
@@ -177,10 +178,11 @@ echo ✔ Imported zenswarm-oracle-key-issuance-2.zen
 
 
 echo "
+Rule caller restroom-mw
 Scenario 'ecdh': ecdh
 Scenario 'schnorr': ecdh
 
-Given I read the content of 'keyring.json'
+Given I read the content of 'contracts/keyring.json'
 
 Given I have a 'keyring'
 Given I have a 'string dictionary' named 'identity'
