@@ -65,14 +65,14 @@ parallel_job() {
   fi
   bash $BASEPATH/$CONTRACTS
   echo "CUSTOM_404_MESSAGE=nothing to see here
-  ZENCODE_DIR="$(pwd)/contracts"
+  ZENCODE_DIR=\"$(pwd)/contracts\"
   FILES_DIR=$(pwd)
   CHAIN_EXT=chain
   # OPENAPI=true
-  COUNTRY="$COUNTRY"
-  HOST="$HOST"
-  SUBSCRIPTIONS="$SUBSCRIPTIONS"
-  PRIVATE_ZENCODE_DIR="$BASEPATH/private-contracts"
+  COUNTRY=\"$COUNTRY\"
+  HOST=\"$HOST\"
+  SUBSCRIPTIONS=\"$SUBSCRIPTIONS\"
+  PRIVATE_ZENCODE_DIR=\"$BASEPATH/private-contracts\"
   YML_EXT=yml"> .env
   SUBSCRIPTIONS=""
 
