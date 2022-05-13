@@ -40,6 +40,7 @@ link_build() {
 # link_build PeculiarVentures/pkcs11js
 yarn
 
+SUBSCRIPTIONS = "fabchain sawroom"
 parallel_job() {
   local i=$1
   NODE=restroom-mw-$i
@@ -68,10 +69,12 @@ parallel_job() {
   FILES_DIR=$(pwd)
   CHAIN_EXT=chain
   # OPENAPI=true
-  COUNTRY=$COUNTRY
-  HOST=$HOST
+  COUNTRY="$COUNTRY"
+  HOST="$HOST"
+  SUBSCRIPTIONS="$SUBSCRIPTIONS"
   PRIVATE_ZENCODE_DIR="$BASEPATH/private-contracts"
   YML_EXT=yml"> .env
+  SUBSCRIPTIONS=""
 
   pm2 delete $NODE || true
   pm2 start yarn --update-env --name $NODE --time -- start
