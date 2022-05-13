@@ -121,7 +121,7 @@ Rule caller restroom-mw
 Scenario 'ecdh': ecdh
 Scenario 'schnorr': ecdh
 
-Given I read the content of 'contracts/identity.keys'
+Given I read the content of 'contracts/identity.json'
 Given I read the content of 'contracts/pubkeys.json'
 
 
