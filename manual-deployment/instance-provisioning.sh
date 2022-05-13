@@ -40,7 +40,7 @@ link_build() {
 # link_build PeculiarVentures/pkcs11js
 yarn
 
-SUBSCRIPTIONS = "fabchain sawroom"
+SUBSCRIPTIONS="fabchain sawroom"
 parallel_job() {
   local i=$1
   NODE=restroom-mw-$i
