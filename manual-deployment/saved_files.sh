@@ -367,4 +367,109 @@ blocks:
 "> ./contracts/ethereum-notarization.yml
 echo ✔ Imported ethereum-notarization.yml
 
+echo "
+Scenario 'ecdh': ecdh
+Scenario 'schnorr': ecdh
+
+Given I read the content of 'contracts/identity.json'
+Given I read the content of 'contracts/pubkeys.json'
+
+
+# Given I have a 'keyring'
+Given I have a 'base64' named 'schnorr'
+Given I have a 'base64 dictionary' named 'schnorr.signature'
+Given I have a 'ecdh public key' from 'Issuer'
+Given I have a 'string dictionary' named 'identity'
+
+
+When I verify the 'schnorr' has a signature in 'schnorr.signature' by 'Issuer' 
+#When I create the schnorr public key
+
+# When I create the ecdh signature of 'identity'
+# When I rename the 'ecdh signature' to 'ecdh.signature.identity'
+
+When I create the 'base64 dictionary' named 'keyring'
+When I insert 'schnorr' in 'keyring'
+
+
+Then print the 'identity'
+
+Then print the 'keyring'
+
+# then print data
+"> ./contracts/zenswarm-oracle-key-issuance-1.zen
+echo ✔ Imported zenswarm-oracle-key-issuance-1.zen
+
+echo "{}" > ./contracts/zenswarm-oracle-key-issuance-1.keys
+echo ✔ Imported zenswarm-oracle-key-issuance-1.keys
+
+echo "
+Scenario 'schnorr': create Schnorr signature
+
+Given I have a 'keyring'
+
+Given I have a 'string dictionary' named 'identity'
+
+When I create the schnorr signature of 'identity'
+# When I create the schnorr public key
+
+When I rename the 'schnorr signature' to 'schnorr.signature.identity'
+
+# Here we print the signatyre, the public key and the message
+# Then print my 'schnorr public key' 
+# Then print the 'schnorr signature'
+# Then print the 'message'
+
+Then print the 'identity'
+
+Then print the 'schnorr.signature.identity'
+"> ./contracts/zenswarm-oracle-key-issuance-2.zen
+echo ✔ Imported zenswarm-oracle-key-issuance-2.zen
+
+
+echo "
+Scenario 'ecdh': ecdh
+Scenario 'schnorr': ecdh
+
+Given I read the content of 'contract/keyring.json'
+
+Given I have a 'keyring'
+Given I have a 'string dictionary' named 'identity'
+
+Given I have a 'base64' named 'schnorr.signature.identity'
+
+When I create the ecdh signature of 'identity'
+When I rename the 'ecdh signature' to 'ecdh.signature.identity'
+
+When I create the ecdh public key 
+
+Then print the 'identity'
+Then print the 'ecdh.signature.identity'
+Then print the 'schnorr.signature.identity'
+Then print the 'ecdh public key'
+
+"> ./contracts/zenswarm-oracle-key-issuance-3.zen
+echo ✔ Imported zenswarm-oracle-key-issuance-3.zen
+
+echo "{}" > ./contracts/zenswarm-oracle-key-issuance-3.keys
+echo ✔ Imported zenswarm-oracle-key-issuance-3.keys
+
+
+echo "
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm-oracle-key-issuance-1.zen
+    keysFile: zenswarm-oracle-key-issuance-1.keys
+    next: id_1
+  id_1:
+    zenFile: zenswarm-oracle-key-issuance-2.zen
+    next: id_2
+  id_2:
+    zenFile: zenswarm-oracle-key-issuance-3.zen
+    keysFile: zenswarm-oracle-key-issuance-3.keys
+
+"> ./contracts/zenswarm-oracle-key-issuance.yml
+echo ✔ Imported zenswarm-oracle-key-issuance.yml
 
