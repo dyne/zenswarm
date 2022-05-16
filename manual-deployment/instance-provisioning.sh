@@ -81,7 +81,7 @@ parallel_job() {
 }
 
 pm2 kill
-rm "~/.pm2/logs/restroom-*"
+rm -f "~/.pm2/logs/restroom-mw-*"
 for i in $(seq $NODES); do
   parallel_job $i
 done
