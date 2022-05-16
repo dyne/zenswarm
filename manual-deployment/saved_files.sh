@@ -229,6 +229,7 @@ echo ✔ Imported pubkeys.json
 
 echo "
 
+### Ethereum notarization
 
 Given I have a 'string dictionary' named 'post'
 Given I have a 'string' named 'endpoint'
@@ -340,7 +341,7 @@ Then print the 'newblock' as 'hex'
 "> ./contracts/ethNotarization-4-ethereum-store.zen
 echo ✔ Imported ethNotarization-4-ethereum-store.zen
 
-
+### End Ethereum notarization
 
 echo "
 zenchain: 1.0
@@ -486,4 +487,150 @@ Given I have a 'string dictionary' named 'subscriptions'
 Then print data
 "> ./contracts/zenswarm-oracle-get-identity.zen
 echo ✔ Imported zenswarm-oracle-get-identity.zen
+
+
+### Sawroom notarization
+
+echo "
+Given I have a 'string' named 'block_id'
+Given I have a 'number' named 'block_num'
+Given I have a 'string' named 'previous_block_id'
+
+Given I have a 'string' named 'endpoint'
+
+
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'sawroomNewBlock'
+
+When I insert 'block_id' in 'sawroomNewBlock'
+When I insert 'previous_block_id' in 'sawroomNewBlock'
+When I insert 'block_num' in 'sawroomNewBlock'
+
+
+When I create the copy of 'block_id' from dictionary 'sawroomNewBlock'
+When I rename the 'copy' to 'block_id'
+When I write string 'blocks/' in 'blocks'
+When I append 'blocks' to 'endpoint'
+When I append 'block_id' to 'endpoint'
+
+then print the 'endpoint'
+then print the 'sawroomNewBlock'
+# Then print the 'url'
+"> ./contracts/sawroom-notarization-0.zen
+echo ✔ Imported sawroom-notarization-0.zen
+
+
+echo "
+Rule caller restroom-mw
+
+Given that I have an endpoint named 'endpoint' 
+Given I connect to 'endpoint' and save the output into 'dataFromEndpoint'
+Given I fetch the local timestamp and store it into 'oracleTimestamp'
+
+Given I have a 'string dictionary' named 'sawroomNewBlock'
+Given I have a 'string' named 'endpoint'
+Given I have a 'string dictionary' named 'dataFromEndpoint'
+Given I have a 'string' named 'oracleTimestamp'
+
+Then print the 'dataFromEndpoint'
+Then print the 'oracleTimestamp'
+
+
+
+"> ./contracts/sawroom-notarization-1.zen
+echo ✔ Imported sawroom-notarization-1.zen
+
+
+echo "
+Given I have a 'string dictionary' named 'result' inside 'dataFromEndpoint'
+Given I have a 'string' named 'oracleTimestamp' 
+When I pickup from path 'result.data.batches.header_signature'
+When I pickup from path 'result.data.header.previous_block_id' 
+When I pickup from path 'result.data.header.block_num' 
+
+
+When I create the 'string dictionary' named 'newSawroomBlock'
+
+When I insert 'header_signature' in 'newSawroomBlock'
+When I insert 'previous_block_id' in 'newSawroomBlock'
+When I insert 'oracleTimestamp' in 'newSawroomBlock'
+When I insert 'block_num' in 'newSawroomBlock'
+
+When I create the mpack of 'newSawroomBlock'
+When I rename the 'mpack' to 'newSawroomBlock-mpack'
+
+Then print the 'newSawroomBlock'
+Then print the 'newSawroomBlock-mpack'
+
+
+
+"> ./contracts/sawroom-notarization-2.zen
+echo ✔ Imported sawroom-notarization-2.zen
+
+
+echo "
+Rule unknown ignore
+Scenario ethereum: test store
+Given I have the 'keyring'
+Given I have a ethereum endpoint named 'fabchain'
+Given I have a 'ethereum address' named 'storage contract'
+Given I have a 'ethereum nonce'
+Given I read the ethereum nonce for 'my_address'
+and a 'gas price'
+and a 'gas limit'
+Given I have a 'base64' named 'newSawroomBlock-mpack'
+
+# Given I read the # ethereum suggested gas price
+When I create the ethereum transaction to 'storage contract'
+When I use the ethereum transaction to store 'newSawroomBlock-mpack'
+
+When I create the signed ethereum transaction for chain 'fabt'
+Then print the 'signed ethereum transaction'
+Then I ask ethereum to broadcast the 'signed_ethereum_transaction' and save the transaction id in 'txid'
+Then print data
+
+"> ./contracts/sawroom-notarization-3.zen
+echo ✔ Imported sawroom-notarization-3.zen
+
+
+echo "
+Given I have a 'base64' named 'newSawroomBlock-mpack'
+Given I have a 'hex' named 'txid'
+
+When I create the 'newSawroomblock' decoded from mpack 'newSawroomBlock-mpack'
+
+Then print the 'txid'
+Then print the 'newSawroomBlock-mpack'
+Then print the 'newSawroomblock' as 'hex'
+
+
+"> ./contracts/sawroom-notarization-4.zen
+echo ✔ Imported sawroom-notarization-4.zen
+
+
+
+echo "
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: sawroom-notarization-0.zen
+    next: id_1
+  id_1:
+    zenFile: sawroom-notarization-1.zen
+    next: id_2
+  id_2:
+    zenFile: sawroom-notarization-2.zen
+    next: id_3
+  id_3:
+    zenFile: sawroom-notarization-3.zen
+    next: id_4
+  id_4:
+    zenFile: sawroom-notarization-4.zen
+
+"> ./contracts/sawroom-notarization.yml
+echo ✔ Imported sawroom-notarization.yml
+
+### End Sawroom notarization
+
 
