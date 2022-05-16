@@ -473,3 +473,17 @@ blocks:
 "> ./contracts/zenswarm-oracle-key-issuance.yml
 echo ✔ Imported zenswarm-oracle-key-issuance.yml
 
+echo "
+Rule caller restroom-mw
+
+Given I read the content of 'contracts/identity.json'
+Given I read the content of 'contracts/blockchain-subscriptions.json'
+
+
+Given I have a 'string dictionary' named 'identity'
+Given I have a 'string dictionary' named 'subscriptions'
+
+Then print data
+"> ./contracts/zenswarm-oracle-get-identity.zen
+echo ✔ Imported zenswarm-oracle-get-identity.zen
+
