@@ -80,8 +80,8 @@ Rule caller restroom-mw
 Given I have a 'string' named 'myTimestamp'
 Given I fetch the local timestamp and store it into 'myTimestamp'
 Then print 'myTimestamp'
-"> ./contracts/consensusroom-get-timestamp.zen
-echo ✔ Imported consensusroom-get-timestamp.zen
+"> ./contracts/zenswarm-oracle-get-timestamp.zen
+echo ✔ Imported zenswarm-oracle-get-timestamp.zen
 
 
 echo "
@@ -89,14 +89,14 @@ Rule unknown ignore
 Given I connect to 'endpoint' and pass it the content of 'myDataToPOST' and save the output into 'dataFromEndpoint'
 Given I have a 'string dictionary' named 'dataFromEndpoint'
 Then print the 'dataFromEndpoint'
-"> ./contracts/consensusroom-http-post.zen
-echo ✔ Imported consensusroom-http-post.zen
+"> ./contracts/zenswarm-oracle-http-post.zen
+echo ✔ Imported zenswarm-oracle-http-post.zen
 
 echo "
 Given nothing
 Then print the string 'I am alive!'
-"> ./contracts/consensusroom-ping.zen
-echo ✔ Imported consensusroom-ping.zen
+"> ./contracts/zenswarm-oracle-ping.zen
+echo ✔ Imported zenswarm-oracle-ping.zen
 
 echo "
 ledgers:
@@ -112,8 +112,8 @@ Rule caller restroom-mw
 Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'output'
 Given I have a 'string dictionary' named 'output'
 Then print the 'output'
-"> ./contracts/consensusroom-http-post.zen
-echo ✔ Imported onsensusroom-http-post.zen
+"> ./contracts/zenswarm-oracle-http-post.zen
+echo ✔ Imported zenswarm-oracle-http-post.zen
 
 
 echo "
