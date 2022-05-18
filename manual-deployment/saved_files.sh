@@ -270,7 +270,7 @@ When I rename the 'copy' to 'hash'
 
 When I create the 'hex array' named 'params'
 When I insert 'hash' in 'params' 
-When I insert false '' in 'params'
+When I insert false in 'params'
 
 When I insert 'params' in 'post'
 
