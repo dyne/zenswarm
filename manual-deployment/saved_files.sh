@@ -257,6 +257,8 @@ echo ✔ Imported zenswarm-oracle-get-identity.zen
 ### Start Ethereum Notarization
 
 echo "
+
+
 Given I have a 'string dictionary' named 'post'
 Given I have a 'string' named 'endpoint'
 Given I have a 'string array' named 'result' in 'params'
@@ -382,34 +384,14 @@ Then print the 'newblock' as 'hex'
 "> ./contracts/ethNotarization-4-ethereum-store.zen
 echo ✔ Imported ethNotarization-4-ethereum-store.zen
 
-echo "
-zenchain: 1.0
-start: id_0
-blocks:
-  id_0:
-    zenFile: ethNotarization-0-newhead.zen
-    keysFile: ethNotarization-0-newhead.keys
-    next: id_1
-  id_1:
-    zenFile: ethNotarization-1-newhead.zen
-    next: id_2
-  id_2:
-    zenFile: ethNotarization-2-filter-newhead.zen
-    keysFile: Ethereum-retrieve-A.keys
-    next: id_3
-  id_3:
-    zenFile: ethNotarization-3-ethereum-store.zen
-    keysFile: ethNotarization-3-ethereum-store.keys
-    next: id_4
-  id_4:
-    zenFile: ethNotarization-4-ethereum-store.zen
 
-"> ./contracts/ethereum-notarization.yml
-echo ✔ Imported ethereum-notarization.yml
+
+
 
 ### END Ethereum Notarization
 
 ### Start Sawroom Notarization
+
 
 echo "
 Given I have a 'string' named 'block_id'
@@ -538,6 +520,8 @@ Then print data
 "> ./contracts/sawroom-notarization-3.zen
 echo ✔ Imported sawroom-notarization-3.zen
 
+echo "{\"fabchain\":\"http://test.fabchain.net:8545\",\"gas limit\":\"1000000\",\"gas price\":\"1000000000\",\"gwei value\":\"0\",\"storage_contract\":\"1b620cA5172A8D6A64798FcA2ee690066F7A7816\"}" > ./contracts/sawroom-notarization-3.keys
+echo ✔ Imported sawroom-notarization-3.keys
 
 echo "
 Given I have a 'base64' named 'newSawroomBlock-mpack'
@@ -560,6 +544,30 @@ zenchain: 1.0
 start: id_0
 blocks:
   id_0:
+    zenFile: ethNotarization-0-newhead.zen
+    keysFile: ethNotarization-0-newhead.keys
+    next: id_1
+  id_1:
+    zenFile: ethNotarization-1-newhead.zen
+    next: id_2
+  id_2:
+    zenFile: ethNotarization-2-filter-newhead.zen
+    keysFile: Ethereum-retrieve-A.keys
+    next: id_3
+  id_3:
+    zenFile: ethNotarization-3-ethereum-store.zen
+    keysFile: ethNotarization-3-ethereum-store.keys
+    next: id_4
+  id_4:
+    zenFile: ethNotarization-4-ethereum-store.zen
+
+"> ./contracts/ethereum-to-ethereum-notarization.yml
+echo ✔ Imported ethereum-to-ethereum-notarization.yml
+echo "
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
     zenFile: sawroom-notarization-0.zen
     next: id_1
   id_1:
@@ -570,12 +578,15 @@ blocks:
     next: id_3
   id_3:
     zenFile: sawroom-notarization-3.zen
+    keysFile: sawroom-notarization-3.keys
     next: id_4
   id_4:
     zenFile: sawroom-notarization-4.zen
 
-"> ./contracts/sawroom-notarization.yml
-echo ✔ Imported sawroom-notarization.yml
+"> ./contracts/sawroom-to-ethereum-notarization.yml
+echo ✔ Imported sawroom-to-ethereum-notarization.yml
+
+
 
 ### END Sawroom Notarization
 
