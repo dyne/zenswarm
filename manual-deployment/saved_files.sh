@@ -380,7 +380,7 @@ When I create the 'newblock' decoded from mpack 'newblock-mpack'
 
 Then print the 'txid'
 Then print the 'newblock-mpack'
-Then print the 'newblock' as 'hex'
+Then print the 'newblock' as 'string'
 
 
 "> ./contracts/ethNotarization-4-ethereum-store.zen
@@ -555,7 +555,7 @@ When I create the 'newSawroomblock' decoded from mpack 'sawroomBlockToNotarize-m
 
 Then print the 'txid'
 Then print the 'sawroomBlockToNotarize-mpack'
-Then print the 'newSawroomblock' as 'hex'
+Then print the 'newSawroomblock' as 'string'
 
 
 "> ./contracts/sawroom-notarization-4.zen
