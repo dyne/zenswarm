@@ -696,8 +696,8 @@ blocks:
   id_1:
     zenFile: iota-notarization-to-eth-2.zen
 
-"> ./contracts/iota-notarization-to-eth.yml
-echo ✔ Imported iota-notarization-to-eth.yml
+"> ./contracts/iota-to-ethereum-notarization.yml
+echo ✔ Imported iota-to-ethereum-notarization.yml
 
 
 ### End Iota to Ethereum Notarization
