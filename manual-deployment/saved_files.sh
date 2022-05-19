@@ -412,9 +412,9 @@ blocks:
 "> ./contracts/ethereum-to-ethereum-notarization.yml
 echo ✔ Imported ethereum-to-ethereum-notarization.yml
 
-### END Ethereum Notarization
+### END Ethereum to Ethereum Notarization
 
-### Start Sawroom Notarization
+### Start Sawroom to Ethereum Notarization
 
 
 echo "
@@ -589,10 +589,118 @@ blocks:
 echo ✔ Imported sawroom-to-ethereum-notarization.yml
 
 
+### Start Iota to Ethereum Notarization
+
+
+echo "
+Rule caller restroom-mw
+
+Given I read the content of 'contracts/identity.json'
+Given I read the content of 'contracts/keyring.json'
+
+
+Given I have a 'string dictionary' named 'blockchain'
+Given I have a 'string' named 'timestamp'
+Given I have a 'string' named 'messageId'
+Given I have a 'string array' named 'parentMessageIds'
 
 
 
+Given I have a 'string' named 'ethereum_address' in 'identity'
+Given I have a 'keyring'
 
+When I create the 'string dictionary' named 'iotaBlockToNotarize'
+
+When I insert 'blockchain' in 'iotaBlockToNotarize'
+When I insert 'timestamp' in 'iotaBlockToNotarize'
+When I insert 'messageId' in 'iotaBlockToNotarize'
+When I insert 'parentMessageIds' in 'iotaBlockToNotarize'
+
+When I create the mpack of 'iotaBlockToNotarize'
+When I rename the 'mpack' to 'iotaBlockToNotarize-mpack'
+
+Then print the 'iotaBlockToNotarize'
+Then print the 'keyring'
+Then print the 'ethereum_address'
+Then print the 'iotaBlockToNotarize-mpack'
+
+
+"> ./contracts/iota-notarization-to-eth-0.zen
+echo ✔ Imported iota-notarization-to-eth-0.zen
+
+
+echo "
+
+Rule unknown ignore
+Scenario ethereum: test store
+
+Given I have a ethereum endpoint named 'fabchain'
+Given I read the ethereum nonce for 'ethereum_address'
+
+Given I have the 'keyring'
+
+Given I have a 'ethereum address' named 'storage contract'
+Given I have a 'ethereum nonce'
+Given I have a 'gas price'
+Given I have a 'gas limit'
+
+Given I have a 'string' named 'iotaBlockToNotarize-mpack'
+Given I have a 'string dictionary' named 'iotaBlockToNotarize'
+
+# Given I read the # ethereum suggested gas price
+When I create the ethereum transaction to 'storage contract'
+When I use the ethereum transaction to store 'iotaBlockToNotarize-mpack'
+
+When I create the signed ethereum transaction for chain 'fabt'
+Then print the 'signed ethereum transaction'
+Then I ask ethereum to broadcast the 'signed_ethereum_transaction' and save the transaction id in 'txid'
+Then print data
+
+
+"> ./contracts/iota-notarization-to-eth-1.zen
+echo ✔ Imported iota-notarization-to-eth-1.zen
+
+echo "{\"fabchain\":\"http://test.fabchain.net:8545\",\"gas limit\":\"1000000\",\"gas price\":\"1000000000\",\"gwei value\":\"0\",\"storage_contract\":\"1b620cA5172A8D6A64798FcA2ee690066F7A7816\"}" > ./contracts/iota-notarization-to-eth-1.keys
+echo ✔ Imported iota-notarization-to-eth-1.keys
+
+echo "
+Given I have a 'base64' named 'iotaBlockToNotarize-mpack'
+Given I have a 'string dictionary' named 'iotaBlockToNotarize'
+
+
+Given I have a 'hex' named 'txid'
+
+When I create the 'decoded-newIotaBlock' decoded from mpack 'iotaBlockToNotarize-mpack'
+
+Then print the 'txid'
+Then print the 'iotaBlockToNotarize-mpack'
+Then print the 'iotaBlockToNotarize'
+# Then print the 'decoded-newIotaBlock' as 'string'
+
+"> ./contracts/iota-notarization-to-eth-2.zen
+echo ✔ Imported iota-notarization-to-eth-2.zen
+
+
+
+echo "
+zenchain: 1.0
+start: id_2
+blocks:
+  id_2:
+    zenFile: iota-notarization-to-eth-0.zen
+    next: id_0
+  id_0:
+    zenFile: iota-notarization-to-eth-1.zen
+    keysFile: iota-notarization-to-eth-1.keys
+    next: id_1
+  id_1:
+    zenFile: iota-notarization-to-eth-2.zen
+
+"> ./contracts/iota-notarization-to-eth.yml
+echo ✔ Imported iota-notarization-to-eth.yml
+
+
+### End Iota to Ethereum Notarization
 
 
 #####################################
