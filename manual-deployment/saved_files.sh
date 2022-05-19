@@ -385,7 +385,30 @@ Then print the 'newblock' as 'hex'
 echo ✔ Imported ethNotarization-4-ethereum-store.zen
 
 
+echo "
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: ethNotarization-0-newhead.zen
+    keysFile: ethNotarization-0-newhead.keys
+    next: id_1
+  id_1:
+    zenFile: ethNotarization-1-newhead.zen
+    next: id_2
+  id_2:
+    zenFile: ethNotarization-2-filter-newhead.zen
+    keysFile: Ethereum-retrieve-A.keys
+    next: id_3
+  id_3:
+    zenFile: ethNotarization-3-ethereum-store.zen
+    keysFile: ethNotarization-3-ethereum-store.keys
+    next: id_4
+  id_4:
+    zenFile: ethNotarization-4-ethereum-store.zen
 
+"> ./contracts/ethereum-to-ethereum-notarization.yml
+echo ✔ Imported ethereum-to-ethereum-notarization.yml
 
 
 ### END Ethereum Notarization
@@ -524,13 +547,13 @@ echo "{\"fabchain\":\"http://test.fabchain.net:8545\",\"gas limit\":\"1000000\",
 echo ✔ Imported sawroom-notarization-3.keys
 
 echo "
-Given I have a 'base64' named 'newSawroomBlock-mpack'
+Given I have a 'base64' named 'sawroomBlockToNotarize-mpack'
 Given I have a 'hex' named 'txid'
 
-When I create the 'newSawroomblock' decoded from mpack 'newSawroomBlock-mpack'
+When I create the 'newSawroomblock' decoded from mpack 'sawroomBlockToNotarize-mpack'
 
 Then print the 'txid'
-Then print the 'newSawroomBlock-mpack'
+Then print the 'sawroomBlockToNotarize-mpack'
 Then print the 'newSawroomblock' as 'hex'
 
 
@@ -539,30 +562,8 @@ echo ✔ Imported sawroom-notarization-4.zen
 
 
 
-echo "
-zenchain: 1.0
-start: id_0
-blocks:
-  id_0:
-    zenFile: ethNotarization-0-newhead.zen
-    keysFile: ethNotarization-0-newhead.keys
-    next: id_1
-  id_1:
-    zenFile: ethNotarization-1-newhead.zen
-    next: id_2
-  id_2:
-    zenFile: ethNotarization-2-filter-newhead.zen
-    keysFile: Ethereum-retrieve-A.keys
-    next: id_3
-  id_3:
-    zenFile: ethNotarization-3-ethereum-store.zen
-    keysFile: ethNotarization-3-ethereum-store.keys
-    next: id_4
-  id_4:
-    zenFile: ethNotarization-4-ethereum-store.zen
 
-"> ./contracts/ethereum-to-ethereum-notarization.yml
-echo ✔ Imported ethereum-to-ethereum-notarization.yml
+
 echo "
 zenchain: 1.0
 start: id_0
