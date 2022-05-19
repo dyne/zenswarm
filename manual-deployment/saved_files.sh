@@ -255,6 +255,9 @@ Given I have a 'string dictionary' named 'post'
 Given I have a 'string' named 'endpoint'
 Given I have a 'string array' named 'result' in 'params'
 
+Given I have a 'string dictionary' named 'blockchain'
+
+
 # Given I have a  'result' in 'params'
 
 #Given I have a 'hex' named 'hash' in 'result'
@@ -270,6 +273,8 @@ When I insert 'params' in 'post'
 
 Then print the 'post'
 Then print the 'endpoint'
+Then print the 'blockchain'
+
 "> ./contracts/ethNotarization-0-newhead.zen
 echo ✔ Imported ethNotarization-0-newhead.zen
 
@@ -294,6 +299,7 @@ Given I connect to 'endpoint' and pass it the content of 'post' and save the out
 Given I have a 'string' named 'endpoint'
 Given I have a 'string dictionary' named 'post'
 Given I have a 'string dictionary' named 'result' in 'output'
+Given I have a 'string dictionary' named 'blockchain'
 
 Given I have a 'string' named 'ethereum_address' in 'identity'
 Given I have a 'keyring'
@@ -302,6 +308,7 @@ When I rename the 'result' to 'params'
 then print the 'params'
 then print the 'ethereum_address'
 then print the 'keyring'
+Then print the 'blockchain'
 
 
 "> ./contracts/ethNotarization-1-newhead.zen
@@ -309,16 +316,19 @@ echo ✔ Imported ethNotarization-1-newhead.zen
 
 
 echo "
-Given I have a 'hex dictionary' named 'result' in 'params'
+Given I have a 'string dictionary' named 'result' in 'params'
 Given I have a 'keyring' 
 Given I have a 'string' named 'ethereum_address' 
+Given I have a 'string dictionary' named 'blockchain' 
 
 # and I have a 'number' named 'system_timestamp'
-When I create the 'hex dictionary' named 'newblock'
+When I create the 'string dictionary' named 'newblock'
 When I move 'hash' from 'result' to 'newblock'
 When I move 'number' from 'result' to 'newblock'
 When I move 'parentHash' from 'result' to 'newblock'
 When I move 'timestamp' from 'result' to 'newblock'
+
+When I insert 'blockchain' in 'newblock'
 # When I insert 'system_timestamp' in 'newblock'
 
 When I create the mpack of 'newblock'
@@ -401,7 +411,6 @@ blocks:
 
 "> ./contracts/ethereum-to-ethereum-notarization.yml
 echo ✔ Imported ethereum-to-ethereum-notarization.yml
-
 
 ### END Ethereum Notarization
 
@@ -578,17 +587,6 @@ blocks:
 
 "> ./contracts/sawroom-to-ethereum-notarization.yml
 echo ✔ Imported sawroom-to-ethereum-notarization.yml
-
-
-
-### END Sawroom Notarization
-
-
-
-
-
-
-
 
 
 
