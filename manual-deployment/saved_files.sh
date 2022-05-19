@@ -85,14 +85,6 @@ echo ✔ Imported zenswarm-oracle-get-timestamp.zen
 
 
 echo "
-Rule unknown ignore
-Given I connect to 'endpoint' and pass it the content of 'myDataToPOST' and save the output into 'dataFromEndpoint'
-Given I have a 'string dictionary' named 'dataFromEndpoint'
-Then print the 'dataFromEndpoint'
-"> ./contracts/zenswarm-oracle-http-post.zen
-echo ✔ Imported zenswarm-oracle-http-post.zen
-
-echo "
 Given nothing
 Then print the string 'I am alive!'
 "> ./contracts/zenswarm-oracle-ping.zen
