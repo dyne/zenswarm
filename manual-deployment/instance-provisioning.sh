@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # TWEAK SETTINGS
-COUNTRY="IT"
-NODES=5
-REPO=https://github.com/dyne/restroom-vmlet-template
-CONTRACTS=saved_files.sh
+${COUNTRY:="NONE"}
+${NODES:=6}
+${REPO:=https://github.com/dyne/restroom-vmlet-template}
+${CONTRACTS:=saved_files.sh}
 
 # UTILITIES
 BASEPATH=$(pwd)
