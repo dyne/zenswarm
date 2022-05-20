@@ -3,7 +3,7 @@ set -euo pipefail
 
 # TWEAK SETTINGS
 COUNTRY="IT"
-NODES=2
+NODES=5
 REPO=https://github.com/dyne/restroom-vmlet-template
 CONTRACTS=saved_files.sh
 
@@ -33,28 +33,14 @@ link_build() {
   fi
 }
 
-# link_build bitauth/libauth
-# link_build cryptocoinjs/secp256k1-node
-# link_build protobufjs/protobuf.js
-# link_build mapbox/node-sqlite3
-# link_build PeculiarVentures/pkcs11js
-yarn
-
-SUBSCRIPTIONS="fabchain sawroom"
 parallel_job() {
-  local i=$1
+  local i=$2
   NODE=restroom-mw-$i
   WD=$BASEPATH/vmlets/$NODE
 
   if ! test -d $WD; then
     npx degit $REPO $WD
     cd $WD
-    # yarn link @bitauth/libauth
-    # yarn link sqlite3
-    # yarn link protobufjs
-    # yarn link pkcs11js
-    # yarn link secp256k1
-    # yarn add zeromq@5 --zmq-external
     sed -ie "s/restroom-vmlet-template/${NODE}/g" package.json
     yarn
 
@@ -63,6 +49,9 @@ parallel_job() {
   if ! test -d contracts; then
     mkdir contracts
   fi
+  SUBSCRIPTIONS="`echo "$1" | cut -d' ' -f 1`"
+  L0_DEST="`echo "$1" | cut -d' ' -f 2`"
+
   bash $BASEPATH/$CONTRACTS
   echo "CUSTOM_404_MESSAGE=nothing to see here
   ZENCODE_DIR=\"$(pwd)/contracts\"
@@ -71,10 +60,10 @@ parallel_job() {
   # OPENAPI=true
   COUNTRY=\"$COUNTRY\"
   HOST=\"$HOST\"
-  SUBSCRIPTIONS=\"$SUBSCRIPTIONS\"
   PRIVATE_ZENCODE_DIR=\"$BASEPATH/private-contracts\"
+  SUBSCRIPTIONS="$SUBSCRIPTIONS"
+  L0_DEST="$L0_DEST"
   YML_EXT=yml"> .env
-  SUBSCRIPTIONS=""
 
   pm2 delete $NODE || true
   pm2 start yarn --update-env --name $NODE --time -- start
@@ -82,6 +71,20 @@ parallel_job() {
 
 pm2 kill
 rm -f "~/.pm2/logs/restroom-mw-*"
-for i in $(seq $NODES); do
-  parallel_job $i
+
+[ -f "./subscriptions.csv" ] || echo "No subscriptions.csv file"
+i=0
+IFS=$'\n'       # make newlines the only separator
+for subscription in $(cat ./subscriptions.csv)
+do
+  echo $i
+  parallel_job "$subscription" $i
+  i=$(($i + 1))
+done
+# Note: IFS needs to be reset to default!
+
+i=$(($i + 1))
+for j in $(seq $i $NODES); do
+  echo $j
+  parallel_job "" $j
 done
