@@ -703,6 +703,79 @@ echo ✔ Imported iota-to-ethereum-notarization.yml
 ### End Iota to Ethereum Notarization
 
 
+### Start Ethereum to Planetmint Notarization
+
+
+
+echo "
+Rule caller restroom-mw
+
+Given I fetch the local timestamp and store it into 'timestamp'
+Given I have a 'base58 dictionary' named 'ed25519 keypair'
+Given I have a planetmint endpoint named 'endpoint'
+
+Given I have a 'string' named 'timestamp'
+Given I have a 'string dictionary' named 'metadata'
+
+Given I have the 'keyring'
+Given I have a 'string dictionary' named 'newblock'
+Given I have a 'base64' named 'newblock-mpack'
+
+When I rename the 'newblock' to 'asset'
+When I insert 'timestamp' in 'metadata'
+
+then print data
+
+Then I create the planetmint transaction to store asset named 'asset' with metadata 'metadata'
+# Then I create the planetmint transaction to store asset named 'asset'
+Then I create the signed planetmint transaction of 'planetmint_transaction'
+Then ask planetmint to broadcast the 'signed_planetmint_transaction'
+
+
+"> ./contracts/ethereum-to-planetmint-3.zen
+echo ✔ Imported ethereum-to-planetmint-3.zen
+
+echo "{\"endpoint\":\"http://3.66.221.17/api/v1/\",\"ed25519_keypair\":{\"private_key\":\"5Jgk9ARKbPXRwPCuVHv94M4q9iKpF67Apk6hP3rRLtby\",\"public_key\":\"Mx2D1WbAdREJphfuAcRCge54zMndKfmozynzRZYP5aw\"},\"metadata\":{\"origin\":\"zenswwarm\",\"ruler\":\"Dyne.org\",\"type\":\"notarization of ethereum block onto planetmint\"}}" > ./contracts/ethereum-to-planetmint-3.keys
+echo ✔ Imported ethereum-to-planetmint-3.keys
+
+echo "
+Given I have a 'string' named 'planetmint_transaction'
+Given I have a 'string' named 'txId'
+Given I have a 'string dictionary' named 'asset'
+Then print data
+"> ./contracts/ethereum-to-planetmint-4.zen
+echo ✔ Imported ethereum-to-planetmint-4.zen
+
+
+
+echo "
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: ethNotarization-0-newhead.zen
+    keysFile: ethNotarization-0-newhead.keys
+    next: id_1
+  id_1:
+    zenFile: ethNotarization-1-newhead.zen
+    next: id_2
+  id_2:
+    zenFile: ethNotarization-2-filter-newhead.zen
+    next: id_3
+  id_3:
+    zenFile: ethereum-to-planetmint-3.zen
+    keysFile: ethereum-to-planetmint-3.keys
+    next: id_4
+  id_4:
+    zenFile: ethereum-to-planetmint-4.zen
+
+"> ./contracts/ethereum-to-planetmint-notarization.yml
+echo ✔ Imported ethereum-to-planetmint-notarization.yml
+
+
+### End Ethereum to Planetmint Notarization
+
+
 #####################################
 ## END BLOCKCHAIN NOTARIZATION#######
 #####################################
