@@ -6,7 +6,7 @@ module.exports = {
       ref : "origin/main",
       repo: "https://github.com/dyne/zenswarm.git",
       "post-setup": "ls -la",
-      "post-deploy": "cd /root/zenswarm && bash manual-deployment/instance-provisioning.sh && pm2 startOrGracefulReload ecosystem.config.js --env production"
+      "post-deploy": "cd /root/zenswarm/manual-deployment && bash instance-provisioning.sh && pm2 startOrGracefulReload ecosystem.config.js --env production"
     }
   }
 }
