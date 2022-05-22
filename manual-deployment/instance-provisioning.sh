@@ -24,15 +24,6 @@ dpkg -l libczmq-dev &> /dev/null || (sudo apt install -y libczmq-dev)
 npm install -g node-gyp-cache
 npm config set node_gyp node-gyp-cache
 
-link_build() {
-  if ! test -d $(basename $1); then
-    git clone --recursive https://github.com/$1 && cd $(basename $1)
-    yarn install
-    yarn link
-    cd ..
-  fi
-}
-
 parallel_job() {
   local i=$2
   NODE=restroom-mw-$i
