@@ -1,7 +1,7 @@
 module.exports = {
   deploy: {
     production: {
-      path: "/",
+      path: "/root/zenswarm/",
       host: ["vmlets"],
       ref : "origin/main",
       repo: "https://github.com/dyne/zenswarm.git",
