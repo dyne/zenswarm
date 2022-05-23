@@ -817,22 +817,17 @@ zenchain: 1.0
 start: id_0
 blocks:
   id_0:
-    zenFile: ethNotarization-0-newhead.zen
-    keysFile: ethNotarization-0-newhead.keys
+    zenFile: sawroom-notarization-0.zen
     next: id_1
   id_1:
-    zenFile: ethNotarization-1-newhead.zen
+    zenFile: sawroom-notarization-1.zen
     next: id_2
   id_2:
-    zenFile: ethNotarization-2-filter-newhead.zen
-    next: id_3
-  id_3:
     zenFile: sawroom-to-planetmint-3.zen
     keysFile: sawroom-to-planetmint-3.keys
-    next: id_4
-  id_4:
+    next: id_3
+  id_3:
     zenFile: ethereum-to-planetmint-4.zen
-
 "> ./contracts/sawroom-to-planetmint-notarization.yml
 echo ✔ Imported sawroom-to-planetmint-notarization.yml
 

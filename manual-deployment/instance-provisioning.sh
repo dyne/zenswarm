@@ -46,6 +46,8 @@ parallel_job() {
   bash $BASEPATH/$CONTRACTS
   echo "CUSTOM_404_MESSAGE=nothing to see here
   ZENCODE_DIR=\"$(pwd)/contracts\"
+  ANNOUNCE_URL="$ANNOUNCE_URL"
+  DEANNOUNCE_URL="$DEANNOUNCE_URL"
   FILES_DIR=$(pwd)
   CHAIN_EXT=chain
   # OPENAPI=true
