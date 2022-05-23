@@ -823,10 +823,13 @@ blocks:
     zenFile: sawroom-notarization-1.zen
     next: id_2
   id_2:
-    zenFile: sawroom-to-planetmint-3.zen
-    keysFile: sawroom-to-planetmint-3.keys
+    zenFile: sawroom-notarization-2.zen
     next: id_3
   id_3:
+    zenFile: sawroom-to-planetmint-3.zen
+    keysFile: sawroom-to-planetmint-3.keys
+    next: id_4
+  id_4:
     zenFile: ethereum-to-planetmint-4.zen
 "> ./contracts/sawroom-to-planetmint-notarization.yml
 echo ✔ Imported sawroom-to-planetmint-notarization.yml
