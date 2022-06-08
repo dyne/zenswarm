@@ -1,0 +1,178 @@
+---
+- name: Deploy oracles
+  hosts: all
+  remote_user: root
+  vars:
+    country: NONE
+    nodes: 6
+    repo: https://github.com/dyne/restroom-vmlet-template
+    contracts: saved_files.sh
+    basepath: /root/vmlets
+
+  tasks:
+  - name: Read default ipv4
+    set_fact:
+      hostname: "{{ ansible_default_ipv4.address }}"
+    when: hostname is not defined
+
+  - name: Current host used
+    debug:
+      msg: "{{ hostname }}"
+
+  - name: Load subscriptions
+    set_fact:
+      subscriptions: "{{ subscriptions|d([]) + [_item] }}"
+    loop: "{{ lookup('file','subscriptions.csv').splitlines() }}"
+    vars:
+      _array: "{{ item.split() }}"
+      _item: "{{ {'from': _array.0, 'to': _array.1} }}"
+
+  - name: Update and upgrade apt packages
+    apt:
+      upgrade: "yes"
+      update_cache: yes
+      cache_valid_time: 86400 # One day
+
+  - name: Copy private contract (executed by zenroom)
+    copy:
+      src: private-contracts
+      dest: "{{ basepath }}/"
+
+  - name: Check if node is installed
+    package:
+      name: nodejs
+      state: present
+    check_mode: true
+    register: node_check
+  - name: Download node setup script
+    get_url: url=https://deb.nodesource.com/setup_16.x dest=/tmp mode=755
+    when: node_check is failed
+  - name: Setup Node.js repository
+    command: /tmp/setup_16.x
+    when: node_check is failed
+
+  - name: Install required packages from apt
+    ansible.builtin.package:
+      name:
+        - git
+        - python
+        - make
+        - libczmq-dev
+        - nodejs
+      state: latest
+
+  # I do not check if yarn or pm2 are already installed
+  - name: Install yarn and pm2
+    shell: >
+      command -v yarn || (npm install --global yarn) &&
+      command -v pm2 || (yarn global add pm2) &&
+      npm install -g node-gyp-cache &&
+      npm config set node_gyp node-gyp-cache
+
+  - name: Stop running oracles
+    command: pm2 kill
+
+  # rm -f "~/.pm2/logs/restroom-mw-*"
+  - name: Remove old logs
+    ansible.builtin.file:
+      path: ~/.pm2/logs
+      state: absent
+
+  # recreate the old directory of oracles
+  - name: Remove old vmlets directory (single packages inside the workspace)
+    ansible.builtin.file:
+      path: "{{ basepath }}/vmlets"
+      state: absent
+
+  - name: Create base directory
+    ansible.builtin.file:
+      path: "{{ basepath }}"
+      state: directory
+
+  - name: Copy package.json (workspace)
+    copy:
+      src: package.json
+      dest: "{{ basepath }}"
+
+  # In the next rules the variables are equal
+  - name: Clone vmlet repository
+    shell: >
+      npx -y degit {{ repo }} {{ wd }} &&
+      cd {{ wd }} &&
+      sed -ie "s/restroom-vmlet-template/{{ vmlet_name }}/g" package.json
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Create directory of contracts
+    file:
+      path: "{{ wd }}/contracts"
+      state: directory
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy contracts creation script
+    copy:
+      src: "{{ contracts }}"
+      dest: "{{ basepath }}"
+
+  - name: Create contract files
+    command: /bin/bash {{ basepath }}/{{ contracts }}
+    args:
+      chdir: "{{ wd }}"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Create .env for each vmlet
+    blockinfile:
+      block: |
+        CUSTOM_404_MESSAGE=nothing to see here
+        ZENCODE_DIR="{{ wd }}/contracts"
+        FILES_DIR={{ wd }}
+        CHAIN_EXT=chain
+        ANNOUNCE_URL="{{ announce_url | default('') }}"
+        DEANNOUNCE_URL="{{ deannounce_url | default('') }}"
+        # OPENAPI=true
+        COUNTRY="{{ country }}"
+        HOST="{{ hostname }}"
+        PRIVATE_ZENCODE_DIR="{{ basepath }}/private-contracts"
+        SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
+        L0_DEST="{{ subscriptions[item].to | default('') }}"
+        YML_EXT=yml
+      path: "{{ wd }}/.env"
+      create: yes
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Update packages of vmlet
+    community.general.yarn:
+      path: "{{ wd }}"
+      state: latest
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  ## I kill pm2, so it is not necessary to stop each instance
+  # - name: Stop oracle in pm2 again!
+  # command: pm2 delete {{ vmlet_name }}
+  # loop: "{{ range(0, nodes) | list }}"
+  # vars:
+  # vmlet_name: "restroom-mw-{{ item }}"
+  #  wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Start oracles in pm2!
+    command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
+    args:
+      chdir: "{{ wd }}"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"

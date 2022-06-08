@@ -1,0 +1,1 @@
+zenswarm.zenroom.org ansible_python_interpreter=/usr/bin/python3 ansible_port=22254 ansible_user=root
