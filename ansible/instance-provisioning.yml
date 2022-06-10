@@ -3,17 +3,17 @@
   hosts: all
   remote_user: root
   vars:
-    country: NONE
-    nodes: 6
     repo: https://github.com/dyne/restroom-vmlet-template
-    contracts: saved_files.sh
-    basepath: /root/vmlets
+    basepath: /zenswarm
 
   tasks:
-  - name: Read default ipv4
-    set_fact:
-      hostname: "{{ ansible_default_ipv4.address }}"
-    when: hostname is not defined
+  - name: Read external ipv4
+    uri:
+      url: https://ifconfig.me/ip
+      return_content: yes
+    register: externa_ip
+
+  - set_fact: hostname="{{externa_ip.content}}"
 
   - name: Current host used
     debug:
@@ -22,7 +22,7 @@
   - name: Load subscriptions
     set_fact:
       subscriptions: "{{ subscriptions|d([]) + [_item] }}"
-    loop: "{{ lookup('file','subscriptions.csv').splitlines() }}"
+    loop: "{{ lookup('file', subs_file).splitlines() }}"
     vars:
       _array: "{{ item.split() }}"
       _item: "{{ {'from': _array.0, 'to': _array.1} }}"
@@ -59,15 +59,29 @@
         - make
         - libczmq-dev
         - nodejs
+        - rsync
       state: latest
 
-  # I do not check if yarn or pm2 are already installed
-  - name: Install yarn and pm2
-    shell: >
-      command -v yarn || (npm install --global yarn) &&
-      command -v pm2 || (yarn global add pm2) &&
-      npm install -g node-gyp-cache &&
-      npm config set node_gyp node-gyp-cache
+  - name: Install yarn
+    community.general.npm:
+      name: yarn
+      global: yes
+      state: latest
+
+  - name: Install pm2
+    community.general.yarn:
+      name: pm2
+      global: yes
+      state: latest
+
+  - name: Install gyp cache
+    community.general.npm:
+      name: node-gyp-cache
+      global: yes
+      state: latest
+
+  - name: Config node_gyp
+    command: npm config set node_gyp node-gyp-cache
 
   - name: Stop running oracles
     command: pm2 kill
@@ -86,7 +100,7 @@
 
   - name: Create base directory
     ansible.builtin.file:
-      path: "{{ basepath }}"
+      path: "{{ basepath }}/vmlets"
       state: directory
 
   - name: Copy package.json (workspace)
@@ -95,11 +109,28 @@
       dest: "{{ basepath }}"
 
   # In the next rules the variables are equal
-  - name: Clone vmlet repository
-    shell: >
-      npx -y degit {{ repo }} {{ wd }} &&
-      cd {{ wd }} &&
-      sed -ie "s/restroom-vmlet-template/{{ vmlet_name }}/g" package.json
+  - name: Copy restroom template
+    copy:
+      src: "restroom-vmlet-template/restroom.mjs"
+      dest: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy blockchain db
+    copy:
+      src: "restroom-vmlet-template/blockchain_db.json"
+      dest: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy package.json (vmlet)
+    template:
+      src: "../files/restroom-vmlet-template/package.json.j2"
+      dest: "{{ wd }}/package.json"
     loop: "{{ range(0, nodes) | list }}"
     vars:
       vmlet_name: "restroom-mw-{{ item }}"
@@ -115,14 +146,9 @@
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
   - name: Copy contracts creation script
-    copy:
-      src: "{{ contracts }}"
-      dest: "{{ basepath }}"
-
-  - name: Create contract files
-    command: /bin/bash {{ basepath }}/{{ contracts }}
-    args:
-      chdir: "{{ wd }}"
+    synchronize:
+      src: contracts
+      dest: "{{ wd }}"
     loop: "{{ range(0, nodes) | list }}"
     vars:
       vmlet_name: "restroom-mw-{{ item }}"

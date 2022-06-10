@@ -1,0 +1,21 @@
+
+Scenario 'schnorr': create Schnorr signature
+
+Given I have a 'keyring'
+
+Given I have a 'string dictionary' named 'identity'
+
+When I create the schnorr signature of 'identity'
+# When I create the schnorr public key
+
+When I rename the 'schnorr signature' to 'schnorr.signature.identity'
+
+# Here we print the signatyre, the public key and the message
+# Then print my 'schnorr public key' 
+# Then print the 'schnorr signature'
+# Then print the 'message'
+
+Then print the 'identity'
+
+Then print the 'schnorr.signature.identity'
+

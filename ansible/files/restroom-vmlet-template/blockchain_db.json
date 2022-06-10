@@ -1,0 +1,24 @@
+{
+  "subscriptions": {
+    "fabchain": {
+      "type": "ethereum",
+      "api": "http://78.47.38.223:8545",
+      "sub": "ws://78.47.38.223:8546"
+    },
+    "sawroom": {
+      "type": "sawtooth",
+      "api": "http://195.201.42.48:8008",
+      "sub": "ws://195.201.42.48:8008/subscriptions"
+    },
+    "iota_devnet": {
+      "type": "iota",
+      "api": "https://api.lb-0.h.chrysalis-devnet.iota.cafe/",
+      "sub": "mqtt://mqtt.lb-0.h.chrysalis-devnet.iota.cafe:1883"
+    },
+    "rinkeby": {
+      "type": "ethereum",
+      "api": "https://rinkeby-light.eth.linkpool.io",
+      "sub": "wss://rinkeby-light.eth.linkpool.io/ws"
+    }
+  }
+}

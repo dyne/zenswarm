@@ -1,0 +1,15 @@
+
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: iota-notarization-to-eth-0.zen
+    next: id_1
+  id_1:
+    zenFile: iota-to-planetmint-1.zen
+    keysFile: iota-to-planetmint-1.keys
+    next: id_2
+  id_2:
+    zenFile: ethereum-to-planetmint-4.zen
+
+

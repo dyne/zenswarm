@@ -1,0 +1,15 @@
+
+zenchain: 1.0
+start: id_2
+blocks:
+  id_2:
+    zenFile: iota-notarization-to-eth-0.zen
+    next: id_0
+  id_0:
+    zenFile: iota-notarization-to-eth-1.zen
+    keysFile: iota-notarization-to-eth-1.keys
+    next: id_1
+  id_1:
+    zenFile: iota-notarization-to-eth-2.zen
+
+
