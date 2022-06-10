@@ -1,12 +1,31 @@
 ---
+- name: Create user
+  hosts: all
+  remote_user: root
+  tasks:
+  - name: Create zenswarm user
+    user:
+      name: zenswarm
+      shell: /sbin/nologin
+
 - name: Deploy oracles
   hosts: all
   remote_user: root
+  become: true
+  become_user: zenswarm
   vars:
     repo: https://github.com/dyne/restroom-vmlet-template
     basepath: /zenswarm
 
   tasks:
+  - name: Create basepath
+    become_user: root
+    ansible.builtin.file:
+      path: "{{ basepath }}/"
+      state: directory
+      owner: zenswarm
+      group: zenswarm
+
   - name: Read external ipv4
     uri:
       url: https://ifconfig.me/ip
@@ -28,6 +47,7 @@
       _item: "{{ {'from': _array.0, 'to': _array.1} }}"
 
   - name: Update and upgrade apt packages
+    become_user: root
     apt:
       upgrade: "yes"
       update_cache: yes
@@ -48,10 +68,12 @@
     get_url: url=https://deb.nodesource.com/setup_16.x dest=/tmp mode=755
     when: node_check is failed
   - name: Setup Node.js repository
+    become_user: root
     command: /tmp/setup_16.x
     when: node_check is failed
 
   - name: Install required packages from apt
+    become_user: root
     ansible.builtin.package:
       name:
         - git
@@ -93,10 +115,11 @@
       state: absent
 
   # recreate the old directory of oracles
-  - name: Remove old vmlets directory (single packages inside the workspace)
-    ansible.builtin.file:
-      path: "{{ basepath }}/vmlets"
-      state: absent
+  # - name: Remove old vmlets directory (single packages inside the workspace)
+  #   become_user: root
+  #   ansible.builtin.file:
+  #     path: "{{ basepath }}/vmlets"
+  #     state: absent
 
   - name: Create base directory
     ansible.builtin.file:
@@ -145,10 +168,24 @@
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
-  - name: Copy contracts creation script
+  - name: Copy contracts (permissions may be wrong)
     synchronize:
       src: contracts
       dest: "{{ wd }}"
+      owner: no
+      group: no
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Fix contracts permissions
+    become_user: root
+    file:
+      dest: "{{ wd }}/contracts"
+      owner: zenswarm
+      group: zenswarm
+      recurse: yes
     loop: "{{ range(0, nodes) | list }}"
     vars:
       vmlet_name: "restroom-mw-{{ item }}"
