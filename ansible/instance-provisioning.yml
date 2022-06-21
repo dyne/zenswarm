@@ -16,6 +16,9 @@
   vars:
     repo: https://github.com/dyne/restroom-vmlet-template
     basepath: /zenswarm
+    # the following variables are similar to the one in acme-certificate.yml
+    letsencrypt_key: /etc/letsencrypt/keys/{{ domain_name }}.key
+    letsencrypt_cert: /etc/letsencrypt/certs/{{ domain_name }}.crt
 
   tasks:
   - name: Create basepath
@@ -207,6 +210,8 @@
         SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
         L0_DEST="{{ subscriptions[item].to | default('') }}"
         YML_EXT=yml
+        TLS_KEY={{ letsencrypt_key }}
+        TLS_CRT={{ letsencrypt_cert }}
       path: "{{ wd }}/.env"
       create: yes
     loop: "{{ range(0, nodes) | list }}"
@@ -230,6 +235,9 @@
   # vars:
   # vmlet_name: "restroom-mw-{{ item }}"
   #  wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+  - name: Set current nonce into redis
+    uri:
+      url: https://apiroom.net/api/zenswarm/zenswarm-issuer-set-nonce
 
   - name: Start oracles in pm2!
     command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start

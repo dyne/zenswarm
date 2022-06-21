@@ -1,1 +1,2 @@
-zenswarm.zenroom.org ansible_python_interpreter=/usr/bin/python3 ansible_port=22254 ansible_user=root nodes=6 country="ES" subs_file=subscriptions.csv
+# zenswarm.zenroom.org ansible_python_interpreter=/usr/bin/python3 ansible_port=22254 ansible_user=root nodes=6 country="ES" subs_file=subscriptions.csv domain_name="zenswarm.zenroom.org"
+zenswarm.zenroom.org ansible_port=22254 ansible_user=root nodes=3 country="ES" subs_file=subscriptions.csv domain_name="zenswarm.zenroom.org"

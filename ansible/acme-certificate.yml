@@ -1,0 +1,146 @@
+- hosts: all
+  vars:
+    acme_challenge_type: http-01
+    acme_directory: https://acme-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    letsencrypt_dir: /etc/letsencrypt
+    letsencrypt_keys_dir: /etc/letsencrypt/keys
+    letsencrypt_csrs_dir: /etc/letsencrypt/csrs
+    letsencrypt_certs_dir: /etc/letsencrypt/certs
+    letsencrypt_account_key: /etc/letsencrypt/account/account.key
+  tasks:
+  - name: Install nginx
+    ansible.builtin.package:
+      name:
+        - nginx
+      state: latest
+
+
+  - name: Configuration for nginx
+    blockinfile:
+      dest: /etc/nginx/sites-enabled/acme
+      create: true
+      block: |
+        server {
+                listen 80 default_server;
+                listen [::]:80 default_server;
+
+                location ^~ /.well-known/acme-challenge/ {
+                        default_type "text/plain";
+                        root         /var/www/html;
+                }
+
+                location = /.well-known/acme-challenge/ {
+                        return 404;
+                }
+        }
+  - name: Remove default config for nginx
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+
+  - name: Restart nginx
+    ansible.builtin.systemd:
+      state: restarted
+      daemon_reload: yes
+      name: nginx
+#  - name: Install the requirements
+#    pip:
+#      state: forcereinstall
+#      name:
+#        - cryptography>=1.5
+#    tags:
+#      - always
+#      - skip_ansible_lint
+#    delegate_to: localhost
+  - name: "Create required directories in /etc/letsencrypt"
+    file:
+      path: "/etc/letsencrypt/{{ item }}"
+      state: directory
+      owner: root
+      group: root
+      mode: u=rwx,g=x,o=x
+    with_items:
+    - account
+    - certs
+    - csrs
+    - keys
+
+  - name: "Generate a Let's Encrypt account key"
+    shell: "if [ ! -f {{ letsencrypt_account_key }} ]; then openssl genrsa 4096 | sudo tee {{ letsencrypt_account_key }}; fi"
+
+  - name: "Generate Let's Encrypt private key"
+    shell: "openssl genrsa 4096 | sudo tee /etc/letsencrypt/keys/{{ domain_name }}.pem"
+
+  - name: "Generate Let's Encrypt CSR"
+    shell: "openssl req -new -sha256 -key /etc/letsencrypt/keys/{{ domain_name }}.key -subj \"/CN={{ domain_name }}\" -reqexts SAN -config <(cat /etc/ssl/openssl.cnf <(printf \"\n[SAN]\nsubjectAltName=DNS:{{ domain_name }}\")) | sudo tee /etc/letsencrypt/csrs/{{ domain_name }}.csr"
+    args:
+      executable: /bin/bash
+
+#  - name: Generate an OpenSSL private key with the default values
+#    community.crypto.openssl_privatekey:
+#      path: "{{ letsencrypt_account_key }}"
+#      type: ECC
+#      curve: secp256k1
+#
+#  - name: Generate Let's Encrypt private key
+#    community.crypto.openssl_privatekey:
+#      path: "/etc/letsencrypt/keys/{{ domain_name }}.pem"
+#      type: ECC
+#      curve: secp256k1
+#
+#  - name: Generate Let's Encrypt CSR
+#    community.crypto.openssl_csr:
+#      path: "/etc/letsencrypt/csrs/{{ domain_name }}.csr"
+#      privatekey_path: /etc/letsencrypt/keys/{{ domain_name }}.pem
+#      common_name: "{{ domain_name }}"
+
+
+  - name: "Begin Let's Encrypt challenges"
+    community.crypto.acme_certificate:
+      acme_directory: "{{ acme_directory }}"
+      acme_version: "2"
+      account_key_src: "{{ letsencrypt_account_key }}"
+      terms_agreed: yes
+      challenge: "{{ acme_challenge_type }}"
+      csr: "{{ letsencrypt_csrs_dir }}/{{ domain_name }}.csr"
+      dest: "{{ letsencrypt_certs_dir }}/{{ domain_name }}.crt"
+      fullchain_dest: "{{ letsencrypt_certs_dir }}/fullchain_{{ domain_name }}.crt"
+      remaining_days: 91
+    register: acme_challenge_domain
+
+  - name: "Create .well-known/acme-challenge directory"
+    file:
+      path: /var/www/html/.well-known/acme-challenge
+      state: directory
+      owner: root
+      group: root
+      mode: u=rwx,g=rx,o=rx
+
+  - name: "Implement http-01 challenge files"
+    copy:
+      content: "{{ acme_challenge_domain['challenge_data'][item]['http-01']['resource_value'] }}"
+      dest: "/var/www/html/{{ acme_challenge_domain['challenge_data'][item]['http-01']['resource'] }}"
+      owner: root
+      group: root
+      mode: u=rw,g=r,o=r
+    with_items:
+    - "{{ domain_name }}"
+#    - "www.{{ domain_name }}"
+
+  - name: "Complete Let's Encrypt challenges"
+    community.crypto.acme_certificate:
+      acme_directory: "{{ acme_directory }}"
+      acme_version: "2"
+      account_key_src: "{{ letsencrypt_account_key }}"
+      challenge: "{{ acme_challenge_type }}"
+      csr: "{{ letsencrypt_csrs_dir }}/{{ domain_name }}.csr"
+      dest: "{{ letsencrypt_certs_dir }}/{{ domain_name }}.crt"
+      chain_dest: "{{ letsencrypt_certs_dir }}/chain_{{ domain_name }}.crt"
+      fullchain_dest: "{{ letsencrypt_certs_dir }}/fullchain_{{ domain_name }}"
+      data: "{{ acme_challenge_domain }}"
+
+  - name: Stop nginx
+    ansible.builtin.systemd:
+      state: stopped
+      name: nginx
