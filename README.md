@@ -10,16 +10,127 @@ Protototype of Zenroom based Swarm of Oracles
 * pm2
 * the hostname on the host machine, must be reachable from the internet (can be an IP), the oracle use the hostname to announce their identities to the tracker
 * ports between the 25000 and 30000 must be open on the host machine
+* add the pubkey you will use todeploy from your workstation (when using root user, in /root/.ssh/authorized_keys )
+* open a port for ansible, can be configured in hosts.toml (default: *ansible_port=22254*)
 
 # How to run
 
-* clone the repo
-* configure the amount of instances to be installed by modifiying the parameter **NODES** inside the file **./manual-deployment/instance-provisioning.sh**
-* execute **./manual-deployment/instance-provisioning.sh**
+* *git clone https://github.com/dyne/zenswarm/*
+* *cd ansible* 
+* edit hosts.toml to set: 
+  * address of target machine for deployment (default: zenswarm.zenroom.org ) 
+  * set user to log in the target machine (default: root) 
+  * port that ansible will use to connect to the host (default: *ansible_port=22254*)
+  * amount of oracles to be deployed on that machine (default: *nodes=3*)
+* edit run_ansible_example.sh, to configure the endpoints that the oracles will use to announce and unannounce (the W3C-DID controller)  
+* run run_ansible_example.sh
+* edit *subscription.csv* to define which Oracle will notarize from which L1 to which L0
 
-use **pm2 list** to see how many instances of restroom_mw are running 
+# Monitoring
 
-# MERMAID
+* On the machines where the oracles are deployed, use **pm2 list** to see how many instances of restroom_mw are running.
+* A GUI-based monitoring service for the Oracle is the [SoO-Dashboard](https://github.com/dyne/SoO-Dashboard). The GUI retrieves a list of the active Oracles from the W3C-DID controller
+
+# Provisioning
+
+Once an Oracle is deployed, each Oracles tries to *announce* to the W3C-DID controller. In this stage, the Oracle will communicate its pubkeys, its version and some metadata. The W3C-DID Controller will register a DID per each Oracle, and store the DID-document on a database and blockchain. 
+
+Upon graceful shutdown, done via *pm2 delete [instansce-name]*, the Oracle will *deannounce* itself, which will prompt the W3C-DID Controller to remove the Oracle from the database.
+
+Specs about the DID implementation is in [Dyne.org's W3C-DID](https://github.com/dyne/W3C-DID).
+
+# Oracles flows
+
+
+
+## Oracle creation
+
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Admin
+  participant C as Cloud
+  participant I as Issuer
+  participant V as VM1..VM2..VMn
+
+  A->>C: Create VM
+  C->>V: VM install and new IP
+  C->>A: Grant VM setup access
+  A->>I: aSK signed registration of a new VM IP
+  A->>V: Provision signed scripts + Issuer public key (iPK)
+```
+
+1. Admin orders the creation of a VM to the Cloud provider
+1. Cloud provider creates the VM on a new allocated IP and installs a signed OS
+1. Cloud provider grants the Admin setup access to the VM (IP + SSH)
+1. Admin signs a message to register the new VM IP on the Issuer
+1. Admin provisions the VM with a signed OS setup and the Issuer public key
+
+## Oracle key issuance
+
+**Note: the current provisioning flow is meant for a permissionless network**, for testing purposes. In the current provisioning, the ephemeral key is delivered within the *announce* flow, in a single communication channel. In order to set up a permissioned network, the announce mechanism can be split and the **ephemeral key can be send on a side channel**. 
+
+```mermaid
+sequenceDiagram
+autonumber
+  participant I as Issuer
+  participant V as VM1..VM2..VMn
+
+  I->I: Ephemeral keygen (eSK + ePK)
+  I->>V: iSK signed request + eSK
+  V->V: VM keygen (vSK + vPK)
+  V->>I: eSK signed answer: IP + vPK
+  I->I: ePK verify and store VM IP + vPK
+```
+
+1. Issuer generates an ephemeral keypair used only to verify the VM registration
+1. Issuer signs the ephemeral secret key with iSK and sends a request to the VM IP
+1. VM verifies the registration request with iPK and generates a VM keypair (vSK + vPK)
+1. VM signs an answer with eSK and sends back its public key
+1. Issuer verifies the answer signed with ePK and saves the VM public key and its IP
+
+At the end of the process the ephemeral keys are discarded and the Issue has added to its database a new IP and its associated public key.
+
+## Swarm operation
+```mermaid
+sequenceDiagram
+autonumber
+  participant U as User
+  participant I as Issuer
+  participant V as VM1..VM2..VMn
+  U->>I: Swarm of Oracles API query
+  I->>+V: propagate query to all VMs
+  V->V: exec queries (TTL)
+  V->>-I: return result or error
+  I->I: consensus on results or errors
+  I->>U: return collective result or error
+```
+
+1. A query is made to the Swarm of Oracles Issuer by a User (or an event or a time trigger)
+1. Issuer parses and validates the query syntax, then propagates to all oracle VMs
+1. VMs execute the Zencode associated to the query: may access other online services, query databases and external APIs
+1. VMs return results of the Zencode execution or an error
+1. Issuer verifies that all results are equal (full consensus) or raises an error
+1. Issuer returns the verified result of the query or a list of specific errors occurred
+
+## Oracle update
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Admin
+  participant I as Issuer
+  participant V as VM1..VM2..VMn
+  
+  A->>I: aSK signed update ZIP
+  I->I: aPK verify update ZIP
+  I->>V: iSK signed update ZIP 
+  V->V: iPK verify and install ZIP
+```
+
+1. Admin signs and uploads a ZIP with updated scripts
+1. Issuer verifies the ZIP is signed by the Admin
+1. Issuer signs and uploads the update ZIP to all VM
+1. VM verifies the ZIP is signed by the Issuer and installs the scripts
 
 ``` mermaid
 sequenceDiagram
@@ -37,7 +148,37 @@ sequenceDiagram
     C1->>C1: Verify the output of the 6 POST (WIP)
 ```
 
-## APIs
+
+
+## Issuer/W3C-DID-Controller creation
+
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Admin
+  participant C as Cloud
+  participant I as Issuer
+  A->A: Admin keygen (aSK + aPK)
+  A->>C: Setup a Cloud provider
+  C->>I: Issuer Install
+  C->>A: Grant Issuer setup access
+  A->>I: Issuer init + aPK
+  I->I: Issuer keygen (iSK + iPK)
+  I->>A: Issuer public key (iPK)
+```
+
+1. Admin is the control terminal and generates a new keypair (aSK + aPK)
+1. Admin sets up a Cloud provider (one or more) can be remote or on-premises
+1. Issuer is created by the Cloud provider and installed with a signed OS
+1. Cloud grants to Admin setup access to the Issuer
+1. Admin initialized the Issuer machine with signed scripts and the Admin public key
+1. Issuer generates an issuer keypair (iSK + iPK)
+1. Issuer shares its public key (iPK) with the Admin
+
+
+## APIs (WIP)
+
+We're moving the API list to a W3C-DID doc
 
 ### All
 
@@ -47,7 +188,7 @@ sequenceDiagram
 {    
 "myTimestamp": "1644584971367" 
   }
-``` 
+```
 
 ### Server
 
