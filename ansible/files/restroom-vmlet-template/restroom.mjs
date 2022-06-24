@@ -25,6 +25,7 @@ import {
 import mqtt from "mqtt"
 
 import http from "http";
+import https from "https";
 import morgan from "morgan";
 import winston from "winston";
 import dotenv from "dotenv";
@@ -179,12 +180,7 @@ const announce = (identity) => {
 const saveVMLetStatus = async () => {
     // generate private keys
     const generatePrivateKeysScript = await fsp.readFile(path.join(PRIVATE_ZENCODE_DIR, "consensus-generate-all-private-keys.zen"), 'utf8')
-    let keyring = {
-        "ed25519_keypair": {
-            "private_key": "5Jgk9ARKbPXRwPCuVHv94M4q9iKpF67Apk6hP3rRLtby",
-            "public_key": "Mx2D1WbAdREJphfuAcRCge54zMndKfmozynzRZYP5aw"
-        }
-    };
+    let keyring = {};
     const keys = await zen(generatePrivateKeysScript, null, null);
     if (!keys) {
         console.error("Error in generate private keys");
@@ -251,9 +247,10 @@ function between(min, max) {
     )
 }
 
-function startHttp(initial_port, callback) {
+function startHttp(initial_port, callback, options) {
     let port = initial_port;
-    const httpServer = http.createServer(app);
+    const httpServer = options ? https.createServer(options, app)
+		               : http.createServer(app);
     let retry = 1000;
     if (port <= 0) port = between(MIN_PORT, MAX_PORT);
     console.log(`CHOSEN_HTTP_PORT ${port}`)
@@ -292,6 +289,13 @@ const ANNOUNCE_URL = process.env.ANNOUNCE_URL || "https://apiroom.net/api/zenswa
 const DEANNOUNCE_URL = process.env.DEANNOUNCE_URL || "https://apiroom.net/api/zenswarm/zenswarm-issuer-remove-identity"
 const L0_DEST = process.env.L0_DEST || "planetmint";
 
+
+const TLS_KEY = process.env.TLS_KEY ? fs.readFileSync(process.env.TLS_KEY) : null;
+const TLS_CRT = process.env.TLS_CRT ? fs.readFileSync(process.env.TLS_CRT) : null;
+const TLS_OPTIONS = {
+	key: TLS_KEY,
+	cert: TLS_CRT,
+}
 const app = express();
 
 app.use(bodyParser.urlencoded({
@@ -345,7 +349,7 @@ if (contracts.length > 0) {
     const httpStarted = async () => {
         process.env.HTTPS_PORT = HTTPS_PORT;
         await saveVMLetStatus();
-        console.log(`🚻 Restroom started on http://${chalk.bold.blue(HOST)}:${HTTP_PORT} and http://${chalk.bold.blue(HOST)}:${HTTPS_PORT}`);
+        console.log(`🚻 Restroom started on ${HTTP_PORT} (http) and ${HTTPS_PORT} (https)`);
         console.log(`📁 the ZENCODE directory is: ${chalk.magenta.underline(ZENCODE_DIR)} \n`);
 
         if (OPENAPI) {
@@ -365,7 +369,7 @@ if (contracts.length > 0) {
     }
     HTTP_PORT = startHttp(HTTP_PORT, () => {
         process.env.HTTP_PORT = HTTP_PORT;
-        HTTPS_PORT = startHttp(HTTPS_PORT, httpStarted);
+        HTTPS_PORT = startHttp(HTTPS_PORT, httpStarted, TLS_OPTIONS);
     });
 
 } else {

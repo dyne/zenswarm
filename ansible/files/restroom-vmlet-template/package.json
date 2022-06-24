@@ -43,7 +43,7 @@
         "websocket": "^1.0.34",
         "winston": "^3.7.2",
         "ws": "^8.6.0",
-        "zenroom": "2.2.3-a56ad1ed"
+        "zenroom": "2.2.3-bc442c74"
     },
     "devDependencies": {
         "@types/ws": "^8.5.3",
