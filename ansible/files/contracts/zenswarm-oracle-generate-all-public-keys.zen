@@ -1,14 +1,14 @@
-
-
-Scenario 'ecdh': Create the keypair
-Scenario 'ethereum': Create the keypair
-Scenario 'reflow': Create the keypair
-Scenario 'schnorr': Create the keypair
+Scenario 'ecdh': Create the public key
+Scenario 'ethereum': Create public key
+Scenario 'reflow': Create public key
+Scenario 'schnorr': Create public key
+Scenario qp : Create the dilithium public key
 
 Given I have the 'keyring'
 When I create the ecdh public key
 When I create the reflow public key
 When I create the schnorr public key
+When I create the dilithium public key
 
 When I create the bitcoin address
 When I create the ethereum address
@@ -19,5 +19,4 @@ Then print the 'schnorr public key'
 
 Then print the 'bitcoin address'
 Then print the 'ethereum address'
-
-
+Then print the 'dilithium public key'
