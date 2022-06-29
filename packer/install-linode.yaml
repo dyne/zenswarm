@@ -1,101 +1,177 @@
 ---
 - name: INSTALL DEVUAN
   hosts: all
+  vars:
+    basepath: /zenswarm
+    nodes: 5
   tasks:
 
-    - name: Setup default password
-      user:
-        name: "root"
-        update_password: always
-        password: $6$BKITGIpl6qrOqHK4$oiUXEGpNoSF9ZQBnNiAIiuEKdzq1sWTLg37t1JBFEvCUepcr9lU2guEEtoqT1V8fbU0uVckC1TzqEOxsPxP8W1
-        # zenswarm
+  - name: Setup default password
+    user:
+      name: "root"
+      update_password: always
+      password: $1$salt$7Ro81hDPJh4jOe4m2msb/0
+      # zenswarm
 
-    - name: Create a login user
-      user:
-        name: "app"
-        state: present
-        shell: /bin/bash
-        uid: 1000
-        home: /home/app
-        update_password: always
-        password: $6$BKITGIpl6qrOqHK4$oiUXEGpNoSF9ZQBnNiAIiuEKdzq1sWTLg37t1JBFEvCUepcr9lU2guEEtoqT1V8fbU0uVckC1TzqEOxsPxP8W1
+  - name: Create a login user
+    user:
+      name: zenswarm
+      state: present
+      shell: /bin/bash
+      uid: 1000
+      home: /home/zenswarm
+      update_password: always
+      password: $1$salt$7Ro81hDPJh4jOe4m2msb/0
 
-    - name: Update Repository cache
-      apt:
-        update_cache: true
-        upgrade: dist
-        cache_valid_time: 3600
-        force_apt_get: true
-        install_recommends: false
-        state: latest
+  - name: Create basepath
+    become_user: root
+    ansible.builtin.file:
+      path: "{{ basepath }}/"
+      state: directory
+      owner: zenswarm
+      group: zenswarm
 
-    - name: Install APT packages
-      apt:
-        force_apt_get: true
-        install_recommends: false
-        autoclean: true
-        autoremove: true
-        state: latest
-        pkg:
-          - python
-          - ntpdate
-          - curl
-          - git
-          - make
-          - gcc
-          - g++
-          - tree
-          - tmux
-          - jq
-          - unzip
-          - supervisor
-          - build-essential
-          - libczmq-dev
+  - name: Update and upgrade apt packages
+    become_user: root
+    apt:
+      upgrade: "yes"
+      update_cache: yes
+      cache_valid_time: 86400 # One day
 
-    - name: Check nvm
-      stat:
-        path: /home/app/.nvm
-      register: nvm_installed
-    - name: Install nvm
-      become: true
-      become_user: "app"
-      shell: >
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
-      when: not nvm_installed.stat.exists
+  - name: Copy private contract (executed by zenroom)
+    copy:
+      src: private-contracts
+      dest: "{{ basepath }}/"
 
-    - name: Install node and set version 16
-      become: true
-      become_user: "app"
-      shell: >
-        source ~/.nvm/nvm.sh && nvm install 16 && nvm alias default 16
-        creates=/home/{{ ansible_user_id }}/.nvm/alias
-      when: not nvm_installed.stat.exists
-      args:
-        executable: /bin/bash
+  - name: Download node setup script
+    get_url: url=https://deb.nodesource.com/setup_16.x dest=/tmp mode=755
 
-    - name: Install yarn
-      become: true
-      become_user: "app"
-      shell:
-        source ~/.nvm/nvm.sh && npm i -g yarn
-      args:
-        executable: /bin/bash
+  - name: Setup Node.js repository
+    become_user: root
+    command: /tmp/setup_16.x
 
-    - name: Install pm2
-      become: true
-      become_user: "app"
-      shell:
-        source ~/.nvm/nvm.sh && yarn global add pm2
-      args:
-        executable: /bin/bash
+  - name: Install required packages from apt
+    become_user: root
+    ansible.builtin.package:
+      name:
+        - git
+        - python
+        - make
+        - libczmq-dev
+        - nodejs
+        - ntpdate
+        - curl
+        - make
+        - gcc
+        - g++
+        - build-essential
+        - tree
+        - tmux
+        - unzip
+        - jq
+        - rsync
+        - libzmq3-dev
+      state: latest
 
-    - name: Login shell init for app user
-      become: true
-      become_user: "app"
-      blockinfile:
-        path: ~/.bashrc
-        block: |
-          source ~/.nvm/nvm.sh
-          export PATH=$PATH:~/.yarn/bin
-        create: yes
+  - name: Install yarn
+    become_user: root
+    community.general.npm:
+      name: yarn
+      global: yes
+      state: latest
+
+  - name: Install pm2
+    become_user: root
+    community.general.npm:
+      name: pm2
+      global: yes
+      state: latest
+
+  - name: Install gyp cache
+    become_user: root
+    community.general.npm:
+      name: node-gyp-cache
+      global: yes
+      state: latest
+
+  - name: Config node_gyp
+    command: npm config set node_gyp node-gyp-cache
+
+  - name: Create base directory
+    ansible.builtin.file:
+      path: "{{ basepath }}/vmlets"
+      state: directory
+
+  - name: Copy package.json (workspace)
+    copy:
+      src: package.json
+      dest: "{{ basepath }}"
+
+  # In the next rules the variables are equal
+  - name: Copy restroom template
+    copy:
+      src: "restroom-vmlet-template/restroom.mjs"
+      dest: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy blockchain db
+    copy:
+      src: "restroom-vmlet-template/blockchain_db.json"
+      dest: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy package.json (vmlet)
+    template:
+      src: "../files/restroom-vmlet-template/package.json.j2"
+      dest: "{{ wd }}/package.json"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Create directory of contracts
+    file:
+      path: "{{ wd }}/contracts"
+      state: directory
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy contracts (permissions may be wrong)
+    synchronize:
+      src: contracts
+      dest: "{{ wd }}"
+      owner: no
+      group: no
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Fix contracts permissions
+    become_user: root
+    file:
+      dest: "{{ wd }}/contracts"
+      owner: zenswarm
+      group: zenswarm
+      recurse: yes
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Update packages of vmlet
+    community.general.yarn:
+      path: "{{ wd }}"
+      state: latest
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
