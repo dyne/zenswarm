@@ -12,6 +12,7 @@ Protototype of Zenroom based Swarm of Oracles
 * ports between the 25000 and 30000 must be open on the host machine
 * add the pubkey you will use todeploy from your workstation (when using root user, in /root/.ssh/authorized_keys )
 * open a port for ansible, can be configured in hosts.toml (default: *ansible_port=22254*)
+* the oracles' ansible installs an SSL certificate using Letsencrypt and the oracle currently comunicates via https. This can generate issues on machines behind a proxy (e.g. a virtual machine).  
 
 # How to run
 
