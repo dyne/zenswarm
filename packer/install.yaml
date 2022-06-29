@@ -1,0 +1,72 @@
+---
+- name: INSTALL BASE SYSTEM PACKAGES
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Update Repository cache"
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+        force_apt_get: true
+        install_recommends: false
+        state: latest
+    - name: "Install APT packages"
+      apt:
+        force_apt_get: true
+        install_recommends: false
+        autoclean: true
+        autoremove: true
+        state: latest
+        pkg:
+          - ntpdate
+          - npm
+          - yarnpkg
+          - curl
+          - git
+          - tree
+          - tmux
+          - jq
+          - unzip
+          - supervisor
+
+    - name: Check nvm
+      stat:
+        path: /home/app/.nvm
+      register: nvm_installed
+    - name: Install nvm
+      become: true
+      become_user: "app"
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+        creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
+      when: not nvm_installed.stat.exists
+    - name: Install node and set version 14
+      become: true
+      become_user: "app"
+      shell: >
+        /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 14 && nvm alias default 14"
+        creates=/home/{{ ansible_user_id }}/.nvm/alias
+      when: not nvm_installed.stat.exists
+    - name: Install yarn
+      command: npm i -g yarn
+
+    # - name: Upload supervisord service conf
+    #   copy: src=supervisord.service dest=/etc/systemd/system/supervisord.service
+    - name: Configure supervised services
+      copy: src=supervisord.conf dest=/etc/supervisor/supervisord.conf
+    - name: Create a directory for app supervisor
+      file:
+        path: /home/app/supervisor
+        state: directory
+        mode: '0755'
+        owner: app
+        group: app
+    - name: Configure supervisord to run as app
+      lineinfile:
+        path: /etc/default/supervisor
+        regexp: '^DAEMON_OPTS='
+        line: 'DAEMON_OPTS="-u app"'
+    - name: Launch supervisord at startup
+      command: update-rc.d supervisor enable
+

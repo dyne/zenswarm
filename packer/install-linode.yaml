@@ -1,0 +1,101 @@
+---
+- name: INSTALL DEVUAN
+  hosts: all
+  tasks:
+
+    - name: Setup default password
+      user:
+        name: "root"
+        update_password: always
+        password: $6$BKITGIpl6qrOqHK4$oiUXEGpNoSF9ZQBnNiAIiuEKdzq1sWTLg37t1JBFEvCUepcr9lU2guEEtoqT1V8fbU0uVckC1TzqEOxsPxP8W1
+        # zenswarm
+
+    - name: Create a login user
+      user:
+        name: "app"
+        state: present
+        shell: /bin/bash
+        uid: 1000
+        home: /home/app
+        update_password: always
+        password: $6$BKITGIpl6qrOqHK4$oiUXEGpNoSF9ZQBnNiAIiuEKdzq1sWTLg37t1JBFEvCUepcr9lU2guEEtoqT1V8fbU0uVckC1TzqEOxsPxP8W1
+
+    - name: Update Repository cache
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+        force_apt_get: true
+        install_recommends: false
+        state: latest
+
+    - name: Install APT packages
+      apt:
+        force_apt_get: true
+        install_recommends: false
+        autoclean: true
+        autoremove: true
+        state: latest
+        pkg:
+          - python
+          - ntpdate
+          - curl
+          - git
+          - make
+          - gcc
+          - g++
+          - tree
+          - tmux
+          - jq
+          - unzip
+          - supervisor
+          - build-essential
+          - libczmq-dev
+
+    - name: Check nvm
+      stat:
+        path: /home/app/.nvm
+      register: nvm_installed
+    - name: Install nvm
+      become: true
+      become_user: "app"
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+        creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
+      when: not nvm_installed.stat.exists
+
+    - name: Install node and set version 16
+      become: true
+      become_user: "app"
+      shell: >
+        source ~/.nvm/nvm.sh && nvm install 16 && nvm alias default 16
+        creates=/home/{{ ansible_user_id }}/.nvm/alias
+      when: not nvm_installed.stat.exists
+      args:
+        executable: /bin/bash
+
+    - name: Install yarn
+      become: true
+      become_user: "app"
+      shell:
+        source ~/.nvm/nvm.sh && npm i -g yarn
+      args:
+        executable: /bin/bash
+
+    - name: Install pm2
+      become: true
+      become_user: "app"
+      shell:
+        source ~/.nvm/nvm.sh && yarn global add pm2
+      args:
+        executable: /bin/bash
+
+    - name: Login shell init for app user
+      become: true
+      become_user: "app"
+      blockinfile:
+        path: ~/.bashrc
+        block: |
+          source ~/.nvm/nvm.sh
+          export PATH=$PATH:~/.yarn/bin
+        create: yes
