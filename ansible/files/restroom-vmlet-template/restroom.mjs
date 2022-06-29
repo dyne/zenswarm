@@ -48,6 +48,31 @@ const L = new winston.createLogger({
 });
 const MIN_PORT = 25000;
 const MAX_PORT = 30000;
+
+
+let HTTP_PORT = parseInt(process.env.HTTP_PORT, 10) || 0;
+let HTTPS_PORT = parseInt(process.env.HTTPS_PORT, 10) || 0;
+const HOST = process.env.HOST || "0.0.0.0";
+const COUNTRY = process.env.COUNTRY || "NONE";
+const ZENCODE_DIR = process.env.ZENCODE_DIR;
+const PRIVATE_ZENCODE_DIR = process.env.PRIVATE_ZENCODE_DIR;
+const OPENAPI = JSON.parse(process.env.OPENAPI || true);
+const L1NODES = process.env.L1NODES || "L1.yaml";
+const FILES_DIR = process.env.FILES_DIR || "contracts";
+const STATE = process.env.STATE || "NONE";
+const SUBSCRIPTIONS = process.env.SUBSCRIPTIONS || "";
+const ANNOUNCE_URL = process.env.ANNOUNCE_URL || "https://apiroom.net/api/zenswarm/W3C-DID-controller-create-DID.chain";
+const DEANNOUNCE_URL = process.env.DEANNOUNCE_URL || "https://apiroom.net/api/zenswarm/W3C-DID-controller-remove-identity"
+const L0_DEST = process.env.L0_DEST || "planetmint";
+
+
+const TLS_KEY = process.env.TLS_KEY ? fs.readFileSync(process.env.TLS_KEY) : null;
+const TLS_CRT = process.env.TLS_CRT ? fs.readFileSync(process.env.TLS_CRT) : null;
+const TLS_OPTIONS = {
+	key: TLS_KEY,
+	cert: TLS_CRT,
+}
+
 /*
  * Load current L1 blockchains database
  */
@@ -180,7 +205,7 @@ const announce = (identity) => {
 const saveVMLetStatus = async () => {
     // generate private keys
     const generatePrivateKeysScript = await fsp.readFile(path.join(PRIVATE_ZENCODE_DIR, "consensus-generate-all-private-keys.zen"), 'utf8')
-    let keyring = {};
+    let keyring = {}
     const keys = await zen(generatePrivateKeysScript, null, null);
     if (!keys) {
         console.error("Error in generate private keys");
@@ -201,25 +226,26 @@ const saveVMLetStatus = async () => {
         .then(res => {
             // put all togheter in the identity
             const identity = {
-                "uid": `${HOST}:${HTTP_PORT}`,
+                "API": [
+                    "/api/zenswarm-oracle-announce",
+                    "/api/ethereum-to-ethereum-notarization.chain",
+                    "/api/zenswarm-oracle-get-identity",
+                    "/api/zenswarm-oracle-http-post",
+                    "/api/zenswarm-oracle-key-issuance.chain",
+                    "/api/zenswarm-oracle-ping.zen",
+                    "/api/sawroom-to-ethereum-notarization.chain",
+                    "/api/zenswarm-oracle-get-timestamp.zen",
+                    "/api/zenswarm-oracle-update"
+                ],
+                "uid": `${HOST}:${HTTPS_PORT}`,
                 "ip": HOST,
-                "baseUrl": `http://${HOST}`,
-                "port_http": `${HTTP_PORT}`,
+                "baseUrl": `https://${HOST}`,
                 "port_https": `${HTTPS_PORT}`,
                 "version": "2",
-                "announceAPI": "/api/zenswarm-oracle-announce",
-                "timestampAPI": "/api/zenswarm-oracle-get-timestamp.zen",
-                "updateAPI": "/api/zenswarm-oracle-update",
-                "http-postAPI": "/api/zenswarm-oracle-http-post",
-                "pingAPI": "/api/zenswarm-oracle-ping.zen",
-                "oracle-key-issuance": "/api/zenswarm-oracle-key-issuance.chain",
                 "tracker": "https://apiroom.net/",
-                "ethereum-notarizationAPI": "/api/ethereum-to-ethereum-notarization.chain",
-                "sawroom-notarizationAPI": "/api/sawroom-to-ethereum-notarization.chain",
-                "get-identityAPI": "/api/zenswarm-oracle-get-identity",
-                "type": "restroom-mw",
-                "region": REGION,
-                "country": `${COUNTRY}`,
+                "description": "restroom-mw",
+                "State": STATE,
+                "Country": `${COUNTRY}`,
                 "L0": L0_DEST
             }
             Object.assign(identity, res.data)
@@ -274,28 +300,6 @@ function startHttp(initial_port, callback, options) {
     return port
 }
 
-let HTTP_PORT = parseInt(process.env.HTTP_PORT, 10) || 0;
-let HTTPS_PORT = parseInt(process.env.HTTPS_PORT, 10) || 0;
-const HOST = process.env.HOST || "0.0.0.0";
-const COUNTRY = process.env.COUNTRY || "NONE";
-const ZENCODE_DIR = process.env.ZENCODE_DIR;
-const PRIVATE_ZENCODE_DIR = process.env.PRIVATE_ZENCODE_DIR;
-const OPENAPI = JSON.parse(process.env.OPENAPI || true);
-const L1NODES = process.env.L1NODES || "L1.yaml";
-const FILES_DIR = process.env.FILES_DIR || "contracts";
-const REGION = process.env.REGION || "NONE";
-const SUBSCRIPTIONS = process.env.SUBSCRIPTIONS || "";
-const ANNOUNCE_URL = process.env.ANNOUNCE_URL || "https://apiroom.net/api/zenswarm/zenswarm-issuer-add-identity.chain";
-const DEANNOUNCE_URL = process.env.DEANNOUNCE_URL || "https://apiroom.net/api/zenswarm/zenswarm-issuer-remove-identity"
-const L0_DEST = process.env.L0_DEST || "planetmint";
-
-
-const TLS_KEY = process.env.TLS_KEY ? fs.readFileSync(process.env.TLS_KEY) : null;
-const TLS_CRT = process.env.TLS_CRT ? fs.readFileSync(process.env.TLS_CRT) : null;
-const TLS_OPTIONS = {
-	key: TLS_KEY,
-	cert: TLS_CRT,
-}
 const app = express();
 
 app.use(bodyParser.urlencoded({

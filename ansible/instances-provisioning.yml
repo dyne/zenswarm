@@ -15,7 +15,7 @@
   become_user: zenswarm
   vars:
     repo: https://github.com/dyne/restroom-vmlet-template
-    basepath: /zenswarm
+    basepath: /zenswarm0
     # the following variables are similar to the one in acme-certificate.yml
     letsencrypt_key: /etc/letsencrypt/keys/{{ domain_name }}.key
     letsencrypt_cert: /etc/letsencrypt/certs/{{ domain_name }}.crt
@@ -61,19 +61,19 @@
       src: private-contracts
       dest: "{{ basepath }}/"
 
-  - name: Check if node is installed
-    package:
-      name: nodejs
-      state: present
-    check_mode: true
-    register: node_check
+#   - name: Check if node is installed
+#     package:
+#       name: nodejs
+#       state: present
+#     check_mode: true
+#     register: node_check
   - name: Download node setup script
     get_url: url=https://deb.nodesource.com/setup_16.x dest=/tmp mode=755
-    when: node_check is failed
+      # when: node_check is failed
   - name: Setup Node.js repository
     become_user: root
     command: /tmp/setup_16.x
-    when: node_check is failed
+      # when: node_check is failed
 
   - name: Install required packages from apt
     become_user: root
@@ -88,18 +88,21 @@
       state: latest
 
   - name: Install yarn
+    become_user: root
     community.general.npm:
       name: yarn
       global: yes
       state: latest
 
   - name: Install pm2
-    community.general.yarn:
+    become_user: root
+    community.general.npm:
       name: pm2
       global: yes
       state: latest
 
   - name: Install gyp cache
+    become_user: root
     community.general.npm:
       name: node-gyp-cache
       global: yes
@@ -210,8 +213,8 @@
         SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
         L0_DEST="{{ subscriptions[item].to | default('') }}"
         YML_EXT=yml
-        TLS_KEY={{ letsencrypt_key }}
-        TLS_CRT={{ letsencrypt_cert }}
+        # TLS_KEY={{ letsencrypt_key }}
+        # TLS_CRT={{ letsencrypt_cert }}
       path: "{{ wd }}/.env"
       create: yes
     loop: "{{ range(0, nodes) | list }}"
