@@ -1,0 +1,34 @@
+
+Given I have a 'string dictionary' named 'result' inside 'dataFromEndpoint'
+Given I have a 'string' named 'oracleTimestamp' 
+Given I have a 'string dictionary' named 'blockchain'
+
+Given I have a 'string' named 'ethereum_address' 
+Given I have a 'keyring'
+
+When I pickup from path 'result.data.batches.header_signature'
+When I pickup from path 'result.data.header.previous_block_id' 
+When I pickup from path 'result.data.header.block_num' 
+
+
+When I create the 'string dictionary' named 'sawroomBlockToNotarize'
+
+When I insert 'header_signature' in 'sawroomBlockToNotarize'
+When I insert 'previous_block_id' in 'sawroomBlockToNotarize'
+When I insert 'oracleTimestamp' in 'sawroomBlockToNotarize'
+When I insert 'block_num' in 'sawroomBlockToNotarize'
+
+When I insert 'blockchain' in 'sawroomBlockToNotarize'
+
+When I create the mpack of 'sawroomBlockToNotarize'
+When I rename the 'mpack' to 'sawroomBlockToNotarize-mpack'
+
+Then print the 'sawroomBlockToNotarize'
+Then print the 'sawroomBlockToNotarize-mpack'
+
+then print the 'ethereum_address'
+then print the 'keyring'
+
+
+
+

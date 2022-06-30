@@ -1,0 +1,22 @@
+
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: ethNotarization-0-newhead.zen
+    keysFile: ethNotarization-0-newhead.keys
+    next: id_1
+  id_1:
+    zenFile: ethNotarization-1-newhead.zen
+    next: id_2
+  id_2:
+    zenFile: ethNotarization-2-filter-newhead.zen
+    next: id_3
+  id_3:
+    zenFile: ethereum-to-planetmint-3.zen
+    keysFile: ethereum-to-planetmint-3.keys
+    next: id_4
+  id_4:
+    zenFile: ethereum-to-planetmint-4.zen
+
+

@@ -1,0 +1,21 @@
+
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: sawroom-notarization-0.zen
+    next: id_1
+  id_1:
+    zenFile: sawroom-notarization-1.zen
+    next: id_2
+  id_2:
+    zenFile: sawroom-notarization-2.zen
+    next: id_3
+  id_3:
+    zenFile: sawroom-notarization-3.zen
+    keysFile: sawroom-notarization-3.keys
+    next: id_4
+  id_4:
+    zenFile: sawroom-notarization-4.zen
+
+

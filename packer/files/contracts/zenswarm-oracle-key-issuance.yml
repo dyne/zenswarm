@@ -1,0 +1,16 @@
+
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm-oracle-key-issuance-1.zen
+    keysFile: zenswarm-oracle-key-issuance-1.keys
+    next: id_1
+  id_1:
+    zenFile: zenswarm-oracle-key-issuance-2.zen
+    next: id_2
+  id_2:
+    zenFile: zenswarm-oracle-key-issuance-3.zen
+    keysFile: zenswarm-oracle-key-issuance-3.keys
+
+

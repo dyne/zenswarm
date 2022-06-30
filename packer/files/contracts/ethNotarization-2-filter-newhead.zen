@@ -1,0 +1,25 @@
+
+Given I have a 'string dictionary' named 'result' in 'params'
+Given I have a 'keyring' 
+Given I have a 'string' named 'ethereum_address' 
+Given I have a 'string dictionary' named 'blockchain' 
+
+# and I have a 'number' named 'system_timestamp'
+When I create the 'string dictionary' named 'newblock'
+When I move 'hash' from 'result' to 'newblock'
+When I move 'number' from 'result' to 'newblock'
+When I move 'parentHash' from 'result' to 'newblock'
+When I move 'timestamp' from 'result' to 'newblock'
+
+When I insert 'blockchain' in 'newblock'
+# When I insert 'system_timestamp' in 'newblock'
+
+When I create the mpack of 'newblock'
+When I rename the 'mpack' to 'newblock-mpack'
+Then print the 'newblock'
+Then print the 'newblock-mpack'
+Then print the 'ethereum_address'
+Then print the 'keyring'
+
+
+

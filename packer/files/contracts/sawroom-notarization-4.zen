@@ -1,0 +1,12 @@
+
+Given I have a 'base64' named 'sawroomBlockToNotarize-mpack'
+Given I have a 'hex' named 'txid'
+
+When I create the 'newSawroomblock' decoded from mpack 'sawroomBlockToNotarize-mpack'
+
+Then print the 'txid'
+Then print the 'sawroomBlockToNotarize-mpack'
+Then print the 'newSawroomblock' as 'string'
+
+
+

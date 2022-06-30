@@ -1,0 +1,30 @@
+
+
+# simulate a call by the callback from ethereum subscription to new heads
+
+# curl --location --request POST 'http://test.fabchain.net:8545' --header 'Content-Type: application/json' --data-raw # '{ jsonrpc:2.0, method:eth_getBlockByHash, params:[ HASH, false ], id:1 }'
+
+
+Rule caller restroom-mw
+
+Given I read the content of 'contracts/identity.json'
+Given I read the content of 'contracts/keyring.json'
+
+Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'output'
+
+Given I have a 'string' named 'endpoint'
+Given I have a 'string dictionary' named 'post'
+Given I have a 'string dictionary' named 'result' in 'output'
+Given I have a 'string dictionary' named 'blockchain'
+
+Given I have a 'string' named 'ethereum_address' in 'identity'
+Given I have a 'keyring'
+
+When I rename the 'result' to 'params'
+then print the 'params'
+then print the 'ethereum_address'
+then print the 'keyring'
+Then print the 'blockchain'
+
+
+

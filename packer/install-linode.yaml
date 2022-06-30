@@ -1,3 +1,4 @@
+# TODO: all subdirectory of /zenswarm have to be owned by zenswarm:zenswarm
 ---
 - name: INSTALL DEVUAN
   hosts: all
@@ -71,6 +72,7 @@
         - jq
         - rsync
         - libzmq3-dev
+        - nginx
       state: latest
 
   - name: Install yarn

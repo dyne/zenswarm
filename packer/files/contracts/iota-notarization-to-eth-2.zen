@@ -1,0 +1,15 @@
+
+Given I have a 'base64' named 'iotaBlockToNotarize-mpack'
+Given I have a 'string dictionary' named 'iotaBlockToNotarize'
+
+
+Given I have a 'hex' named 'txid'
+
+When I create the 'decoded-newIotaBlock' decoded from mpack 'iotaBlockToNotarize-mpack'
+
+Then print the 'txid'
+Then print the 'iotaBlockToNotarize-mpack'
+Then print the 'iotaBlockToNotarize'
+# Then print the 'decoded-newIotaBlock' as 'string'
+
+

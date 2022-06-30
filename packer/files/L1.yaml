@@ -1,0 +1,6 @@
+
+ledgers:
+  ping:
+    interval: 300
+    contract: zenswarm-oracle-ping
+

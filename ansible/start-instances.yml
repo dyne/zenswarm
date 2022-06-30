@@ -1,0 +1,101 @@
+---
+- name: Deploy oracles
+  hosts: all
+  remote_user: root
+  become: true
+  become_user: zenswarm
+  vars:
+    repo: https://github.com/dyne/restroom-vmlet-template
+    basepath: /zenswarm
+    domain_name: swarm.dyne.org
+    nodes: 5
+    base_port: 25000
+    public_base_port: 20000
+    subs_file: subscriptions.csv
+    country: DE
+  tasks:
+  - name: Load subscriptions
+    set_fact:
+      subscriptions: "{{ subscriptions|d([]) + [_item] }}"
+    loop: "{{ lookup('file', subs_file).splitlines() }}"
+    vars:
+      _array: "{{ item.split() }}"
+      _item: "{{ {'from': _array.0, 'to': _array.1} }}"
+
+  - name: Stop running oracles
+    command: pm2 kill
+
+  # rm -f "~/.pm2/logs/restroom-mw-*"
+  - name: Remove old logs
+    ansible.builtin.file:
+      path: ~/.pm2/logs
+      state: absent
+
+  - name: Create .env for each vmlet
+    blockinfile:
+      block: |
+        CUSTOM_404_MESSAGE=nothing to see here
+        ZENCODE_DIR="{{ wd }}/contracts"
+        FILES_DIR={{ wd }}
+        CHAIN_EXT=chain
+        ANNOUNCE_URL="{{ announce_url | default('') }}"
+        DEANNOUNCE_URL="{{ deannounce_url | default('') }}"
+        OPENAPI=true
+        COUNTRY="{{ country }}"
+        HOST="{{ domain_name }}"
+        PRIVATE_ZENCODE_DIR="{{ basepath }}/private-contracts"
+        SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
+        L0_DEST="{{ subscriptions[item].to | default('') }}"
+        YML_EXT=yml
+        PORT={{ item + base_port }}
+      path: "{{ wd }}/.env"
+      create: yes
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Update packages of vmlet
+    community.general.yarn:
+      path: "{{ wd }}"
+      state: latest
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Set current nonce into redis
+    uri:
+      url: https://apiroom.net/api/zenswarm/zenswarm-issuer-set-nonce
+
+#  - name: Start oracles in pm2!
+#    command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
+#    args:
+#      chdir: "{{ wd }}"
+#    loop: "{{ range(0, nodes) | list }}"
+#    vars:
+#      vmlet_name: "restroom-mw-{{ item }}"
+#      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+  - name: Nginx service
+    become: false
+    blockinfile:
+      dest: "/etc/nginx/conf.d/restroom-mw-{{ item }}"
+      create: true
+      block: |
+        server {
+          listen {{ public_base_port + item }} ssl;
+          root /var/www/html;
+          server_name swarm.dyne.org;
+          ssl_certificate /etc/letsencrypt/live/swarm.dyne.org/fullchain.pem;
+          ssl_certificate_key /etc/letsencrypt/live/swarm.dyne.org/privkey.pem;
+
+          include /etc/letsencrypt/options-ssl-nginx.conf;
+          # Redirect non-https traffic to https
+          if ($scheme != "https") {
+              return 301 https://$host$request_uri;
+          }
+          location / {
+            proxy_pass http://127.0.0.1:{{ base_port + item }}/;
+          }
+        }
+    loop: "{{ range(0, nodes) | list }}"
