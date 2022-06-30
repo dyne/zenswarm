@@ -64,3 +64,7 @@ init: ## Init instances
 start: ## Start instances
 	$(info Starting instances...)
 	$(call ANSIPLAY,start-instances.yml)
+
+kill: ## Kill instances
+	$(info Killing instances...)
+	$(call ANSIPLAY,kill-instances.yml)

@@ -1,7 +1,6 @@
 - hosts: all
   remote_user: root
   vars:
-    domain_name: "swarm.dyne.org"
     email: alberto@dyne.org
   tasks:
   - name: Configuration for nginx

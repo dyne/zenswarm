@@ -1,0 +1,14 @@
+---
+- name: Kill oracles
+  hosts: all
+  remote_user: root
+  become: true
+  become_user: zenswarm
+  vars:
+    basepath: /zenswarm
+    nodes: 5
+  tasks:
+  - name: Kill oracles in pm2!
+    command: pm2 kill
+    args:
+      chdir: "{{ basepath }}"
