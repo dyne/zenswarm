@@ -57,6 +57,10 @@ setup-tls: ## Install TLS certificates
 	$(info Start TLS certificate creation)
 	$(call ANSIPLAY,acme-certificate.yml)
 
-start: ## Install TLS certificates
-	$(info Start TLS certificate creation)
+init: ## Init instances
+	$(info Generate .env and keys)
+	$(call ANSIPLAY,init-instances.yml)
+
+start: ## Start instances
+	$(info Starting instances...)
 	$(call ANSIPLAY,start-instances.yml)

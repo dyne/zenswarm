@@ -1,12 +1,9 @@
 # TODO: all subdirectory of /zenswarm have to be owned by zenswarm:zenswarm
 ---
-- name: INSTALL DEVUAN
+- name: GENERATE USER
+  remote_user: root
   hosts: all
-  vars:
-    basepath: /zenswarm
-    nodes: 5
   tasks:
-
   - name: Setup default password
     user:
       name: "root"
@@ -24,8 +21,19 @@
       update_password: always
       password: $1$salt$7Ro81hDPJh4jOe4m2msb/0
 
+- name: INSTALL DEVUAN
+  hosts: all
+  remote_user: root
+  become: true
+  become_user: zenswarm
+  vars:
+    repo: https://raw.githubusercontent.com/dyne/restroom-vmlet-template/main
+    basepath: /zenswarm
+    nodes: 5
+  tasks:
+
   - name: Create basepath
-    become_user: root
+    become: false
     ansible.builtin.file:
       path: "{{ basepath }}/"
       state: directory
@@ -33,7 +41,7 @@
       group: zenswarm
 
   - name: Update and upgrade apt packages
-    become_user: root
+    become: false
     apt:
       upgrade: "yes"
       update_cache: yes
@@ -45,10 +53,11 @@
       dest: "{{ basepath }}/"
 
   - name: Download node setup script
+    become: false
     get_url: url=https://deb.nodesource.com/setup_16.x dest=/tmp mode=755
 
   - name: Setup Node.js repository
-    become_user: root
+    become: false
     command: /tmp/setup_16.x
 
   - name: Install required packages from apt
@@ -109,10 +118,36 @@
       src: package.json
       dest: "{{ basepath }}"
 
+  - name: Copy package.json template
+    become: false
+    get_url:
+      url: "{{ repo }}/package.json.j2"
+      dest: /tmp/package.json.j2
+    delegate_to: 127.0.0.1
+
   # In the next rules the variables are equal
+  - name: Create vmlet directory
+    file:
+      path: "{{ wd }}"
+      state: directory
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+
   - name: Copy restroom template
-    copy:
-      src: "restroom-vmlet-template/restroom.mjs"
+    get_url:
+      url: "{{ repo }}/init.mjs"
+      dest: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Copy restroom template
+    get_url:
+      url: "{{ repo }}/restroom.mjs"
       dest: "{{ wd }}/"
     loop: "{{ range(0, nodes) | list }}"
     vars:
@@ -120,8 +155,8 @@
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
   - name: Copy blockchain db
-    copy:
-      src: "restroom-vmlet-template/blockchain_db.json"
+    get_url:
+      url: "{{ repo }}/blockchain_db.json"
       dest: "{{ wd }}/"
     loop: "{{ range(0, nodes) | list }}"
     vars:
@@ -130,7 +165,7 @@
 
   - name: Copy package.json (vmlet)
     template:
-      src: "../files/restroom-vmlet-template/package.json.j2"
+      src: "/tmp/package.json.j2"
       dest: "{{ wd }}/package.json"
     loop: "{{ range(0, nodes) | list }}"
     vars:
@@ -158,7 +193,7 @@
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
   - name: Fix contracts permissions
-    become_user: root
+    become: false
     file:
       dest: "{{ wd }}/contracts"
       owner: zenswarm
@@ -169,7 +204,7 @@
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
-  - name: Update packages of vmlet
+  - name: update packages of vmlet
     community.general.yarn:
       path: "{{ wd }}"
       state: latest
@@ -177,3 +212,4 @@
     vars:
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+

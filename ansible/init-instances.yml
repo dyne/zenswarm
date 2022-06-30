@@ -13,6 +13,8 @@
     public_base_port: 20000
     subs_file: subscriptions.csv
     country: DE
+    announce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-create-oracle-DID.chain "
+    deannounce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-remove-oracle"
   tasks:
   - name: Load subscriptions
     set_fact:
@@ -47,7 +49,8 @@
         SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
         L0_DEST="{{ subscriptions[item].to | default('') }}"
         YML_EXT=yml
-        PORT={{ item + base_port }}
+        HTTP_PORT={{ item + base_port }}
+        HTTPS_PORT={{ item + public_base_port }}
       path: "{{ wd }}/.env"
       create: yes
     loop: "{{ range(0, nodes) | list }}"
@@ -64,22 +67,21 @@
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
-  - name: Set current nonce into redis
-    uri:
-      url: https://apiroom.net/api/zenswarm/zenswarm-issuer-set-nonce
+  - name: Create private keys
+    command:
+      cmd: "yarn run init"
+      creates: "{{ wd }}/contracts/keyring.json"
+    args:
+      chdir: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
-#  - name: Start oracles in pm2!
-#    command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
-#    args:
-#      chdir: "{{ wd }}"
-#    loop: "{{ range(0, nodes) | list }}"
-#    vars:
-#      vmlet_name: "restroom-mw-{{ item }}"
-#      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
   - name: Nginx service
     become: false
     blockinfile:
-      dest: "/etc/nginx/conf.d/restroom-mw-{{ item }}"
+      dest: "/etc/nginx/conf.d/restroom-mw-{{ item }}.conf"
       create: true
       block: |
         server {
@@ -99,3 +101,7 @@
           }
         }
     loop: "{{ range(0, nodes) | list }}"
+
+  - name: Restart nginx
+    become: false
+    service: name=nginx state=restarted
