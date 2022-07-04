@@ -65,6 +65,10 @@ start: ## Start instances
 	$(info Starting instances...)
 	$(call ANSIPLAY,start-instances.yml)
 
+update: ## Update instances
+	$(info Updating instances...)
+	$(call ANSIPLAY,update-instances.yml)
+
 kill: ## Kill instances
 	$(info Killing instances...)
 	$(call ANSIPLAY,kill-instances.yml)
