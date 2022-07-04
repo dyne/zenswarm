@@ -88,7 +88,7 @@ Below a list of the main Oracle flows involving:
  * Oracle consensus based query
  * Oracle update
 
-### Controller creation
+## Controller creation
 
 ```mermaid
 sequenceDiagram
@@ -101,8 +101,9 @@ autonumber
   C->>I: Issuer Install
   C->>A: Grant Issuer setup access
   A->>I: Issuer init + aPK
-  I->I: Issuer keygen (iSK + iPK)
-  I->>A: Issuer public key (iPK)
+  I->I: Keygen (iSK + iPK)
+  I->I: DID Document creation
+  I->>A: DID publishing (containing iPK)
 ```
 
 1. Admin is the control terminal and generates a new keypair (aSK + aPK)
@@ -110,11 +111,12 @@ autonumber
 1. Issuer is created by the Cloud provider and installed with a signed OS
 1. Cloud grants to Admin setup access to the Issuer
 1. Admin initialized the Issuer machine with signed scripts and the Admin public key
-1. Issuer generates an issuer keypair (iSK + iPK)
-1. Issuer shares its public key (iPK) with the Admin
+1. Controller generates an issuer keypair (iSK + iPK)
+1. Controller generates DID Document
+1. Controller shares its DID containing (iPK)
 
 
-### Oracle creation
+## Oracle creation
 
 ```mermaid
 sequenceDiagram
@@ -125,51 +127,37 @@ autonumber
   participant I as Controller
   participant B as Blockchain
 
-  A->>C: Create Oracle
-  C->>V: Oracle deployment
+  A->>C: Deploy Oracle request
   C->>A: Grant Oracle setup access
-  C->>I: aSK signed registration of a new Oracle identity
+  A->>C: Setup SSL
+  C->>V: Oracle provisioning (oSK + oPK)
+  V->>I: announce of Oracle
+  I->I: Ephemeral keygen (eSK + ePK) or sidechannel
+  I->>V: iSK signed request + eSK
+  V->>I: eSK signed answer: IP + oPK
+  I->I: ePK verify and store Oracle IP + oPK
   I->I: Create Oracle DID 
   I->>B: Notarize Oracle DID 
   B->>I: Return txId with DID
   I->I: Store txId as DID
-  A->>V: Provision signed scripts + Controller public key (iPK) (????)
 ```
 
 1. Admin orders the creation of Oracle to the Cloud provider
-1. Cloud provider creates the Oracle on a new allocated IP and installs a signed OS
-1. Cloud provider grants the Admin setup access to the Oracle (IP + SSH)
-1. Cloud announces Oracle identity to the Controller
-1. Controller creates DID document for Oracle (containins DID of future txId)
+1. Cloud provider grants the Admin setup access to deploy the Oracle (IP + SSH)
+1. Admin set up SSL certificates in Cloud
+1. Cloud provider creates the Oracle on the host machine, and generates keys (oSK, oPK)
+1. Oracle announces its identity to the Controller (URL + oPK)
+1. Controller generates ephemeral secret key (eSK) (this step can moved to a side channel)
+1. Controller sends eSK signed with its private key (iSK), its public key (iPK) is known 
+1. Cloud verify signed eSK and signs it with its private key (oSK)
+1. Controller verifies eSK signed from Oracle using Oracle's publick key (oPK)
+1. Controller creates DID document for Oracle (containins DID of future txId), DID id is oPK
 1. Controller notarizes DID document of Oracle on Blockchain
 1. Blockchain returns txId storing DID document Oracle 
 1. Controller stores txId as DID document (txId DID is contained in Oracle's DID Document)
-1. Admin provisions the Oracle with a signed OS setup and the Issuer public key
 
-## Oracle key issuance 
 
-```mermaid
-sequenceDiagram
-autonumber
-  participant I as Controller
-  participant V as O1..O2..On
-
-  I->I: Ephemeral keygen (eSK + ePK)
-  I->>V: iSK signed request + eSK
-  V->V: Oracle keygen (oSK + oPK)
-  V->>I: eSK signed answer: IP + oPK
-  I->I: ePK verify and store Oracle IP + oPK
-```
-
-1. Issuer generates an ephemeral keypair used only to verify the Oracle registration
-1. Issuer signs the ephemeral secret key with iSK and sends a request to the Oracle IP
-1. VM verifies the registration request with iPK and generates a VM keypair (vSK + vPK)
-1. VM signs an answer with eSK and sends back its public key
-1. Issuer verifies the answer signed with ePK and saves the VM public key and its IP
-
-At the end of the process the ephemeral keys are discarded and the Issue has added to its database a new IP and its associated public key.
-
-### Oracle multiple query operation 
+## Oracle distributed query 
 ```mermaid
 sequenceDiagram
 autonumber
@@ -180,26 +168,30 @@ autonumber
   participant B as Blockchain
   
   
-  U->>I: Query list of Oracles
+  U->>I: Ask active Oracles
   I->>U: Returns list of Oracles
-  U->>O: Query Oracle
-  O->>+V: Query SoO
-  V->V: exec queries (TTL)
-  V->>-O: return ECDSA signed result or error
-  O->O: consensus on results or errors
+  U->>O: Asks Oracle distributed query
+  O->>+V: Oracles queries Swarm-of-Oracles
+  V->V: Execute queries 
+  V->>-O: Return ECDSA signed result or error
+  O->O: Consensus on results or errors
   O->>U: return ECDSA signed collective result or error
   U->>B: (optional) queries Oracles' txId containing W3C-DID
   B->>U: (optional) returns txId containing W3C-DID
 ```
 
-1. A query is made to the Swarm of Oracles Issuer by a User (or an event or a time trigger)
-1. Issuer parses and validates the query syntax, then propagates to all oracle VMs
-1. VMs execute the Zencode associated to the query: may access other online services, query databases and external APIs
-1. VMs return results of the Zencode execution or an error
-1. Issuer verifies that all results are equal (full consensus) or raises an error
-1. Issuer returns the verified result of the query or a list of specific errors occurred
+1. User queries to Oracle Controller requesting list of registered Oracles in the Swarm of Oracles (SoO)(or an event or a time trigger)
+1. Controller returns list of registered SoO
+1. User makes to request to one Orace to perform a distributed query
+1. Oracles queries Swarm-of-Oracles (SoO) chosen from a trusted random
+1. SoO perform POST to endpoint
+1. SoO returned ECDSA signed output to Oracle
+1. Oracle verifies output and signatures of SoO
+1. Oracle returns ECDSA signed aggregated output of SoO 
+1. (Optional) User queries blockchain to read notarized DID Documents of Oracle(s)
+1. (Optional) Blockchain returns DID Document notarized in tx
 
-### Oracle update
+## Oracle update
 ```mermaid
 sequenceDiagram
 autonumber
@@ -217,6 +209,7 @@ autonumber
 1. Issuer verifies the ZIP is signed by the Admin
 1. Issuer signs and uploads the update ZIP to all VM
 1. VM verifies the ZIP is signed by the Issuer and installs the scripts
+
 
 
 
