@@ -219,8 +219,9 @@ autonumber
 
 Below a list of the APIs available on an Oracle
 
-### Get Identity
 ----
+### Get Identity
+
   Returns json data containing the Oracle's identity: 
  * Identity
   * uid: contains URL and HTTPS port 
@@ -319,9 +320,10 @@ Below a list of the APIs available on an Oracle
 
 
 
+----
 
 ### Ping
-----
+
   Returns json data with a string.
 
 * **URL**
@@ -367,8 +369,10 @@ Below a list of the APIs available on an Oracle
 }'
 ```
 
-### Get timestamp
 ----
+
+### Get timestamp
+
 Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine
 
 * **URL**
@@ -412,9 +416,10 @@ curl -X 'POST' \
 }'
 ```
 
+----
 
 ### Get signed timestamp
-----
+
 Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine, along with its ECDSA signature, produced by the Oracle its ECDSA sk
 
 * **URL**
@@ -466,9 +471,10 @@ curl -X 'POST' \
 }'
 ```
 
+----
 
 ### Dilithium signature
-----
+
   Returns json data contained in **asset** along with the [Dilithium QP signature](https://pq-crystals.org/dilithium/), produced by the Oracle its Dilithium sk. 
 
 * **URL**
@@ -511,8 +517,8 @@ curl -X 'POST' \
  
 * **Error Response:**
 
-	* **Code: 500 Error: Internal Server Error** 
-    **Content:*
+ **Code**: 500 Error: Internal Server Error <br />
+    **Content:**
     
 ```json
 {
@@ -545,9 +551,10 @@ curl -X 'POST' \
 }'
 ```
 
+----
 
 ### ECDSA signature
-----
+
    Returns json data contained in the **asset** along with the **ECDSA signature**, produced by the Oracle its ECDSA sk 
 
 
@@ -593,8 +600,8 @@ curl -X 'POST' \
  
 * **Error Response:**
 
-	* **Code: 500 Error: Internal Server Error** 
-    **Content:*
+ **Code**: 500 Error: Internal Server Error <br />
+    **Content:**
     
 ```json
 {
@@ -627,10 +634,10 @@ curl -X 'POST' \
 }'
 ```
 
-
+----
 
 ### EDDSA signature
-----
+
    Returns json data contained in the **asset** along with the **EDDSA signature**, produced by the Oracle its EDDSA sk 
 
 
@@ -674,8 +681,8 @@ curl -X 'POST' \
  
 * **Error Response:**
 
-	* **Code: 500 Error: Internal Server Error** 
-    **Content:*
+ **Code**: 500 Error: Internal Server Error <br />
+    **Content:**
     
 ```json
 {
@@ -708,9 +715,10 @@ curl -X 'POST' \
 }'
 ```
 
+----
 
 ### Schnor signature
-----
+
 Returns json data contained in the **asset** along with the **Schnorr signature**, produced by the Oracle its Schnorr sk 
 
 
@@ -754,8 +762,8 @@ Returns json data contained in the **asset** along with the **Schnorr signature*
  
 * **Error Response:**
 
-	* **Code: 500 Error: Internal Server Error** 
-    **Content:*
+ **Code**: 500 Error: Internal Server Error <br />
+    **Content:**
     
 ```json
 {
@@ -788,8 +796,10 @@ curl -X 'POST' \
 }'
 ```
 
-### HTTP Post
 ----
+
+### HTTP Post
+
 Returns json data containing the result of the POST performed by the Oracle 
 
 
@@ -831,8 +841,8 @@ Returns json data containing the result of the POST performed by the Oracle
  
 * **Error Response:**
 
-	* **Code: 500 Error: Internal Server Error** 
-    **Content:*
+ **Code**: 500 Error: Internal Server Error <br />
+    **Content:**
     
 ```json
 {
