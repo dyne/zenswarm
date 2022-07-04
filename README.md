@@ -1,11 +1,41 @@
 ![Zenswarm](docs/zenswarm.svg)
 
 # Zenswarm
-Zenroom based Swarm of Oracles 
+**Zenroom based Swarm of Oracles**
 
-# Deployment
+After announcing to a DID controller, the Oracles provide a number of services, including:
+ * Cryptographic signature
+ * Blockchain notarization
+ * Smart Contract execution
 
-## Requirements
+<h1 align="center">
+Zenswarm
+  </br>
+  <sub>Zenroom based Swarm of Oracles</sub>
+</h1>
+
+<p align="center">
+  <a href="https://dyne.org">
+    <img src="https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%9D%A4%20by-Dyne.org-blue.svg" alt="Dyne.org">
+  </a>
+</p>
+
+<br><br>
+
+
+<details id="toc">
+ <summary><strong>🚩 Table of Contents</strong> (click to expand)</summary>
+
+* [Install](#-install)
+* [Monitoring](#-monitoring)
+* [Diagrams](#-oracles-diagrams)
+* [APs](#-apis)
+* [License](#-license)
+</details>
+
+## 💾 Install
+
+### Requirements
 *  Linux based machine 
 * the hostname on the host machine, must be reachable from the internet (can be an IP), the oracle use the hostname to announce their identities to the Controller
 * Ports between the 20000 and 30000 must be open on the host machine
@@ -14,7 +44,7 @@ Zenroom based Swarm of Oracles
 * The Oracles' ansible installs an SSL certificate using Letsencrypt and the oracle currently comunicates via https. This can generate issues on machines behind a proxy (e.g. a virtual machine).  
 * (DID-Controller only) redis running on port 6379
 
-## How to install
+### How to install
 
 * *git clone https://github.com/dyne/zenswarm/*
 * edit hosts.toml to set: 
@@ -27,28 +57,30 @@ Zenroom based Swarm of Oracles
 * (If deploying on Linode): execute **make one-up IMAGE=(name of the linode image)** 
 * (If NOT deploying on Linode): execute **make install**
 
-# How to run
+### How to run
 After installation, run:
  * **make init** to generate the secret keys of the Oracle(s)
  * **make start** to generate the identity and trigger the announce of the Oracle(s)
  * **make kill** performs a graceful shutdown that deannounces the Oracle(s), unregistering the Oracle(s) from the DID Controller
 
-
-# Monitoring
-
-* On the machines where the oracles are deployed, use **pm2 list** to see how many instances of restroom_mw are running.
-* A GUI-based monitoring service for the Oracle is the [Zenswarm-Dashboard](https://github.com/dyne/Zenswarm-Dashboard). The GUI retrieves a list of the active Oracles from the W3C-DID controller
-
-# Provisioning
+### Announce and Deannounce process
 
 Once an Oracle is deployed, each Oracles tries to *announce* to the W3C-DID controller. In this stage, the Oracle will communicate its pubkeys, its version and some metadata. The W3C-DID Controller will register a DID per each Oracle, and store the DID-document on a database and blockchain. 
 
-Upon graceful shutdown, done via *pm2 delete [instansce-name]*, the Oracle will *deannounce* itself, which will prompt the W3C-DID Controller to remove the Oracle from the database.
+Upon graceful shutdown, done via *make kill* from your workstation or *pm2 delete [instansce-name]* on the host machine, the Oracle will *deannounce* itself, which will prompt the W3C-DID Controller to remove the Oracle from the database.
 
 Specs about the DID implementation is in [Dyne.org's W3C-DID](https://github.com/dyne/W3C-DID).
 
 
-# Oracles diagrams
+## 📉 Monitoring
+
+* On the machines where the oracles are deployed, use **pm2 list** to see how many instances of restroom_mw are running.
+* A GUI-based monitoring service for the Oracle is the [Zenswarm-Dashboard](https://github.com/dyne/Zenswarm-Dashboard). The GUI retrieves a list of the active Oracles from the W3C-DID controller
+
+
+
+
+## 🖧 Oracles diagrams
 
 Below a list of the main Oracle flows involving:
  * Controller provisioning: provisioning of the DID Controller producing signed DID Document for the Oracles
@@ -56,7 +88,7 @@ Below a list of the main Oracle flows involving:
  * Oracle consensus based query
  * Oracle update
 
-## Controller creation
+### Controller creation
 
 ```mermaid
 sequenceDiagram
@@ -82,7 +114,7 @@ autonumber
 1. Issuer shares its public key (iPK) with the Admin
 
 
-## Oracle creation
+### Oracle creation
 
 ```mermaid
 sequenceDiagram
@@ -137,7 +169,7 @@ autonumber
 
 At the end of the process the ephemeral keys are discarded and the Issue has added to its database a new IP and its associated public key.
 
-## Oracle multiple query operation 
+### Oracle multiple query operation 
 ```mermaid
 sequenceDiagram
 autonumber
@@ -167,7 +199,7 @@ autonumber
 1. Issuer verifies that all results are equal (full consensus) or raises an error
 1. Issuer returns the verified result of the query or a list of specific errors occurred
 
-## Oracle update
+### Oracle update
 ```mermaid
 sequenceDiagram
 autonumber
@@ -190,11 +222,11 @@ autonumber
 
 
 
-## APIs 
+## 🌐 APIs 
 
 Below a list of the APIs available on an Oracle
 
-**Get Identity**
+### Get Identity
 ----
   Returns json data containing the Oracle's identity: 
  * Identity
@@ -295,7 +327,7 @@ Below a list of the APIs available on an Oracle
 
 
 
-**Ping**
+### Ping
 ----
   Returns json data with a string.
 
@@ -342,7 +374,7 @@ Below a list of the APIs available on an Oracle
 }'
 ```
 
-**Get timestamp**
+### Get timestamp
 ----
 Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine
 
@@ -388,7 +420,7 @@ curl -X 'POST' \
 ```
 
 
-**Get signed timestamp**
+### Get signed timestamp
 ----
 Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine, along with its ECDSA signature, produced by the Oracle its ECDSA sk
 
@@ -442,7 +474,7 @@ curl -X 'POST' \
 ```
 
 
-**Dilithium signature**
+### Dilithium signature
 ----
   Returns json data contained in **asset** along with the [Dilithium QP signature](https://pq-crystals.org/dilithium/), produced by the Oracle its Dilithium sk. 
 
@@ -521,7 +553,7 @@ curl -X 'POST' \
 ```
 
 
-**ECDSA signature**
+### ECDSA signature
 ----
    Returns json data contained in the **asset** along with the **ECDSA signature**, produced by the Oracle its ECDSA sk 
 
@@ -604,7 +636,7 @@ curl -X 'POST' \
 
 
 
-**EDDSA signature**
+### EDDSA signature
 ----
    Returns json data contained in the **asset** along with the **EDDSA signature**, produced by the Oracle its EDDSA sk 
 
@@ -684,7 +716,7 @@ curl -X 'POST' \
 ```
 
 
-**Schnor signature**
+### Schnor signature
 ----
 Returns json data contained in the **asset** along with the **Schnorr signature**, produced by the Oracle its Schnorr sk 
 
@@ -763,7 +795,7 @@ curl -X 'POST' \
 }'
 ```
 
-**HTTP Post**
+### HTTP Post
 ----
 Returns json data containing the result of the POST performed by the Oracle 
 
@@ -921,3 +953,22 @@ https://apiroom.net/api/dyneorg/consensusroom-update-all-instances
 The API needs no parameter.
 
 
+***
+## 💼 License
+    Zenswarm - {tagline}
+    Copyleft (ɔ) 2021 Dyne.org foundation, Amsterdam
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+**[🔝 back to top](#toc)**
