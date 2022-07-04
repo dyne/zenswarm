@@ -1,0 +1,16 @@
+Rule caller restroom-mw
+
+Scenario 'schnorr': create the signature of an object 
+
+Given I read the content of 'contracts/keyring.json'
+
+Given I have the 'keyring' 
+Given I have a 'string dictionary' named 'asset' 
+
+
+When I create the schnorr signature of 'asset'
+#When I rename the 'signature' to 'ecdsa signature'
+
+
+Then print the 'asset' 
+Then print the 'schnorr signature' 
