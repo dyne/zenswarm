@@ -1,0 +1,23 @@
+Rule caller restroom-mw
+# The whole Dilithium signature flow, works pretty much like ECDSA
+#
+# Here we are load the QP Scenario
+Scenario qp : Alice signs the message
+
+Given I read the content of 'contracts/keyring.json'
+
+
+# Here I load my private key, which is stored in a schema named 'keyring'
+Given I have the 'keyring'
+
+# Here I loead the object I want to sign.
+# The object can be a simple object like a string, 
+# or a complex one such an array or a dictionary 
+Given I have a 'string dictionary' named 'asset'
+
+# Here I create the Dilithium signature
+When I create the dilithium signature of 'asset'
+
+# Here I print out the signature and the message
+Then print the 'dilithium signature'
+Then print the 'asset'

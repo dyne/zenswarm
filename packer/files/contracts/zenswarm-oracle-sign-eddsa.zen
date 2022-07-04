@@ -1,0 +1,20 @@
+Rule caller restroom-mw
+
+# Here we are load the EDDSA Scenario
+Scenario 'eddsa': create the signature of an object 
+
+
+Given I read the content of 'contracts/keyring.json'
+
+Given I have the 'keyring' 
+Given I have a 'string array' named 'asset' 
+
+# Here we are creating an eddsa signature of an array and renaming it afterwards, 
+
+When I create the eddsa signature of 'asset' 
+
+# Here we are printing out the signatures  
+Then print the 'asset' 
+Then print the 'eddsa signature' 
+
+
