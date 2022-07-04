@@ -1,4 +1,5 @@
 Scenario 'ecdh': Create the public key
+Scenario 'eddsa': Create the public key
 Scenario 'ethereum': Create public key
 Scenario 'reflow': Create public key
 Scenario 'schnorr': Create public key
@@ -9,11 +10,13 @@ When I create the ecdh public key
 When I create the reflow public key
 When I create the schnorr public key
 When I create the dilithium public key
+When I create the eddsa public key
 
 When I create the bitcoin address
 When I create the ethereum address
 
 Then print the 'ecdh public key'
+Then print the 'eddsa public key'
 Then print the 'reflow public key'
 Then print the 'schnorr public key'
 
