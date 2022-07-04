@@ -1,36 +1,43 @@
 ![Zenswarm](docs/zenswarm.svg)
 
 # Zenswarm
-Protototype of Zenroom based Swarm of Oracles 
+Zenroom based Swarm of Oracles 
 
-# Requirements
-* a Debian based machine (the provisioning script uses apt)
-* node 14
-* (Server only) redis running on port 6379
-* pm2
-* the hostname on the host machine, must be reachable from the internet (can be an IP), the oracle use the hostname to announce their identities to the tracker
-* ports between the 25000 and 30000 must be open on the host machine
-* add the pubkey you will use todeploy from your workstation (when using root user, in /root/.ssh/authorized_keys )
-* open a port for ansible, can be configured in hosts.toml (default: *ansible_port=22254*)
-* the oracles' ansible installs an SSL certificate using Letsencrypt and the oracle currently comunicates via https. This can generate issues on machines behind a proxy (e.g. a virtual machine).  
+# Deployment
 
-# How to run
+## Requirements
+*  Linux based machine 
+* the hostname on the host machine, must be reachable from the internet (can be an IP), the oracle use the hostname to announce their identities to the Controller
+* Ports between the 20000 and 30000 must be open on the host machine
+* On the host machine, add to /root/.ssh/authorized_keys the pubkey you will use to deploy from your workstation: ansible will use this pubkey to obtain root privileges on the host (not required if using the Linode scripts)
+* Open an ssh port for ansible, can be configured in hosts.toml (default: *ansible_port=22254*) (not required if using the Linode scripts)
+* The Oracles' ansible installs an SSL certificate using Letsencrypt and the oracle currently comunicates via https. This can generate issues on machines behind a proxy (e.g. a virtual machine).  
+* (DID-Controller only) redis running on port 6379
+
+## How to install
 
 * *git clone https://github.com/dyne/zenswarm/*
-* *cd ansible* 
 * edit hosts.toml to set: 
   * address of target machine for deployment (default: zenswarm.zenroom.org ) 
-  * set user to log in the target machine (default: root) 
   * port that ansible will use to connect to the host (default: *ansible_port=22254*)
   * amount of oracles to be deployed on that machine (default: *nodes=3*)
-* edit run_ansible_example.sh, to configure the endpoints that the oracles will use to announce and unannounce (the W3C-DID controller)  
-* run run_ansible_example.sh
-* edit *subscription.csv* to define which Oracle will notarize from which L1 to which L0
+* edit *./ansible/init-instances.yml* in case you want to use a different DID Controller to perform the announce and deannounce (defaults: **announce_url: "https://did.dyne.org/api/W3C-DID-controller-create-oracle-DID.chain"** and **deannounce_url: "https://did.dyne.org/api/W3C-DID-controller-remove-oracle"**)  
+* edit *./ansible/subscription.csv* to define which Oracle will notarize from which L1 to which L0
+* **make setup-tls** to install the SSL certificate using Letsecncrypt
+* (If deploying on Linode): execute **make one-up IMAGE=(name of the linode image)** 
+* (If NOT deploying on Linode): execute **make install**
+
+# How to run
+After installation, run:
+ * **make init** to generate the secret keys of the Oracle(s)
+ * **make start** to generate the identity and trigger the announce of the Oracle(s)
+ * **make kill** performs a graceful shutdown that deannounces the Oracle(s), unregistering the Oracle(s) from the DID Controller
+
 
 # Monitoring
 
 * On the machines where the oracles are deployed, use **pm2 list** to see how many instances of restroom_mw are running.
-* A GUI-based monitoring service for the Oracle is the [SoO-Dashboard](https://github.com/dyne/SoO-Dashboard). The GUI retrieves a list of the active Oracles from the W3C-DID controller
+* A GUI-based monitoring service for the Oracle is the [Zenswarm-Dashboard](https://github.com/dyne/Zenswarm-Dashboard). The GUI retrieves a list of the active Oracles from the W3C-DID controller
 
 # Provisioning
 
@@ -40,125 +47,23 @@ Upon graceful shutdown, done via *pm2 delete [instansce-name]*, the Oracle will 
 
 Specs about the DID implementation is in [Dyne.org's W3C-DID](https://github.com/dyne/W3C-DID).
 
-# Oracles flows
 
+# Oracles diagrams
 
+Below a list of the main Oracle flows involving:
+ * Controller provisioning: provisioning of the DID Controller producing signed DID Document for the Oracles
+ * Oracle Provisioning: key issuance, DID document creation
+ * Oracle consensus based query
+ * Oracle update
 
-## Oracle creation
-
-```mermaid
-sequenceDiagram
-autonumber
-  participant A as Admin
-  participant C as Cloud
-  participant I as Issuer
-  participant V as VM1..VM2..VMn
-
-  A->>C: Create VM
-  C->>V: VM install and new IP
-  C->>A: Grant VM setup access
-  A->>I: aSK signed registration of a new VM IP
-  A->>V: Provision signed scripts + Issuer public key (iPK)
-```
-
-1. Admin orders the creation of a VM to the Cloud provider
-1. Cloud provider creates the VM on a new allocated IP and installs a signed OS
-1. Cloud provider grants the Admin setup access to the VM (IP + SSH)
-1. Admin signs a message to register the new VM IP on the Issuer
-1. Admin provisions the VM with a signed OS setup and the Issuer public key
-
-## Oracle key issuance
-
-**Note: the current provisioning flow is meant for a permissionless network**, for testing purposes. In the current provisioning, the ephemeral key is delivered within the *announce* flow, in a single communication channel. In order to set up a permissioned network, the announce mechanism can be split and the **ephemeral key can be send on a side channel**. 
-
-```mermaid
-sequenceDiagram
-autonumber
-  participant I as Issuer
-  participant V as VM1..VM2..VMn
-
-  I->I: Ephemeral keygen (eSK + ePK)
-  I->>V: iSK signed request + eSK
-  V->V: VM keygen (vSK + vPK)
-  V->>I: eSK signed answer: IP + vPK
-  I->I: ePK verify and store VM IP + vPK
-```
-
-1. Issuer generates an ephemeral keypair used only to verify the VM registration
-1. Issuer signs the ephemeral secret key with iSK and sends a request to the VM IP
-1. VM verifies the registration request with iPK and generates a VM keypair (vSK + vPK)
-1. VM signs an answer with eSK and sends back its public key
-1. Issuer verifies the answer signed with ePK and saves the VM public key and its IP
-
-At the end of the process the ephemeral keys are discarded and the Issue has added to its database a new IP and its associated public key.
-
-## Swarm operation
-```mermaid
-sequenceDiagram
-autonumber
-  participant U as User
-  participant I as Issuer
-  participant V as VM1..VM2..VMn
-  U->>I: Swarm of Oracles API query
-  I->>+V: propagate query to all VMs
-  V->V: exec queries (TTL)
-  V->>-I: return result or error
-  I->I: consensus on results or errors
-  I->>U: return collective result or error
-```
-
-1. A query is made to the Swarm of Oracles Issuer by a User (or an event or a time trigger)
-1. Issuer parses and validates the query syntax, then propagates to all oracle VMs
-1. VMs execute the Zencode associated to the query: may access other online services, query databases and external APIs
-1. VMs return results of the Zencode execution or an error
-1. Issuer verifies that all results are equal (full consensus) or raises an error
-1. Issuer returns the verified result of the query or a list of specific errors occurred
-
-## Oracle update
-```mermaid
-sequenceDiagram
-autonumber
-  participant A as Admin
-  participant I as Issuer
-  participant V as VM1..VM2..VMn
-  
-  A->>I: aSK signed update ZIP
-  I->I: aPK verify update ZIP
-  I->>V: iSK signed update ZIP 
-  V->V: iPK verify and install ZIP
-```
-
-1. Admin signs and uploads a ZIP with updated scripts
-1. Issuer verifies the ZIP is signed by the Admin
-1. Issuer signs and uploads the update ZIP to all VM
-1. VM verifies the ZIP is signed by the Issuer and installs the scripts
-
-``` mermaid
-sequenceDiagram
-    participant R as Register
-    participant C1 as Random Client
-    participant Cn as N-Clients
-    C1->>C1: CREATE ID
-    Cn->>Cn: CREATE ID
-    C1->>R: ANNOUNCE ID
-    Cn->>R: ANNOUNCE IDs
-    C1->>R: ASK 6 random IDs
-    R->>C1: REPLY 6 random IDs
-    C1->>Cn: ASK to execute POST  (x6)
-    Cn->>C1: REPLY result of 6 POST (array)
-    C1->>C1: Verify the output of the 6 POST (WIP)
-```
-
-
-
-## Issuer/W3C-DID-Controller creation
+## Controller creation
 
 ```mermaid
 sequenceDiagram
 autonumber
   participant A as Admin
   participant C as Cloud
-  participant I as Issuer
+  participant I as Controller
   A->A: Admin keygen (aSK + aPK)
   A->>C: Setup a Cloud provider
   C->>I: Issuer Install
@@ -177,210 +82,834 @@ autonumber
 1. Issuer shares its public key (iPK) with the Admin
 
 
-## APIs (WIP)
+## Oracle creation
 
-We're moving the API list to a W3C-DID doc
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Admin
+  participant C as Cloud
+  participant V as O1..O2..On
+  participant I as Controller
+  participant B as Blockchain
 
-### All
-
-* **'https://apiroom.net/api/dyneorg/consensusroom-get-timestamp** needs no parameter, returns:
-
-```json
-{    
-"myTimestamp": "1644584971367" 
-  }
+  A->>C: Create Oracle
+  C->>V: Oracle deployment
+  C->>A: Grant Oracle setup access
+  C->>I: aSK signed registration of a new Oracle identity
+  I->I: Create Oracle DID 
+  I->>B: Notarize Oracle DID 
+  B->>I: Return txId with DID
+  I->I: Store txId as DID
+  A->>V: Provision signed scripts + Controller public key (iPK) (????)
 ```
 
-### Server
+1. Admin orders the creation of Oracle to the Cloud provider
+1. Cloud provider creates the Oracle on a new allocated IP and installs a signed OS
+1. Cloud provider grants the Admin setup access to the Oracle (IP + SSH)
+1. Cloud announces Oracle identity to the Controller
+1. Controller creates DID document for Oracle (containins DID of future txId)
+1. Controller notarizes DID document of Oracle on Blockchain
+1. Blockchain returns txId storing DID document Oracle 
+1. Controller stores txId as DID document (txId DID is contained in Oracle's DID Document)
+1. Admin provisions the Oracle with a signed OS setup and the Issuer public key
 
-All the queries to the server
+## Oracle key issuance 
 
-* **https://apiroom.net/api/dyneorg/consensusroom-server-initIdentities**  needs no parameter, stores (and overwrites!) in redis a list of mock identities 
-* **https://apiroom.net/api/dyneorg/consensusroom-server-add-identity**  stores a new identity in the list of identities, input: 
+```mermaid
+sequenceDiagram
+autonumber
+  participant I as Controller
+  participant V as O1..O2..On
+
+  I->I: Ephemeral keygen (eSK + ePK)
+  I->>V: iSK signed request + eSK
+  V->V: Oracle keygen (oSK + oPK)
+  V->>I: eSK signed answer: IP + oPK
+  I->I: ePK verify and store Oracle IP + oPK
+```
+
+1. Issuer generates an ephemeral keypair used only to verify the Oracle registration
+1. Issuer signs the ephemeral secret key with iSK and sends a request to the Oracle IP
+1. VM verifies the registration request with iPK and generates a VM keypair (vSK + vPK)
+1. VM signs an answer with eSK and sends back its public key
+1. Issuer verifies the answer signed with ePK and saves the VM public key and its IP
+
+At the end of the process the ephemeral keys are discarded and the Issue has added to its database a new IP and its associated public key.
+
+## Oracle multiple query operation 
+```mermaid
+sequenceDiagram
+autonumber
+  participant U as User
+  participant I as Controller
+  participant O as Oracle
+  participant V as O1..O2..On
+  participant B as Blockchain
+  
+  
+  U->>I: Query list of Oracles
+  I->>U: Returns list of Oracles
+  U->>O: Query Oracle
+  O->>+V: Query SoO
+  V->V: exec queries (TTL)
+  V->>-O: return ECDSA signed result or error
+  O->O: consensus on results or errors
+  O->>U: return ECDSA signed collective result or error
+  U->>B: (optional) queries Oracles' txId containing W3C-DID
+  B->>U: (optional) returns txId containing W3C-DID
+```
+
+1. A query is made to the Swarm of Oracles Issuer by a User (or an event or a time trigger)
+1. Issuer parses and validates the query syntax, then propagates to all oracle VMs
+1. VMs execute the Zencode associated to the query: may access other online services, query databases and external APIs
+1. VMs return results of the Zencode execution or an error
+1. Issuer verifies that all results are equal (full consensus) or raises an error
+1. Issuer returns the verified result of the query or a list of specific errors occurred
+
+## Oracle update
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Admin
+  participant I as Controller
+  participant V as O1..O2..On
+  
+  A->>I: aSK signed update ZIP
+  I->I: aPK verify update ZIP
+  I->>V: iSK signed update ZIP 
+  V->V: iPK verify and install ZIP
+```
+
+1. Admin signs and uploads a ZIP with updated scripts
+1. Issuer verifies the ZIP is signed by the Admin
+1. Issuer signs and uploads the update ZIP to all VM
+1. VM verifies the ZIP is signed by the Issuer and installs the scripts
+
+
+
+
+
+## APIs 
+
+Below a list of the APIs available on an Oracle
+
+**Get Identity**
+----
+  Returns json data containing the Oracle's identity: 
+ * Identity
+  * uid: contains URL and HTTPS port 
+  * baseUrl: the URL 
+  * HTTPS port
+  * ECDSA, EDDSA, Schnorr, Dilithium, public keys
+  * Ethereum and Bitcoin address
+  * List of available APIs
+  * Country
+  * State (region)
+  * subscriptions: list of blockchain(s) the Oracles has a websocket subscription to
+  * L0: blockchain the Oracle is notarizing onto
+  
+
+* **URL**
+
+  /api/zenswarm-oracle-get-identity
+
+* **Method:**
+
+  `GET` or `POST` 
+  
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
 
 ```json
 {
-	"identity": {
-			"baseUrl": "http://192.168.0.100:3030",
-			"ip": "192.168.0.100",
-			"public_key": "BGiQeHz55rNc/k/iy7wLzR1jNcq/MOy8IyS6NBZ0kY3Z4sExlyFXcILcdmWDJZp8FyrILOC6eukLkRNt7Q5tzWU=",
-			"timeServer": "http://localhost:3312",
-			"uid": "Kenshiro",
-			"version": "1",
-			"test": "1"
-	}
-}
-``` 
-
-* **https://apiroom.net/api/dyneorg/consensusroom-server-get-listOfIdentities** needs no parameter, returns the full list of identities stored
-
-Returns an array of objects like: 
-
-```json
-{
-  "identities": [
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://192.168.1.41",
-      "bitcoin_address": "bc1q5xngalmnf4vau3uuq8ssh3pp65dqzm0mtuxj44",
-      "ecdh_public_key": "BN2H/OxIfEeX/ZUbRJvE3FvSkRrJrDl7x6U1+r8yMbvVKJ2o/C4B0/HusVTkyulzs2hiIij/2L6GvLCVgv4TOEE=",
-      "ethereum_address": "a494024323222c4e9ac0fcbf7df460b0a393e6ad",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "192.168.1.41",
-      "port_http": "39761",
-      "port_https": "38361",
-      "reflow_public_key": "DLQiNv10/RmHe5wa8lL9wKY9oXl3SYgT8/fF38dWZjFJPLamHOfiY5avIUfbOAVVBmooTgyYUWNsoWvzfT+32gXOfyLNNNVNL1nq/DLOxU89Kbm/+7cijpz+Ev1AcAHYFmxGGnL7sHh5bmKgAKT5A7UTYFoOr85Z/bZd/2o+1Ipmp7PPUihPIBwkfmCXIm3BAIVcIMqNZwhJe7nMm9iER8GUgK01ObOtlzqTq3ShpBmT5/OdbHZ+7SZj6g+ciich",
-      "schnorr_public_key": "101889fafdb60fd8443a8c97f3063d06340e4b22a79c3e359bdede5e921c4710c1c0e6088568e4489701631911cbd5e5",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://192.168.1.41",
-      "bitcoin_address": "bc1qy0z0k22srzz085lhesazw0fma9ae3ypsyrrvr3",
-      "ecdh_public_key": "BDb0B6qWEJpz3RECjr58+ZWa1zGUan6zHfCF3PatfLzWRcQ78Lt1z9MM/qqyqmEi4tPkUr1n3SVOyD2XfbfXxYk=",
-      "ethereum_address": "571df9f1de18f86b61a5124eb0f7859709eac6da",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "192.168.1.41",
-      "port_http": "39379",
-      "port_https": "41175",
-      "reflow_public_key": "Cd/Npe5RSnyV+mt1IxNMNN9+UCKBCK7mEpT/mv1Q9ih14apmfKBTy4meNBUpSvRNGdRJ68ZUNcBfkDAQAG2RsCCJwPxn3GL+nmhz2xBRhJaxN0EyTfFTnG0uTohZP+Z/AiLS4bF8Nb4aKev6MJORzJTMX8pH3Lj95dtR10DcfhRe8kMcllDl7oXUHnqmcbPLBl27lPaGIABwgVAERCJuM5gxTJKMqluu67wcyVgijlXdu1jur40k+PcrjvOQTL5m",
-      "schnorr_public_key": "066db2b2047271104ccedf31a2012f023eff28447811feb8928cb8629fbacfcc9ea4ee9d817382aa726a50d811814018",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://10.204.214.254",
-      "bitcoin_address": "bc1qzn7zjfpvdsd5l0gt3fhn9hcn0qx4dnsa7yst4y",
-      "ecdh_public_key": "BFX6UPhr0rDbv3zzMjhYXYthFddFrhcjmNzjGkjy5csnB9CpOgyu4Y4kIMuSMB+jZpX5EOR8iw0NU526t/+HO/o=",
-      "ethereum_address": "391f2cedbfc845ea0db3df4b1f529810c5e7e0af",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "10.204.214.254",
-      "port_http": "33579",
-      "port_https": "41351",
-      "reflow_public_key": "Ey341Uioo68+KuUla7SI4v9vioW3aJlHOFwhpv0bj1An8Rn1kQPX04C8a40GIfJjDSq5DA6KtZfbXGpMoQnIDoQuUzlNRikVqHFp19H5yIDnoSOpFR1TIIKkMOzX6+7EBdgIz8RRe92VoHQXgKPwgrJEnHzkmZWovm4VPzjPeO7vchinDLa77itsQICzzQT5FcOegZiVXCGMzADhxqUJRwiz9sme0XjORNQFyaDYqiOmxGXmSu5frNYhK/NXRkm0",
-      "schnorr_public_key": "0c57c2b5a2cc43daaae2cf8eead24e23c62e38cd9870ab091b92005a7365f47f4916393a87769e19c8c11795dc56c30c",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://10.204.214.254",
-      "bitcoin_address": "bc1qgrt69h8v83fc8ataw3a7ser6rzdcxutsvxz4pq",
-      "ecdh_public_key": "BDNtfT0/sx9wVPSR9H+mjpRaD7zhjhksb8KPAibfqN2YHy6vv9ECCGh7sff8LlJTZPdTUBsZH2DiiknqsnrP6xs=",
-      "ethereum_address": "aa8f7e1d2d9c85c4f450ba5cf841c31578a7aad0",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "10.204.214.254",
-      "port_http": "42121",
-      "port_https": "43493",
-      "reflow_public_key": "Daww03xahKmIIkdWbeXar/veuyV56ib7PlD0TnZuXprmr6DHAStbXK/ZJG3xfMuRBpzrlW/p2liqLvStylCxBLAWN9kjLxGUUjLAQ5yknXh6DnqGRndzdsoTzT3bR6TnF7mtzH1Ro/0gNQ206nzhZaL4mqeJE2gG1x+mGZP6CrehlPLUWqj0xiQ9i9IiZZsVEXm0Y4n+nJw4w9wgs/8x7hNelDHvXP2xJWRPjfCs0ekT+wqRHIuMBaP9lqSz9aH/",
-      "schnorr_public_key": "0c095bd75250368be273d928cca08c787aba8acf6af31dc163e1d120832dbaf73bbcc85b772728ffbc707f6bbff1a803",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://10.204.214.254",
-      "bitcoin_address": "bc1qxsfjk2k6kunmkmhyur0gp5s5zhjcw72llkssgx",
-      "ecdh_public_key": "BNKEZI/c5S1i0TOQKv2ZUB9hHtZA/IrsJBga2GOMgevLjNkMO8fKDykLrB7hRX07hvOkfwJE14Za2t+jkFQWTW8=",
-      "ethereum_address": "823f56ad5386b3d3505e8c196f0905fba6525d8e",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "10.204.214.254",
-      "port_http": "42573",
-      "port_https": "38531",
-      "reflow_public_key": "F9/NncAfcphm5s9Kw9YruSuwBXUSvPD/TaNyvYq5rkBlT2SQu0siNOftpXKHsPVLEPpzMNPHU7SrM3CXOHk1woRkEz87TwIzsNAG8ekqX+6gUiJftJTRrnH20smvZ/1ACKqG4iV/sAvanFSST84QQpXhisZjQewoBFKHKJhePVY6hnLa+ANDsFFxLr8nmrB7BeFF6eQMtyay94ACNa5zRZ86KCWBpA2A6arfVPGUi7L/ZocEYQbhVLUUmdg3cD0K",
-      "schnorr_public_key": "0be32933a6a8be278e59f68676e8e7daa4401a4cff10756b172161520cf88e67b62b4d6afa3b97d80663a1a7da2d91f4",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://10.204.214.254",
-      "bitcoin_address": "bc1qex58qawdr99upg6hx6pzeu4vsly394cg7mnuwg",
-      "ecdh_public_key": "BAk6V54mtV0362oFnIGt/qPOb5o57KOOJx7KScdu+a+/1vTcZ0nYO8FtkuNJk7c1L4uLBuaZ8Q3uisii+nCJx2E=",
-      "ethereum_address": "a78ed579726853d6761575813eaaaad79fb0988a",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "10.204.214.254",
-      "port_http": "39641",
-      "port_https": "38259",
-      "reflow_public_key": "AzI8skvJE+UlLbCeGtMZZx8HzCfzzmjz/XtlH1VJpYLL875t4Idq/3QFYF0ILKUCFLgN1ncWcZDbLzwEl13+wSc2pvzrztF0tIQpAgY35Ju18znWOrJKsC2QcxVUDfyQBmPNkf8nAKdJ5xRhWtiNhh75Qx3HAHILy/odESRrKPsjk3xUbVCoyl4KJ0gx+h1jDVY6MAVwtb46QqfEP0ebnCW3SwedqRxjkfWddkiQMSo0p4iifB1jEzgfjSU1f6Fh",
-      "schnorr_public_key": "00d892e798a8a4a22574f3e778296457ef477b6f8fa95589e85f5bd6afecb61742405087a60a8977ea7de39d0bbd63c3",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
-    },
-    {
-      "announceAPI": "/api/consensusroom-announce",
-      "baseUrl": "http://10.204.214.254",
-      "bitcoin_address": "bc1qz9sshm5l7029nnggqyftqqre5u372m90pq8p9p",
-      "ecdh_public_key": "BNz4LBFlRL+Ik/+1pZ4mvI0PrwSYjosETf6Axw91oKAE1pmfxDLf5eofzqPiFgqgzwDefLPvlDIrY/C4i3qZjto=",
-      "ethereum_address": "26a3f1224076b11d1a6b5a3077d126b98bebc39a",
-      "get-6-timestampsAPI": "/api/consensusroom-get-6-timestamps",
-      "ip": "10.204.214.254",
-      "port_http": "45611",
-      "port_https": "41297",
-      "reflow_public_key": "AeLw9Z8Ag7jenNNP4Y5eQIeTnDtZuVMqz+U1HzvjqSNK58Gsy8oveFF2KTd5W/ISGaFm7nUKtnwKwQzySPE/QI4VQur/ZCwm+e8Y72E3jIpdmJaaDN2HJlpNXeMUqosHBkhwu0sMW5PRaxil8xGjfET+iZVsV0xt9A7IBhGej1vMr9oswNRteq99MaMrdtxcE/vgOTsdxR16WFwCsmCWTBBvBzMNEJ/JfrS6DJTfhEm8DkTc9aAuT5S9kbYWb1Vt",
-      "schnorr_public_key": "08eaad7e99b34a13ba1078707cce51278b05d98f101964f3d390058a511a047adb31b7dafef01d6f012ebffe464a0cbc",
-      "timestampAPI": "/api/consensusroom-get-timestamp",
-      "tracker": "https://apiroom.net/",
-      "uid": "random",
-      "version": "2"
+  "identity": {
+    "API": [
+      "/api/zenswarm-oracle-announce",
+      "/api/ethereum-to-ethereum-notarization.chain",
+      "/api/zenswarm-oracle-get-identity",
+      "/api/zenswarm-oracle-http-post",
+      "/api/zenswarm-oracle-key-issuance.chain",
+      "/api/zenswarm-oracle-ping",
+      "/api/sawroom-to-ethereum-notarization.chain",
+      "/api/zenswarm-oracle-get-timestamp",
+      "/api/zenswarm-oracle-update",
+      "/api/zenswarm-oracle-get-signed-timestamp",
+      "/api/zenswarm-oracle-sign-dilithium",
+      "/api/zenswarm-oracle-sign-ecdsa",
+      "/api/zenswarm-oracle-sign-eddsa"
+    ],
+    "Country": "FR",
+    "L0": "ethereum",
+    "State": "NONE",
+    "baseUrl": "https://swarm1.dyne.org",
+    "bitcoin_address": "bc1q2eje20v242z9walf35vv78e9t364qat7gptl33",
+    "description": "restroom-mw",
+    "dilithium_public_key": "WR6I8Y2/D7pN9wUypkNqoG1ivSozcezyLTovGDBpJYxn3PIO7m2sDJYHx8cr9tJVpCcpdSdregQEWG7iHdgyMwXic60JajTQfifyZCHOStJRYwEXKBA36fMnu/0rK6kjGjImXCGIfGO8gDdvVtWe1x2HmN4XBoLsE+J7Qbwqir+qub3AssQKg+xyq/4DYRGyrqG0kiablY5RaUR66eaVVORgTR2eHza58nf/iCDUkol3Y//yM8CS7BS4bPh+ARd+3Dk2P++XLXzi8kV4Vrj5S4nIVv7D5AbPBUYQc6uTKyw7ybhON2x21MHGWfF0s83J4P1h/yMtObnYg9DxJQAHGZrpc6RvH2fND2hUB0PobdrzRQLz79jm+Pn1oFbhq7LsQep6CFsO2iqQquab3Qes41W16V3gVd2aNtzhbTqaTRr+hU7/T8bYf0dv1r0jZuZvaMnfpbiPpesQ0izSh7lO1l7TrMHNZbVPU/vB9P53stGuqcEXrsmz6W/ExoVCusj2L6DCMo3q2y42XRT2tA3JXsjMrFJKzc2DI1UdOkOuP7jzuc9WxlwFSTHvIdZDrG8SuWiRZYGda6ZzQBvCPgkqpaDRmsZvrC4IGNFeuAcedNZWMI6W+fvw+csOToLOwRUqUmJqhrjjc8dZ0EfyKM34PMp1z8TKcPh/wUWeXOZ6HJCfbEcyNZHNpBXtabhA/bMS3dhVnUR2hDgF5/Ch3wgevXB22VlpQECkRIFkZ6C3q8MD5mVIVQ9hSsHp9hy/mqzCkuRiIrVNfDEglgpMJCtimX5l0prnQPyB5I1B2zWNNJDxuzFGhRn7Nuj5l7Xq0rJN+wa5JlPQmOrTR55YKWi5HrP/r3Z6VAanf23fsWuaNayIDhsDv21Jgg3x+vo2aCx5kuYPnx67ci/3CDOK8YRfAHKuZm2LojEs0GB+FW4H71wQW/46p7LKlvHbU4/XjZFaW3gbrErKIlSVj4eL3kxi9/eCXEoRSueLBips/RWnS+Nrttf6jFLogOyJERFmLYMq+RpC2oViPgRDc3AGfsMlkJUrDY71LkrxbfMCAJXC94OE6A4egUzZTOkch/6dVWSLvOEX4z8ojSEyS5EwlOuVLoa9p+k+VqNRniqGXgto7083RKFu+6HGfQ5HG4CBurpzm7FJ3POM5h246urjyXB6CYVb7qgIa0MhjdNqAZSX+Uhwl0z/Q329vqbM4OZfO3tPO2M6TCPKDb/fcao22bYoNx4P0WfGGtHlzw8TpSQLPnsLpGX7da7LLKsBty2EDCElSlyGDWpoALNui02SGsAiSSF7MDg/ili/GJrYUPlV336X/hg/qqmd+gTVWK88qSyF6NEf7+jMxyHw4a7O7wrRi+PuzH1OJYSTINYGFIwc22MwDZ01gN38s/9i72FQQnI+7Jybt06JZtu/l9cnJp+17qmnZYGskswF1FM6YFGiIxS2++NmW9Vj1iIb1atpcfc9nU7P3RzgOy39Pcc3LH/32eN38Gc4oGB6t2uGqK0UeYAm+hj17+rGrOQGAd4FnJTWmk2euRuGtzU3Xps4YNIxU5kVEe1zMGyb+ueZGLRfu8CsLXqKv8jDWd19Ek1cSceUgUUhdJFXdu4gpiSw4w+QkSrok3A/4dYa30/W/SSyBbDRZ1U2p2ANYhz04oTJe1fEvasf9P9EQsArxQQMPMSdozhHiR3DJ8eks927/eT6YHUzUyL3PgvnOBlmsNxjJQEWARG9eC2NdD+Nvw/L/xZBdg==",
+    "ecdh_public_key": "BKQKsKZsau62MJAk3nsEK/NoKdS80+a0j7TezfbwrWdAEPJzWk5/yAPldkVL3eiQkz3x2z6FDcIex7cu9W5aYf8=",
+    "eddsa_public_key": "FFB2sQifRQNRLmetRroJ8PvcudBxBuRoYQpMSYdQhg6L",
+    "ethereum_address": "e785f9e188f8137ec13ecea52ed753d4c7c7c064",
+    "ip": "swarm1.dyne.org",
+    "port_https": "20003",
+    "reflow_public_key": "E+QVn6d+mrTDPl8g/a98CL9K+CVG1LRG1mdFvYb1nhAFHtMOVw+t3Y6gc+zzTKO7AFRwHyaYI9moXCKanHdcLS37+ebRuxoxB9qOwZhPM6IWJj9opQPdql8xdMz7T1yKBHnq7uy4rkywwUkSgG32nQXA7zPJKwHq+ieLaD65ePzi1n21L1vjIlNBVVDTjGmHD3/xTmgxSVcM8eYswOBSxv+EsU6YhAj9EAgp+OoTW2h7bSIPTXgI8i1COtcw2emA",
+    "schnorr_public_key": "D54MEEyah5gC76dQscft9ggFt29tENpcp4Ms+6z5ZBaChQeu3iZee5/81Mq9MJEg",
+    "tracker": "https://apiroom.net/",
+    "uid": "swarm1.dyne.org:20003",
+    "version": "2"
+  },
+  "subscriptions": {
+    "iota_devnet": {
+      "api": "https://api.lb-0.h.chrysalis-devnet.iota.cafe/",
+      "name": "iota_devnet",
+      "sub": "mqtt://mqtt.lb-0.h.chrysalis-devnet.iota.cafe:1883",
+      "type": "iota"
     }
+  }
+}
+```
+
+ 
+* **Error Response:**
+
+	None
+
+* **Sample Call:**
+
+```shell
+ curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-identity' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {},
+  "keys": {}
+}'
+```
+
+
+
+
+**Ping**
+----
+  Returns json data with a string.
+
+* **URL**
+
+  /api/zenswarm-oracle-ping
+
+* **Method:**
+
+  `GET` or `POST` 
+  
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+  "output": [
+    "I_am_alive!"
   ]
 }
-``` 
+```
 
-* **https://apiroom.net/api/dyneorg/consensusroom-server-get-6RandomIdentities** needs no parameter, returns 3 random identities picked from the list of identities
+ 
+* **Error Response:**
 
-* **https://apiroom.net/api/dyneorg/consensusroom-parallel-post-from-6random.chain** picks 6 random oracles, asks them to perform a POST and returns the aggregated results
+	None
 
-json```
+* **Sample Call:**
+
+```shell
+ curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-ping' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {},
+  "keys": {}
+}'
+```
+
+**Get timestamp**
+----
+Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine
+
+* **URL**
+
+  /api/zenswarm-oracle-get-timestamp
+
+* **Method:**
+
+  `GET` or `POST` 
+  
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+  "myTimestamp": "1656931966016"
+}
+```
+
+ 
+* **Error Response:**
+
+	None
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-timestamp' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {},
+  "keys": {}
+}'
+```
+
+
+**Get signed timestamp**
+----
+Returns json data with a string, containing the timestamp fetched using the JavaScript method **getTime()** from the host machine, along with its ECDSA signature, produced by the Oracle its ECDSA sk
+
+* **URL**
+
+  /api/zenswarm-oracle-get-signed-timestamp
+
+* **Method:**
+
+  `GET` or `POST` 
+  
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+  "ecdsa_signature": {
+    "r": "ivjynFRQXm4EYKGwYpXSejoZvLNmEYHb3O5pFh2I+F8=",
+    "s": "DWLIWDtSTxfyuKRuj2d0uIkRjKRaaJwvoBbU+qmFZJQ="
+  },
+  "myTimestamp": "1656932308339"
+}
+```
+
+ 
+* **Error Response:**
+
+	None
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-signed-timestamp' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
   "data": {
-  "post": {
-   "data": {
-    "endpoint": "https://apiroom.net/api/dyneorg/create-keys-from-given-random",
-    "post": {
-     "data": {
-	"seed": "pNivlLFjZesFAqSG3qDobmrhKeWkGtPuUBeJ3FmkAWQ="
-     }
+    "keyring": {
+      "ecdh": "mukeqwntoJPtAN94jgahUA/ID7NptMLNL84sMPJ++eY="
     }
-   }
+  },
+  "keys": {}
+}'
+```
+
+
+**Dilithium signature**
+----
+  Returns json data contained in **asset** along with the [Dilithium QP signature](https://pq-crystals.org/dilithium/), produced by the Oracle its Dilithium sk. 
+
+* **URL**
+
+  /api/zenswarm-oracle-sign-dilithium
+
+* **Method:**
+
+  `POST` 
+  
+* **Data Params required:**
+   
+  `asset={data}`
+
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+  "asset": {
+    "array": [
+      1,
+      2,
+      3
+    ],
+    "dictionary": {
+      "number": 1969,
+      "string": "hello world again!"
+    },
+    "number": 42,
+    "string": "hello world!"
+  },
+  "dilithium_signature": "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"
+}
+```
+
+ 
+* **Error Response:**
+
+	* **Code: 500 Error: Internal Server Error** 
+    **Content:*
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-sign-dilithium]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-dilithium' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+    "asset": {
+     "string": "hello world!",
+	 "number": 42,
+	 "array": [1,2,3],
+	 "dictionary": {"string": "hello world again!","number":1969}
+    }
+  },
+  "keys": {}
+}'
+```
+
+
+**ECDSA signature**
+----
+   Returns json data contained in the **asset** along with the **ECDSA signature**, produced by the Oracle its ECDSA sk 
+
+
+* **URL**
+
+  /api/zenswarm-oracle-sign-ecdsa
+
+* **Method:**
+
+  `POST` 
+  
+
+* **Data Params required:**
+   
+  `asset={data}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+  "asset": {
+    "array": [
+      1,
+      2,
+      3
+    ],
+    "dictionary": {
+      "number": 1969,
+      "string": "hello world again!"
+    },
+    "number": 42,
+    "string": "hello world!"
+  },
+  "ecdsa_signature": {
+    "r": "VSWtbgWid2bMvXDVd2pemTlYb204E3+TgjhQh1nu38M=",
+    "s": "EH16QToBcWVqasQ8+3uTSgklvvk6odXw/ut1KuDDHkk="
   }
- }
+}
+```
+
+ 
+* **Error Response:**
+
+	* **Code: 500 Error: Internal Server Error** 
+    **Content:*
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-sign-ecdsa]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-ecdsa' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+    "asset": {
+     "string": "hello world!",
+	 "number": 42,
+	 "array": [1,2,3],
+	 "dictionary": {"string": "hello world again!","number":1969}
+    }
+  },
+  "keys": {}
+}'
 ```
 
 
 
-### Instance 
+**EDDSA signature**
+----
+   Returns json data contained in the **asset** along with the **EDDSA signature**, produced by the Oracle its EDDSA sk 
 
 
-*  **/api/consensusroom-announce**  the oracle announces itself to the server, the input is the same as the endpoint /consensusroom-server-add-identity
-*  **/api/consensusroom-ping**  monitoring API
-*  **/api/consensusroom-http-post**  performs a POST and returns the result. Signature:
+* **URL**
 
+  /api/zenswarm-oracle-sign-eddsa
+
+* **Method:**
+
+  `POST` 
+  
+* **Data Params required:**
+
+  `asset={data}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
 
 ```json
 {
-	"post": {
-		"data": {
-			"myName": "User123456"
+  "asset": {
+    "array": [
+      1,
+      2,
+      3
+    ],
+    "dictionary": {
+      "number": 1969,
+      "string": "hello world again!"
+    },
+    "number": 42,
+    "string": "hello world!"
+  },
+  "eddsa_signature": "3E7obC3UDtVsf5v8c52pYbqv39pJeFHGyFbqnK2shZdmtPB3EjfpwAKwYdZ8jrDGe6buHXUDvD9ZVeADLErLdMv6"
+}
+
+```
+
+ 
+* **Error Response:**
+
+	* **Code: 500 Error: Internal Server Error** 
+    **Content:*
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-sign-eddsa]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-eddsa' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+    "asset": {
+     "string": "hello world!",
+	 "number": 42,
+	 "array": [1,2,3],
+	 "dictionary": {"string": "hello world again!","number":1969}
+    }
+  },
+  "keys": {}
+}'
+```
+
+
+**Schnor signature**
+----
+Returns json data contained in the **asset** along with the **Schnorr signature**, produced by the Oracle its Schnorr sk 
+
+
+* **URL**
+
+  /api/zenswarm-oracle-sign-schnorr
+
+* **Method:**
+
+  `POST` 
+  
+* **Data Params required**
+
+  `asset={data}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "asset": {
+      "array": [
+         1,
+         2,
+         3
+      ],
+      "dictionary": {
+         "number": 1969,
+         "string": "hello world again!"
+      },
+      "number": 42,
+      "string": "hello world!"
+   },
+   "schnorr_signature": "GO2MvxSUezuUGnNXJ8715MisUCn+bXzjISI311MhdWiXTfilahlFwUkwqFQ1MvBMBD/sA52Jq3h4T5zFMzSaZJfsMQZeTrJ64fG38oBw4Qw="
+}
+
+```
+
+ 
+* **Error Response:**
+
+	* **Code: 500 Error: Internal Server Error** 
+    **Content:*
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-sign-schnorr]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-schnorr' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+    "asset": {
+     "string": "hello world!",
+	 "number": 42,
+	 "array": [1,2,3],
+	 "dictionary": {"string": "hello world again!","number":1969}
+    }
+  },
+  "keys": {}
+}'
+```
+
+**HTTP Post**
+----
+Returns json data containing the result of the POST performed by the Oracle 
+
+
+* **URL**
+
+  /api/zenswarm-oracle-http-post
+
+* **Method:**
+
+  `POST` 
+  
+
+* **Data Params**
+
+  `post{data={data to post}}` 
+  
+  `endpoint={URL}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+  "output": {
+    "result": {
+      "User123456": {
+        "keyring": {
+          "ecdh": "a5b0Zw3RNUlUcKk9ZSmt53uesVJW5PHQ8gcKISbQjvo="
+        }
+      }
+    },
+    "status": 200
+  }
+}
+```
+
+ 
+* **Error Response:**
+
+	* **Code: 500 Error: Internal Server Error** 
+    **Content:*
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-http-post]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-http-post' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {	
+      "post": {
+		    "data": {
+			    "myName": "User123456"
 		}
 	},
 	"endpoint": "https://apiroom.net/api/dyneorg/API-generate-keyring-passing-user-name"
-}
+},
+  "keys": {}
+}'
 ```
+
+
+
+
+
+
+### Reserved APIs
+
+The following APIs contain the *business logic* of the Oracles and are used only internally, therefore not documented:
+
+/api/ethNotarization-0-newhead
+
+/api/ethNotarization-1-newhead
+
+/api/ethNotarization-2-filter-newhead
+
+/api/ethNotarization-4-ethereum-store
+
+/api/ethereum-to-planetmint-3
+
+/api/ethereum-to-planetmint-4
+
+/api/iota-notarization-to-eth-0
+
+/api/iota-notarization-to-eth-2
+
+/api/iota-to-planetmint-1
+
+/api/sawroom-notarization-0
+
+/api/sawroom-notarization-1
+
+/api/sawroom-notarization-2
+
+/api/sawroom-notarization-4
+
+/api/sawroom-to-planetmint-3
+
+/api/zenswarm-oracle-announce
+
+/api/ethNotarization-3-ethereum-store
+
+/api/iota-notarization-to-eth-1
+
+/api/sawroom-notarization-3
+
+/api/ethereum-to-ethereum-notarization.chain
+
+/api/ethereum-to-planetmint-notarization.chain
+
+/api/iota-to-ethereum-notarization.chain
+
+/api/iota-to-planetmint-notarization.chain
+
+/api/sawroom-to-ethereum-notarization.chain
+
+/api/sawroom-to-planetmint-notarization.chain
+
+/api/zenswarm-oracle-key-issuance.chain
+
+/api/zenswarm-oracle-generate-all-public-keys
+
+/api/zenswarm-oracle-key-issuance-1
+
+/api/zenswarm-oracle-key-issuance-3
+
+/api/zenswarm-oracle-update
+
+/api/zenswarm-oracle-key-issuance-2
+
+
 
 
 ### Update instances 
