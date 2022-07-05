@@ -885,7 +885,7 @@ Executes Zenroom in Planetmint, Returns json data containing Planetmint fullfill
 
 * **URL**
 
-  /api/zenswarm-oracle-http-post
+  /api/zenswarm-oracle-execute-zencode-planetmint.chain
 
 * **Method:**
 
