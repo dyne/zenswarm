@@ -1,0 +1,38 @@
+Rule caller restroom-mw
+
+Given I connect to 'zenswarm-oracle-sign-dilithium' and pass it the content of 'post' and save the output into 'output'
+Given I have a 'string dictionary' named 'output'
+Given I have a 'string' named 'zenswarm-oracle-execute-zencode-planetmint.chain'
+Given I have a 'string' named 'script'
+Given I have a 'string' named 'dilithium_public_key'
+
+When I pickup from path 'output.result.asset'
+When I pickup from path 'output.result.dilithium_signature'
+
+When I create the 'string dictionary' named 'post'
+When I create the 'string dictionary' named 'temp'
+
+When I create the 'string dictionary' named 'data'
+When I create the 'string dictionary' named 'metadata'
+When I insert 'data' in 'metadata'
+When I insert 'metadata' in 'temp'
+
+When I insert 'asset' in 'temp'
+
+When I create the 'string dictionary' named 'data'
+When I insert 'dilithium_signature' in 'data'
+When I insert 'data' in 'temp'
+
+When I create the 'string dictionary' named 'keys'
+When I create the 'string dictionary' named 'Alice'
+When I insert 'dilithium_public_key' in 'Alice'
+When I insert 'Alice' in 'keys'
+When I insert 'keys' in 'temp'
+
+When I insert 'script' in 'temp'
+
+When I rename 'temp' to 'data'
+When I insert 'data' in 'post'
+
+Then print 'post'
+Then print 'zenswarm-oracle-execute-zencode-planetmint.chain'

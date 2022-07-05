@@ -1,0 +1,1 @@
+{"script":"Scenario 'qp':Bob verifies the signature from Alice\nGiven I have a 'dilithium public key' from 'Alice'\nGiven that I have a 'string dictionary' named 'asset'\nGiven I have a 'dilithium signature' named 'dilithium signature' in 'output'\nWhen I verify the 'asset' has a dilithium signature in 'dilithium signature' by 'Alice'\nThen print the string 'ok'\n"}

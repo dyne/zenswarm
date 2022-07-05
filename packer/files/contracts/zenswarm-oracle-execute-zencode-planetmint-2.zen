@@ -1,0 +1,11 @@
+
+Rule caller restroom-mw
+
+Given I have a 'string' named 'endpoint'
+
+# Loading input data and telling Zenroom that 'output' will be created by Restroom-mw
+Given I have a 'string dictionary' named 'post'
+Given I have a 'string dictionary' named 'output'
+Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'output'
+
+Then print the 'output'

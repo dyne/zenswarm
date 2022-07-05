@@ -1,0 +1,6 @@
+Rule caller restroom-mw
+
+Given I connect to 'zenswarm-oracle-execute-zencode-planetmint.chain' and pass it the content of 'post' and save the output into 'output'
+Given I have a 'string dictionary' named 'output'
+
+Then print 'output'

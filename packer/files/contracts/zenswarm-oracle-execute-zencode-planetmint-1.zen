@@ -1,0 +1,39 @@
+Rule caller restroom-mw
+
+
+
+# this needs to be passed via POST in data
+Given I have a 'string dictionary' named 'asset'
+Given I have a 'string dictionary' named 'metadata'
+Given I have a 'string dictionary' named 'data'
+Given I have a 'string dictionary' named 'keys'
+Given I have a 'string' named 'script'
+
+# those 2 can be hardcoded in keys for now
+Given I have a 'string' named 'endpoint'
+Given I have a 'string' named 'ed_public_key'
+
+Given I fetch the local timestamp and store it into 'oracleTimestamp'
+Given I have a 'string' named 'oracleTimestamp'
+
+
+When I insert 'oracleTimestamp' in 'metadata'
+
+# When I insert 'data' in 'metadata' 
+
+When I create the 'string dictionary' named 'post'
+
+When I insert 'metadata' in 'post'
+When I insert 'data' in 'post'
+When I insert 'script' in 'post'
+When I insert 'ed_public_key' in 'post'
+When I insert 'keys' in 'post'
+
+
+When I insert 'asset' in 'post'
+
+# Print the output
+Then print the data
+
+
+

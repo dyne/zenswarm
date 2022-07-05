@@ -1,0 +1,9 @@
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm-oracle-execute-zencode-planetmint-1.zen
+    keysFile: zenswarm-oracle-execute-zencode-planetmint-1.keys
+    next: id_1
+  id_1:
+    zenFile: zenswarm-oracle-execute-zencode-planetmint-2.zen

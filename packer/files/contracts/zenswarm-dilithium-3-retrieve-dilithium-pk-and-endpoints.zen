@@ -1,0 +1,21 @@
+Scenario 'w3c': read did document
+Scenario 'qp': read public key
+
+Given I have a 'did document'
+Given I have a 'string dictionary' named 'asset'
+
+When I create the verificationMethod
+When I create the serviceEndpoint
+
+When I pickup from path 'verificationMethod.dilithium_public_key'
+
+# prepar the post for next script
+When I create the 'string dictionary' named 'data'
+When I insert 'asset' in 'data'
+When I create the 'string dictionary' named 'post'
+When I insert 'data' in 'post'
+
+Then print the 'dilithium public key' as 'base64'
+Then print the 'zenswarm-oracle-sign-dilithium' from 'serviceEndpoint'
+Then print the 'zenswarm-oracle-execute-zencode-planetmint.chain' from 'serviceEndpoint'
+Then print the 'post'

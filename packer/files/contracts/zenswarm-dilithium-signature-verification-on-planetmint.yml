@@ -1,0 +1,20 @@
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm-dilithium-1-extract-a-random-did.zen
+    keysFile: zenswarm-dilithium-1-extract-a-random-did.keys
+    next: id_1
+  id_1:
+    zenFile: zenswarm-dilithium-2-resolve-did.zen
+    keysFile: zenswarm-dilithium-2-resolve-did.keys
+    next: id_2
+  id_2:
+    zenFile: zenswarm-dilithium-3-retrieve-dilithium-pk-and-endpoints.zen
+    next: id_3
+  id_3:
+    zenFile: zenswarm-dilithium-4-dilithium-signature.zen
+    keysFile: zenswarm-dilithium-4-dilithium-signature.keys
+    next: id_4
+  id_4:
+    zenFile: zenswarm-dilithium-5-verify-dilithium-signature-on-planetmint.zen

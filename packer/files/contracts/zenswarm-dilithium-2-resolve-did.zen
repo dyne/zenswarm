@@ -1,0 +1,13 @@
+Rule caller restroom-mw
+
+# post
+Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'output'
+Given I have a 'string dictionary' named 'output'
+Given I have a 'string dictionary' named 'asset'
+
+# extract the did document (I can not work directly here beacuse it is a string dictionary at the moment)
+When I pickup from path 'output.result.W3C-DID'
+When I rename 'W3C-DID' to 'did document'
+
+Then print the 'did document'
+Then print the 'asset'

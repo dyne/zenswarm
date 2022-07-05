@@ -1,0 +1,19 @@
+Rule caller restroom-mw
+
+# post
+Given I connect to 'endpoint' and pass it the content of 'post' and save the output into 'W3C-DIDs'
+Given I have a 'string array' named 'W3C-DIDs'
+Given I have a 'string dictionary' named 'asset'
+
+# pick a random did
+When I pickup from path 'W3C-DIDs.result.W3C-DIDs_list'
+When I pick the random object in 'W3C-DIDs_list'
+When I rename the 'random_object' to 'id'
+# prepare the post for second script
+When I create the 'string dictionary' named 'data'
+When I insert 'id' in 'data'
+When I create the 'string dictionary' named 'post'
+When I insert 'data' in 'post'
+
+Then print 'post'
+Then print 'asset'
