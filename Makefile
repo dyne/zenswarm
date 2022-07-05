@@ -10,7 +10,7 @@ regions := ca-central us-west us-east eu-central ap-west ap-southeast
 # only 6
 export
 
-ANSIPLAY = ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --inventory hosts.toml --ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' --private-key ${sshkey} "ansible/$(1)"
+ANSIPLAY = ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --inventory hosts.toml --ssh-common-args '-o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes' --private-key ${sshkey} "$(1)"
 
 LINCREATE = xargs -I {} linode-cli linodes create --root_pass ${rootpass} --type ${nodetype} --group zenswarm --image $(1) --label zenswarm-"{}" --region "{}" --authorized_keys "$(shell cat ${sshkey}.pub)"
 ##@ General
@@ -55,20 +55,24 @@ ssh: ## log into a node in REGION via ssh (eu-central is default)
 ##@ Server config
 setup-tls: ## Install TLS certificates
 	$(info Start TLS certificate creation)
-	$(call ANSIPLAY,acme-certificate.yml)
+	$(call ANSIPLAY,ansible/acme-certificate.yml)
+
+install: ## Install vmlets (not required if using packer image)
+	$(info Install vmlet base image)
+	$(call ANSIPLAY,packer/install-linode.yaml)
 
 init: ## Init instances
 	$(info Generate .env and keys)
-	$(call ANSIPLAY,init-instances.yml)
+	$(call ANSIPLAY,ansible/init-instances.yml)
 
 start: ## Start instances
 	$(info Starting instances...)
-	$(call ANSIPLAY,start-instances.yml)
+	$(call ANSIPLAY,ansible/start-instances.yml)
 
 update: ## Update instances
 	$(info Updating instances...)
-	$(call ANSIPLAY,update-instances.yml)
+	$(call ANSIPLAY,ansible/update-instances.yml)
 
 kill: ## Kill instances
 	$(info Killing instances...)
-	$(call ANSIPLAY,kill-instances.yml)
+	$(call ANSIPLAY,ansible/kill-instances.yml)
