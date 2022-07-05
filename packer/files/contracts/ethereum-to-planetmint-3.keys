@@ -1,1 +1,1 @@
-{"endpoint":"http://3.66.221.17/api/v1/","ed25519_keypair":{"private_key":"5Jgk9ARKbPXRwPCuVHv94M4q9iKpF67Apk6hP3rRLtby","public_key":"Mx2D1WbAdREJphfuAcRCge54zMndKfmozynzRZYP5aw"},"metadata":{"origin":"zenswwarm","ruler":"Dyne.org","type":"notarization of ethereum block onto planetmint"}}
+{"endpoint":"http://3.72.94.104/api/v1/","ed25519_keypair":{"private_key":"5Jgk9ARKbPXRwPCuVHv94M4q9iKpF67Apk6hP3rRLtby","public_key":"Mx2D1WbAdREJphfuAcRCge54zMndKfmozynzRZYP5aw"},"metadata":{"origin":"zenswwarm","ruler":"Dyne.org","type":"notarization of ethereum block onto planetmint"}}
