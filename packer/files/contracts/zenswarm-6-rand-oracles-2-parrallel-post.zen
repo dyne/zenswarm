@@ -1,0 +1,64 @@
+Rule caller restroom-mw
+
+Given I execute parallel POST with 'post' to array 'endpoints' and save the result named 'result' 
+Given I have a 'string dictionary' named 'result'
+
+When I set '0' to '0' as 'number'
+When I create the length of 'result'
+When I rename the 'length' to 'results-length'
+
+When I set '200' to '200' as 'number'
+When I find the 'status' for dictionaries in 'result' where 'status' = '200'
+When I rename the 'status' to 'status-200'
+When I create the length of 'status-200'
+When I rename the 'length' to 'length-200'
+
+When I set '404' to '404' as 'number' 
+When I find the 'status' for dictionaries in 'result' where 'status' = '404'
+When I rename the 'status' to 'status-404'
+When I create the length of 'status-404'
+When I rename the 'length' to 'length-404'
+
+When I set '500' to '500' as 'number'
+When I find the 'status' for dictionaries in 'result' where 'status' = '500'
+When I rename the 'status' to 'status-500'
+When I create the length of 'status-500'
+When I rename the 'length' to 'length-500'
+
+If the elements in 'result' are all equal
+If number 'length-200' is more than '0'
+When I write string 'all results are equal' in 'consensus'
+Then print 'result'
+Then print 'consensus'
+Endif
+
+If the elements in 'result' are all equal
+If number 'length-500' is more than '0'
+When I write string 'all results are 500' in 'consensus'
+Then print 'result'
+Then print 'consensus'
+Endif
+
+If the elements in 'result' are all equal
+If number 'length-404' is more than '0'
+When I write string 'all results are 404' in 'consensus'
+Then print 'result'
+Then print 'consensus'
+Endif
+
+If the elements in 'result' are not equal
+If I verify 'length-200' is equal to 'results-length'
+When I write string 'results are all 200 but different' in 'consensus'
+Then print 'result'
+Then print 'consensus'
+Endif
+
+If the elements in 'result' are not equal
+If number 'length-200' is less than 'results-length'
+When I write string 'results are mixed' in 'consensus'
+Then print 'result'
+Then print 'consensus'
+Endif
+
+
+
