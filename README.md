@@ -29,7 +29,7 @@ Zenswarm
 * [Install](#-install)
 * [Monitoring](#-monitoring)
 * [Diagrams](#-oracles-diagrams)
-* [APs](#-apis)
+* [APIs](#-apis)
 * [License](#-license)
 </details>
 
@@ -211,7 +211,38 @@ autonumber
 1. VM verifies the ZIP is signed by the Issuer and installs the scripts
 
 
+## Transfer Ethereum NFT to Planetmint asset
 
+```mermaid
+sequenceDiagram
+autonumber
+  participant A as Alice
+  participant SC as Transfer SC
+  participant OE as Oracle ETH
+  participant OP as Oracle Planetmint
+  participant B as Bob
+  
+  OE->>SC: Oracle creates the SC
+  A->>SC: Alice allow the SC to transfer a NFT
+  A->>SC: Alice calls the begin transfer method
+  A-->>OE: SC transfer the NFT and emit an event
+  Note over A,OE: The SC was authorized by Alice to transfer
+  rect rgb(191, 223, 255)
+  note right of OP: Inter-chain transfer
+    OP->>OP: Oracle create an asset on planetmint
+    OE->>OE: Oracle destroy the asset on ethereum
+  end
+  OP->>B: Oracle transfer the asset to Bob
+```
+Alice sends an Ethereum NFT (ERC 721) and Bob receives a Planetmint asset, using a double-escrow approach. The NFT and the asset represent the same non-fungible token:
+
+1. A smart contract (SC) is created on ethereum, in its constructor, the account of the oracle is set as `the owner`
+1. Alice allows (approve in the NFT terminology) the SC to transfer an NFT (the one she wants to send to Bob)
+1. Alice starts the transfer by calling a method on the Ethereum SC
+1. The SC transfer the NFT from the account of Alice to the account of the oracle on ethereum (the SC sends the NFT to `the owner`) and emits and event, to which the oracle is listening
+1. The oracle creates an asset on Planetmint which represents the same object as the NFT he received (using a `CREATE` transaction)
+1. The oracle destroys the NFT on Ethereum
+1. The oracle sends the asset to Bob (using a `TRANSFER` transaction)
 
 
 
