@@ -255,6 +255,7 @@ Below a list of the APIs available on an Oracle
 
 ```json
 {
+  "events_subscriptions": [],
   "identity": {
     "API": [
       "/api/zenswarm-oracle-announce",
@@ -269,32 +270,46 @@ Below a list of the APIs available on an Oracle
       "/api/zenswarm-oracle-get-signed-timestamp",
       "/api/zenswarm-oracle-sign-dilithium",
       "/api/zenswarm-oracle-sign-ecdsa",
-      "/api/zenswarm-oracle-sign-eddsa"
+      "/api/zenswarm-oracle-sign-eddsa",
+      "/api/zenswarm-oracle-sign-schnorr",
+      "/api/zenswarm-dilithium-signature-verification-on-planetmint.chain",
+      "/api/zenswarm-oracle-execute-zencode-planetmint.chain",
+      "/api/zenswarm-post-6-rand-oracles.chain",
+      "/api/zenswarm-read-from-fabric",
+      "/api/zenswarm-write-on-fabric",
+      "/api/zenswarm-read-from-ethereum",
+      "/api/zenswarm-write-on-ethereum.chain",
+      "/api/zenswarm-read-from-planetmint",
+      "/api/zenswarm-write-on-planetmint",
+      "/api/zenswarm-oracle-verify-dilithium",
+      "/api/zenswarm-oracle-verify-ecdsa",
+      "/api/zenswarm-oracle-verify-eddsa",
+      "/api/zenswarm-oracle-verify-schnorr"
     ],
     "Country": "FR",
     "L0": "ethereum",
     "State": "NONE",
     "baseUrl": "https://swarm1.dyne.org",
-    "bitcoin_address": "bc1q2eje20v242z9walf35vv78e9t364qat7gptl33",
+    "bitcoin_address": "bc1q6hygvxc3szryv7gm3tz45t0jteexhfn3ttnkr5",
     "description": "restroom-mw",
-    "dilithium_public_key": "WR6I8Y2/D7pN9wUypkNqoG1ivSozcezyLTovGDBpJYxn3PIO7m2sDJYHx8cr9tJVpCcpdSdregQEWG7iHdgyMwXic60JajTQfifyZCHOStJRYwEXKBA36fMnu/0rK6kjGjImXCGIfGO8gDdvVtWe1x2HmN4XBoLsE+J7Qbwqir+qub3AssQKg+xyq/4DYRGyrqG0kiablY5RaUR66eaVVORgTR2eHza58nf/iCDUkol3Y//yM8CS7BS4bPh+ARd+3Dk2P++XLXzi8kV4Vrj5S4nIVv7D5AbPBUYQc6uTKyw7ybhON2x21MHGWfF0s83J4P1h/yMtObnYg9DxJQAHGZrpc6RvH2fND2hUB0PobdrzRQLz79jm+Pn1oFbhq7LsQep6CFsO2iqQquab3Qes41W16V3gVd2aNtzhbTqaTRr+hU7/T8bYf0dv1r0jZuZvaMnfpbiPpesQ0izSh7lO1l7TrMHNZbVPU/vB9P53stGuqcEXrsmz6W/ExoVCusj2L6DCMo3q2y42XRT2tA3JXsjMrFJKzc2DI1UdOkOuP7jzuc9WxlwFSTHvIdZDrG8SuWiRZYGda6ZzQBvCPgkqpaDRmsZvrC4IGNFeuAcedNZWMI6W+fvw+csOToLOwRUqUmJqhrjjc8dZ0EfyKM34PMp1z8TKcPh/wUWeXOZ6HJCfbEcyNZHNpBXtabhA/bMS3dhVnUR2hDgF5/Ch3wgevXB22VlpQECkRIFkZ6C3q8MD5mVIVQ9hSsHp9hy/mqzCkuRiIrVNfDEglgpMJCtimX5l0prnQPyB5I1B2zWNNJDxuzFGhRn7Nuj5l7Xq0rJN+wa5JlPQmOrTR55YKWi5HrP/r3Z6VAanf23fsWuaNayIDhsDv21Jgg3x+vo2aCx5kuYPnx67ci/3CDOK8YRfAHKuZm2LojEs0GB+FW4H71wQW/46p7LKlvHbU4/XjZFaW3gbrErKIlSVj4eL3kxi9/eCXEoRSueLBips/RWnS+Nrttf6jFLogOyJERFmLYMq+RpC2oViPgRDc3AGfsMlkJUrDY71LkrxbfMCAJXC94OE6A4egUzZTOkch/6dVWSLvOEX4z8ojSEyS5EwlOuVLoa9p+k+VqNRniqGXgto7083RKFu+6HGfQ5HG4CBurpzm7FJ3POM5h246urjyXB6CYVb7qgIa0MhjdNqAZSX+Uhwl0z/Q329vqbM4OZfO3tPO2M6TCPKDb/fcao22bYoNx4P0WfGGtHlzw8TpSQLPnsLpGX7da7LLKsBty2EDCElSlyGDWpoALNui02SGsAiSSF7MDg/ili/GJrYUPlV336X/hg/qqmd+gTVWK88qSyF6NEf7+jMxyHw4a7O7wrRi+PuzH1OJYSTINYGFIwc22MwDZ01gN38s/9i72FQQnI+7Jybt06JZtu/l9cnJp+17qmnZYGskswF1FM6YFGiIxS2++NmW9Vj1iIb1atpcfc9nU7P3RzgOy39Pcc3LH/32eN38Gc4oGB6t2uGqK0UeYAm+hj17+rGrOQGAd4FnJTWmk2euRuGtzU3Xps4YNIxU5kVEe1zMGyb+ueZGLRfu8CsLXqKv8jDWd19Ek1cSceUgUUhdJFXdu4gpiSw4w+QkSrok3A/4dYa30/W/SSyBbDRZ1U2p2ANYhz04oTJe1fEvasf9P9EQsArxQQMPMSdozhHiR3DJ8eks927/eT6YHUzUyL3PgvnOBlmsNxjJQEWARG9eC2NdD+Nvw/L/xZBdg==",
-    "ecdh_public_key": "BKQKsKZsau62MJAk3nsEK/NoKdS80+a0j7TezfbwrWdAEPJzWk5/yAPldkVL3eiQkz3x2z6FDcIex7cu9W5aYf8=",
-    "eddsa_public_key": "FFB2sQifRQNRLmetRroJ8PvcudBxBuRoYQpMSYdQhg6L",
-    "ethereum_address": "e785f9e188f8137ec13ecea52ed753d4c7c7c064",
+    "dilithium_public_key": "ItLfEp0MYHZLlunATIOdjVtlMI0YdSUb7TwEcJFfyD1noDqWbdNmCW7ODIP3sWUxVP/+X+Xerw+mgCxulAiuU4k1Jc3LtliYuXIjmGr8O+SyIwLKnEmi7Vv4hxT0PnubZHEnlipovn298+Fibas4/GgP4c5b3omzZuZXAJ/ncwbuOLbs4XaJckNWEK9Gkq+WiNjCu0mnd5ERVawXTnfi5377f63nOAj7VqSHJImc8lQ34WtLRgyGVSQySyVtEzeCWlBfzVp1+rNjPIwc+xvp8NBdeHiZdL/kzFXtagD5MkgxtFDfj5BPVyWcfs6mUnjetfz20zerHsrSe3nBCbe5pPYLtqzkIPntiNQk6LFqELQo4DwHiXOn0iulGLJlVTkKKc5hJUGLSrrWurN0heBYIkaPEgkNTuLAwWRV3rV74a18L4rsR713yYQB85oFlgXgd0vOp/BUzrTExwslq5MviwUI5m5TArSnGCGBhvpI3HXydVUw391JztvJd18r6lbtGCD1/4FUXZFVtTYFfCwAzao6fcEDa8eiqoAwzrbHUSgqE9WEbR0BxaHMBTANh7i5mnNfcdqFi/rcce7Q29Rt5gSfST7d30YMlmXrIuB2zok2GQnvWSHiFMg7eP/FSvVLMy6CXER0Vsc/f7IDjUmfVF7dDWQzVA+/4/N6aGqaesKx4vELM/ZhvALy9bxOM1e6zE2AW9taal9rrdcLQ82mD00pX0cZ2ulAYWLF66OVIl3APn4zGlKceYtvxlmMba3Qc3gzPSdyDfqaW7mI7/P9YpXphogC6N0kHcvBfQt7YB5U8KE3fG+OoqfSVDcmP/lcT+3Gi3NgoxLYzhN+m3daBpNyWBdQbpWBYYlGa5dxcPmc2G6/WhLPPPEvAZiviakxd0WJtqbeKhTkxHpORwavCzSXm10YnGXbV/JBIV//LDNclwRJ6zqiD2y1ha3XScNIyzOW8rKebsIgJHquXCn2DHLjZJggJepU4Wy9AJ2PmjeP98JS/8+n1mTlkGT+OL4dzAYn3cZRNeC1BdG/dPExwr8i53BjX/suybLLKcHRdg1M8Wh1qo36s+7Cj32oRR3gPIdhcbxmM1udlqdplHk5gUV3ZX2p47C84op+JILgSfOvm8iD8ovxE1mSxQxnHT+UjMRynk0m+kVQvEUV9vNTxHm5bgi6OrjsXOBlLolyF1PMjPXBKymOu9g0gMfpXtGYAO2uSFVCocWTLAzBn9X9zCEy9NLSLcwccvx1Ha1TpKuIj9axtPtE5h6yST/bNxSDdfDLKppkgYafBiUWa9skNMMOAKywqAa2nZXV3qaaJz2ItyJjUfd2RY3NPxh/9LwqsGiwTBSab81hCmbiP6Kto97npEvGWSkNSfO03mkooiP4+6GyzsbGqSqgwvmCUg4DYlypg+B6WC4JanKcKh/7TbZ6py4j0EWWRVjG4saXYPQvEOTEMKl2XF7EAZlkJJ+Px2ODws+fm8TxhwnQv5lYk8SNETFcYr3At1q8vkoV3oYMlsLK+JNUDeajIBvhht3UXlV1qq9302LzkKY7NaB98RYrYtnMvm9lE+rrAtpwVagKAhI9D8Ro3DXvqFcYsUq4/YrzqBSvSpCE2Hr5SJfdG0gauj3/8c8Dp48ZMSPvAEogGhio4A9p6v2tkY4jbZtZ52VqeHcvapsernTLcSze43KgQ1IZ9IsVifPJ/T4PwwGdN/wdHruerxJyuczsRkav53Ab/jqI5yRZfjok5ainBQ==",
+    "ecdh_public_key": "BGKoemBeotGNDDRo5UkTt22A6JptWw8cBfNJsWqZ0a5HoJeTkJbxt8rgUkqOo01MWzlYzS4fTDLop+iKaJ4wPYM=",
+    "eddsa_public_key": "DTfR61WARbLGRKKktKXFA4ju7wGPHweCWr4k6XEpYiFz",
+    "ethereum_address": "d4f1a1e96bc645b546b8490061fca2ca4e4aa176",
     "ip": "swarm1.dyne.org",
     "port_https": "20003",
-    "reflow_public_key": "E+QVn6d+mrTDPl8g/a98CL9K+CVG1LRG1mdFvYb1nhAFHtMOVw+t3Y6gc+zzTKO7AFRwHyaYI9moXCKanHdcLS37+ebRuxoxB9qOwZhPM6IWJj9opQPdql8xdMz7T1yKBHnq7uy4rkywwUkSgG32nQXA7zPJKwHq+ieLaD65ePzi1n21L1vjIlNBVVDTjGmHD3/xTmgxSVcM8eYswOBSxv+EsU6YhAj9EAgp+OoTW2h7bSIPTXgI8i1COtcw2emA",
-    "schnorr_public_key": "D54MEEyah5gC76dQscft9ggFt29tENpcp4Ms+6z5ZBaChQeu3iZee5/81Mq9MJEg",
+    "reflow_public_key": "FpQNINRts97o3vLXc29wu32xKG/FScspyjkfzipvvA9ynzlG3deSfWpu6byqn9acCHbGVKuuooDJ5zhylwCMaOsmC3wUvKbCLylaJuaroYqIu9j03ELOZamfTTerG3KdAS+DJNbnU/Qm5Qo9b3EFVvIcJEw+7SIwV5fztnC9wzy9dq2IAq1OQSQCQ69ZDRIRE5DspHik0y7ib4Qm6QRsJ3IDqt4XBKYxJAZdJ1rgsMCTdtx0YREGnOZSSILbWYQF",
+    "schnorr_public_key": "Fdui5ug5o2AlRHLtKwF3j6YwYm2JVnY4aqZW6Wyse/ykGlixYUFKZLNFmBQFBiW/",
     "tracker": "https://apiroom.net/",
     "uid": "swarm1.dyne.org:20003",
     "version": "2"
   },
   "subscriptions": {
-    "iota_devnet": {
-      "api": "https://api.lb-0.h.chrysalis-devnet.iota.cafe/",
-      "name": "iota_devnet",
-      "sub": "mqtt://mqtt.lb-0.h.chrysalis-devnet.iota.cafe:1883",
-      "type": "iota"
+    "fabchain": {
+      "api": "http://78.47.38.223:8545",
+      "name": "fabchain",
+      "sub": "ws://78.47.38.223:8546",
+      "type": "ethereum"
     }
   }
 }
