@@ -1,0 +1,9 @@
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm-write-on-ethereum-1.zen
+    next: id_1
+  id_1:
+    zenFile: zenswarm-write-on-ethereum-2.zen
+    keysFile: zenswarm-write-on-ethereum-2.keys

@@ -1,0 +1,23 @@
+Rule caller restroom-mw
+Scenario ethereum: Store data
+
+Given I read the content of 'contracts/keyring.json'
+Given I have a ethereum endpoint named 'fabchain'
+Given I read the ethereum nonce for 'ethereum_address'
+
+Given I have the 'keyring'
+Given I have a 'ethereum address' named 'storage contract'
+Given I have a 'ethereum nonce'
+Given I have a 'gas price'
+Given I have a 'gas limit'
+Given I have a 'string dictionary' named 'input'
+
+When I create the mpack of 'input'
+
+When I create the ethereum transaction to 'storage contract'
+and I use the ethereum transaction to store 'mpack'
+When I create the signed ethereum transaction for chain 'fabt'
+
+Then print the 'signed ethereum transaction'
+Then print the 'ethereum transaction'
+Then I ask ethereum to broadcast the 'signed_ethereum_transaction' and save the transaction id in 'txId'

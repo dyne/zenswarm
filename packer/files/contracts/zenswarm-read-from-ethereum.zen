@@ -1,0 +1,12 @@
+Rule caller restroom-mw
+Scenario ethereum: Retrieve data
+
+Given I have a ethereum endpoint named 'fabchain'
+Given I read the ethereum bytes with hash 'txId' and save the output into 'ethereum_data'
+
+Given I have a 'hex' named 'ethereum data'
+
+When I create the 'block' decoded from ethereum bytes 'ethereum data'
+When I create the 'output' decoded from mpack 'block'
+
+Then print 'output' as 'string'

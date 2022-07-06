@@ -1,0 +1,10 @@
+Rule caller restroom-mw
+Scenario ethereum: Store data
+
+Given I read the content of 'contracts/identity.json'
+
+Given I have a 'ethereum address' in 'identity'
+Given I have a 'string dictionary' named 'input'
+
+Then print the 'ethereum address'
+Then print the 'input'
