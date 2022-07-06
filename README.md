@@ -1269,8 +1269,7 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "data": {
-	"txId": "6038da8073e567a8e819032ce8c15ffdf1d7b9aae9cbd53e9c2ffcf84a8057ec",
-	}
+	"txId": "6038da8073e567a8e819032ce8c15ffdf1d7b9aae9cbd53e9c2ffcf84a8057ec"
 },
   "keys": {}
 }'
@@ -1342,7 +1341,6 @@ curl -X 'POST' \
 		  "temperature": "22",
 		  "Country": "DE"
 	  }
-  }
 },
   "keys": {}
 }'
@@ -1403,13 +1401,12 @@ Retrieve a transaction in the ethereum blockchain (fabchain) starting from its t
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-read-from-ethereum \
+  'https://swarm2.dyne.org:20003/api/zenswarm-read-from-ethereum' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
   "data": {
-	"txId": "587392b3e3ab7c2aa5c7a6d67282d5274152fcf555438d9c5fa547a303bda595",
-	}
+	"txId": "587392b3e3ab7c2aa5c7a6d67282d5274152fcf555438d9c5fa547a303bda595"
 },
   "keys": {}
 }'
@@ -1478,17 +1475,16 @@ Store data on the ethereum blockchain and return the transaction id.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-ethereum.chain \
+  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-ethereum.chain' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "data": { 
+  "data": {
 	  "input": {
 		  "city": "Berlin",
 		  "temperature": "22",
 		  "Country": "DE"
 	  }
-  }
 },
   "keys": {}
 }'
@@ -1564,8 +1560,7 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "data": {
-	"txId": "4d2cebc509b0f2f5ce0dcf69ca49bcfe181ed437a174a538379f8824ae2e78ca",
-	}
+	"txId": "4d2cebc509b0f2f5ce0dcf69ca49bcfe181ed437a174a538379f8824ae2e78ca"
 },
   "keys": {}
 }'
@@ -1639,7 +1634,7 @@ Store data on the planetmint blockchain and return the transaction id.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-planetmint \
+  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-planetmint' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1649,7 +1644,6 @@ curl -X 'POST' \
 		  "temperature": "22",
 		  "Country": "DE"
 	  }
-  }
 },
   "keys": {}
 }'
@@ -1710,7 +1704,7 @@ Verify a dilithium signature.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-dilithium \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-dilithium' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1792,7 +1786,7 @@ Verify a ecdsa signature.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-ecdsa \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-ecdsa' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1877,7 +1871,7 @@ Verify a eddsa signature.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-eddsa \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-eddsa' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1959,7 +1953,7 @@ Verify a schnorr signature.
 
 ```shell
 curl -X 'POST' \
-  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-schnorr \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-schnorr' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
