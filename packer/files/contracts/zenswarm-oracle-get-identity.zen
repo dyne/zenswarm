@@ -3,10 +3,12 @@ Rule caller restroom-mw
 
 Given I read the content of 'contracts/identity.json'
 Given I read the content of 'contracts/blockchain-subscriptions.json'
+Given I read the content of 'contracts/event-subscriptions.json'
 
 
 Given I have a 'string dictionary' named 'identity'
 Given I have a 'string dictionary' named 'subscriptions'
+Given I have a 'string dictionary' named 'events_subscriptions'
 
 Then print data
 

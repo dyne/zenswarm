@@ -1,0 +1,13 @@
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: eth2pltmnt-0.zen
+    keysFile: eth2pltmnt-0.keys
+    next: id_1
+  id_1:
+    zenFile: eth2pltmnt-1.zen
+    keysFile: eth2pltmnt-1.keys
+    next: id_2
+  id_2:
+    zenFile: eth2plntmnt-2.zen

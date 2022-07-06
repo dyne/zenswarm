@@ -1,0 +1,39 @@
+Rule unknown ignore
+Scenario ethereum: delete nft
+Given I have the 'keyring'
+Given I have a 'ethereum address' named 'ethereum_address'
+Given I have a 'ethereum address' named 'erc721_address'
+Given I have a 'ethereum address' named 'dest_addr'
+Given I have the 'base58 dictionary' named 'ed25519_keypair'
+
+Given I read the ethereum suggested gas price
+Given I have a ethereum endpoint named 'fabchain_endpoint'
+Given I read the ethereum nonce for 'ethereum_address'
+
+Given I have a 'number' named 'erc721 id'
+Given I have a 'string' named 'fabchain_endpoint'
+Given I have a 'string' named 'planetmint_endpoint'
+
+Given I have a 'ethereum nonce'
+Given I have a 'gas price'
+Given I have a 'gas limit'
+Given I have a 'hex' named 'txid'
+Given I have a 'string' named 'to'
+
+When I rename the 'txid' to 'txid_planetmint'
+
+When I create the ethereum transaction to 'erc721_address'
+When I use the ethereum transaction to transfer the erc721 'erc721 id' from 'ethereum_address' to 'dest addr'
+When I create the signed ethereum transaction for chain 'fabt'
+Then I ask ethereum to broadcast the 'signed_ethereum_transaction' and save the transaction id in 'txid'
+Then print the 'signed ethereum transaction'
+Then print the 'ethereum transaction'
+
+Then print the 'ethereum_address'
+Then print the 'erc721_address'
+Then print the 'fabchain_endpoint'
+Then print the 'planetmint_endpoint'
+Then print the 'txid planetmint'
+Then print the 'ethereum nonce'
+Then print the 'to'
+Then print the 'ed25519_keypair'

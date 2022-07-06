@@ -1,0 +1,41 @@
+Rule unknown ignore
+Scenario ethereum: Create the asset on planetmint
+
+Given I read the content of 'contracts/keyring.json'
+Given I have the 'keyring'
+Given I have the 'base58 dictionary' named 'ed25519_keypair'
+Given I have a 'string' named 'fabchain endpoint'
+Given I have a 'string' named 'planetmint endpoint'
+Given I have a 'string' named 'to'
+
+Given I have a ethereum endpoint named 'fabchain_endpoint'
+
+# Restroom onBefore
+Given I have a planetmint endpoint named 'planetmint_endpoint'
+Given I have a 'number' named 'erc721 id'
+Given I have a 'ethereum address' named 'erc721 address'
+# Given I read the JSON 'contracts/keyring.json'
+Given I have the 'string' named 'asset'
+Given I read the asset in the erc721 'erc721_id' for contract 'erc721_address'
+When I create the ethereum address
+When I rename the 'asset' to 'uri'
+# Zenroom
+# Given I have a 'string dictionary' named 'ed25519_keypair'
+When I create the 'string dictionary'
+When I rename the 'string dictionary' to 'asset'
+When I insert 'uri' in 'asset'
+
+# Restrom onSuccess
+Then I create the planetmint transaction to store asset named 'asset'
+Then I create the signed planetmint transaction of 'planetmint_transaction'
+Then ask planetmint to broadcast the 'signed_planetmint_transaction'
+
+Then print the 'ed25519_keypair'
+Then print the 'keyring'
+Then print the 'asset'
+Then print the 'erc721_address'
+Then print the 'erc721_id'
+Then print the 'fabchain_endpoint'
+Then print the 'planetmint_endpoint'
+Then print the 'ethereum address'
+Then print the 'to'

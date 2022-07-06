@@ -1,0 +1,15 @@
+Rule unknown ignore
+
+# Restroom onBefore
+Given I have a planetmint endpoint named 'planetmint_endpoint'
+
+# Zenroom
+Given I have a 'base58 dictionary' named 'ed25519 keypair'
+
+
+# Restrom onSuccess
+Then I create the planetmint transaction to transfer the asset in 'txid_planetmint' to 'to'
+Then I create the signed planetmint transaction of 'planetmint_transaction'
+Then ask planetmint to broadcast the 'signed_planetmint_transaction'
+# Zenroom
+Then print the data
