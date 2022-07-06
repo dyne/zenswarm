@@ -1,0 +1,16 @@
+Rule caller restroom-mw
+
+# post
+Given I connect to 'controller_endpoint' and pass it the content of 'controller_post' and save the output into 'W3C-DIDs'
+Given I have a 'string array' named 'W3C-DIDs'
+Given I have a 'hex' named 'txId'
+Given I have a 'string dictionary' named 'post'
+
+# pick 6 random endpoints
+When I pickup from path 'W3C-DIDs.result.W3C-DIDs_endpoints_list'
+When I seed the random with 'txId'
+When I create the random dictionary with '6' random objects from 'W3C-DIDs_endpoints_list'
+When I rename the 'random_dictionary' to 'endpoints'
+
+Then print 'endpoints' as 'string'
+Then print 'post'

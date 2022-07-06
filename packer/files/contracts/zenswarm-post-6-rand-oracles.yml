@@ -1,0 +1,9 @@
+zenchain: 1.0
+start: id_0
+blocks:
+  id_0:
+    zenFile: zenswarm/zenswarm-6-rand-oracles-1-extract-6-endpoints.zen
+    keysFile: zenswarm/zenswarm-6-rand-oracles-1-extract-6-endpoints.keys
+    next: id_1
+  id_1:
+    zenFile: zenswarm/zenswarm-6-rand-oracles-2-parrallel-post.zen
