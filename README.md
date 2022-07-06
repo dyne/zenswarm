@@ -1065,10 +1065,930 @@ curl -X 'POST' \
 },
   "keys": {}
 }'
-
-
-
 ```
+
+
+---
+### zenswarm-post-6-rand-oracles.chain
+
+Set the random seed to the transaction id, choose 6 random Orcales and returns the json data containing the respons obtained from the POST made by the selected Oracles and a string that describe the result.
+
+
+* **URL**
+
+  /api/zenswarm-post-6-rand-oracles.chain
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `post{data={Input to the HTTP Post API}}`
+
+  `txId={transaction id}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+
+```json
+{
+  "consensus": "all_results_are_equal",
+  "result": [
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    },
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    },
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    },
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    },
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    },
+    {
+      "result": {
+        "output": {
+          "result": {
+            "data": []
+          },
+          "status": 200
+        }
+      },
+      "status": 200
+    }
+  ]
+}
+```
+
+
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** "
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-post-6-rand-oracles.chain]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-post-6-rand-oracles.chain' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+	"txId": "94d5a744e8a4d8153cda90a900fdeba5b763a945411f3f7ebe33c7d54b91bbf0",
+	"post": {
+		"data": {
+			"post": {
+				"id": "01FSKCT2BR8326ZEM6F6C4STWM",
+				"recurseLimit": 2
+			},
+			"endpoint": "https://reflow-demo.dyne.org/api/json/trace"
+		}
+	}
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-read-from-fabric
+
+Retrieve a transaction in the fabric blockchain starting from its transaction id.
+
+* **URL**
+
+  /api/zenswarm-read-from-fabric
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `txId={transaction id}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+
+```json
+{
+   "output": {
+      "city": "Berlin",
+	  "temperature": "22",
+	  "Country": "DE"
+   }
+}
+```
+
+
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** "
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-read-from-fabric]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-read-from-fabric' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+	"txId": "6038da8073e567a8e819032ce8c15ffdf1d7b9aae9cbd53e9c2ffcf84a8057ec",
+	}
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-write-on-fabric
+
+Store data on the fabric blockchain and return the transaction id.
+
+* **URL**
+
+  /api/zenswarm-write-on-fabric
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `input={data to store}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+
+```json
+{
+   "input": {
+      "city": "Berlin",
+	  "temperature": "22",
+	  "Country": "DE"
+   },
+   "txId": "6038da8073e567a8e819032ce8c15ffdf1d7b9aae9cbd53e9c2ffcf84a8057ec"
+}
+```
+
+
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** "
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-write-on-fabric]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-fabric' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+	  "input": {
+		  "city": "Berlin",
+		  "temperature": "22",
+		  "Country": "DE"
+	  }
+  }
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-read-from-ethereum
+
+Retrieve a transaction in the ethereum blockchain (fabchain) starting from its transaction id.
+
+* **URL**
+
+  /api/zenswarm-read-from-ethereum
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `txId={transaction id}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**
+
+```json
+{
+   "output": {
+      "city": "Berlin",
+	  "temperature": "22",
+	  "Country": "DE"
+   }
+}
+```
+
+
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** "
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-read-from-ethereum]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-read-from-ethereum \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+	"txId": "587392b3e3ab7c2aa5c7a6d67282d5274152fcf555438d9c5fa547a303bda595",
+	}
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-write-on-ethereum.chain
+
+Store data on the ethereum blockchain and return the transaction id.
+
+* **URL**
+
+  /api/zenswarm-write-on-ethereum.chain
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `input={data to store}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "ethereum_transaction": {
+      "data": "b374012b0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003783a7436f756e747279c700000003524555a463697479c700000008516d567962476c75ab74656d7065726174757265c7000000034d6a49000000000000000000",
+      "gas_limit": "1000000",
+      "gas_price": "1000000000",
+      "nonce": "5943",
+      "r": "20856933781bbc7e9df17065cdf2bf3c1a8e508e0e7c2236968324b7c08a184e",
+      "s": "3eed335c5fdf891874534601589ab4c15561afe0dd16480ec75f712f295c21b4",
+      "to": "1b620ca5172a8d6a64798fca2ee690066f7a7816",
+      "v": "ccc2c50b",
+      "value": "0"
+   },
+   "signed_ethereum_transaction": "f8ef821737843b9aca00830f4240941b620ca5172a8d6a64798fca2ee690066f7a781680b884b374012b0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003783a7436f756e747279c700000003524555a463697479c700000008516d567962476c75ab74656d7065726174757265c7000000034d6a4900000000000000000084ccc2c50ba020856933781bbc7e9df17065cdf2bf3c1a8e508e0e7c2236968324b7c08a184ea03eed335c5fdf891874534601589ab4c15561afe0dd16480ec75f712f295c21b4",
+   "txId": "587392b3e3ab7c2aa5c7a6d67282d5274152fcf555438d9c5fa547a303bda595"
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-write-on-ethereum.chain]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-ethereum.chain \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": { 
+	  "input": {
+		  "city": "Berlin",
+		  "temperature": "22",
+		  "Country": "DE"
+	  }
+  }
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-read-from-planetmint
+
+Retrieve a transaction in the planetmint blockchain starting from its transaction id.
+
+* **URL**
+
+  /api/zenswarm-read-from-planetmint
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `txId={transaction id}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "output": {
+      "asset": {
+         "data": {
+            "Country": "DE",
+            "city": "Berlin",
+            "temperature": "22"
+         }
+      },
+      "metadata": {
+         "encoding": "Zenroom",
+         "origin": "apiroom.net",
+         "ruler": "Dyne.org",
+         "timestamp": "1657119595165"
+      }
+   }
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-read-from-planetmint]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-read-from-planetmint' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": {
+	"txId": "4d2cebc509b0f2f5ce0dcf69ca49bcfe181ed437a174a538379f8824ae2e78ca",
+	}
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-write-on-planetmint
+
+Store data on the planetmint blockchain and return the transaction id.
+
+* **URL**
+
+  /api/zenswarm-write-on-planetmint
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `input={data to store}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "asset": {
+      "Country": "DE",
+      "city": "Berlin",
+      "temperature": "22"
+   },
+   "ed25519_keypair": {
+      "private_key": "5Jgk9ARKbPXRwPCuVHv94M4q9iKpF67Apk6hP3rRLtby",
+      "public_key": "Mx2D1WbAdREJphfuAcRCge54zMndKfmozynzRZYP5aw"
+   },
+   "metadata": {
+      "encoding": "Zenroom",
+      "origin": "apiroom.net",
+      "ruler": "Dyne.org",
+      "timestamp": "1657120723370"
+   },
+   "planetmint_transaction": "eyJpZCI6bnVsbCwib3BlcmF0aW9uIjoiQ1JFQVRFIiwib3V0cHV0cyI6W3siY29uZGl0aW9uIjp7ImRldGFpbHMiOnsidHlwZSI6ImVkMjU1MTktc2hhLTI1NiIsInB1YmxpY19rZXkiOiJNeDJEMVdiQWRSRUpwaGZ1QWNSQ2dlNTR6TW5kS2Ztb3p5bnpSWllQNWF3In0sInVyaSI6Im5pOi8vL3NoYS0yNTY7X0JDSUZ4Y25fR0VjUVR2T0tBOTh1WHZtazc0WHlQTEQ0M25MZTdoaEFYZz9mcHQ9ZWQyNTUxOS1zaGEtMjU2JmNvc3Q9MTMxMDcyIn0sImFtb3VudCI6IjEiLCJwdWJsaWNfa2V5cyI6WyJNeDJEMVdiQWRSRUpwaGZ1QWNSQ2dlNTR6TW5kS2Ztb3p5bnpSWllQNWF3Il19XSwiaW5wdXRzIjpbeyJmdWxmaWxsbWVudCI6bnVsbCwiZnVsZmlsbHMiOm51bGwsIm93bmVyc19iZWZvcmUiOlsiTXgyRDFXYkFkUkVKcGhmdUFjUkNnZTU0ek1uZEtmbW96eW56UlpZUDVhdyJdfV0sIm1ldGFkYXRhIjp7ImVuY29kaW5nIjoiWmVucm9vbSIsIm9yaWdpbiI6ImFwaXJvb20ubmV0IiwicnVsZXIiOiJEeW5lLm9yZyIsInRpbWVzdGFtcCI6IjE2NTcxMjA3MjMzNzAifSwiYXNzZXQiOnsiZGF0YSI6eyJDb3VudHJ5IjoiREUiLCJjaXR5IjoiQmVybGluIiwidGVtcGVyYXR1cmUiOiIyMiJ9fSwidmVyc2lvbiI6IjIuMCJ9",
+   "signed_planetmint_transaction": "eyJpZCI6IjRkMmNlYmM1MDliMGYyZjVjZTBkY2Y2OWNhNDliY2ZlMTgxZWQ0MzdhMTc0YTUzODM3OWY4ODI0YWUyZTc4Y2EiLCJvcGVyYXRpb24iOiJDUkVBVEUiLCJvdXRwdXRzIjpbeyJjb25kaXRpb24iOnsiZGV0YWlscyI6eyJ0eXBlIjoiZWQyNTUxOS1zaGEtMjU2IiwicHVibGljX2tleSI6Ik14MkQxV2JBZFJFSnBoZnVBY1JDZ2U1NHpNbmRLZm1venluelJaWVA1YXcifSwidXJpIjoibmk6Ly8vc2hhLTI1NjtfQkNJRnhjbl9HRWNRVHZPS0E5OHVYdm1rNzRYeVBMRDQzbkxlN2hoQVhnP2ZwdD1lZDI1NTE5LXNoYS0yNTYmY29zdD0xMzEwNzIifSwiYW1vdW50IjoiMSIsInB1YmxpY19rZXlzIjpbIk14MkQxV2JBZFJFSnBoZnVBY1JDZ2U1NHpNbmRLZm1venluelJaWVA1YXciXX1dLCJpbnB1dHMiOlt7ImZ1bGZpbGxtZW50IjoicEdTQUlBVmQxQkstMTRjclFncjFObXhwbW9ZR09FR25rT1NfOF9hQ3lDVzJiS0lnZ1VEczcyNjBiUlhfczJSaG13ZXpBYi05U2ZmN0JCcFQwZ0gzODZMS0puUkdYRE5sUnJKV1hVeDd2MzBjenBJT1Y2MGZTMFhLTTRyOFhYaFJjWXhsdWdnSiIsImZ1bGZpbGxzIjpudWxsLCJvd25lcnNfYmVmb3JlIjpbIk14MkQxV2JBZFJFSnBoZnVBY1JDZ2U1NHpNbmRLZm1venluelJaWVA1YXciXX1dLCJtZXRhZGF0YSI6eyJlbmNvZGluZyI6IlplbnJvb20iLCJvcmlnaW4iOiJhcGlyb29tLm5ldCIsInJ1bGVyIjoiRHluZS5vcmciLCJ0aW1lc3RhbXAiOiIxNjU3MTIwNzIzMzcwIn0sImFzc2V0Ijp7ImRhdGEiOnsiQ291bnRyeSI6IkRFIiwiY2l0eSI6IkJlcmxpbiIsInRlbXBlcmF0dXJlIjoiMjIifX0sInZlcnNpb24iOiIyLjAifQ==",
+   "txid": "4d2cebc509b0f2f5ce0dcf69ca49bcfe181ed437a174a538379f8824ae2e78ca"
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-write-on-planetmint]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-write-on-planetmint \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": { 
+	  "input": {
+		  "city": "Berlin",
+		  "temperature": "22",
+		  "Country": "DE"
+	  }
+  }
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-oracle-verify-dilithium
+
+Verify a dilithium signature.
+
+* **URL**
+
+  /api/zenswarm-oracle-verify-dilithium
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `asset={data}`
+  `dilithium signature={dilithium signature of asset}`
+  `dilithium public key={dilithium public key}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "output": [
+      "The_Dilithium_signature_was_verified"
+   ]
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-verify-dilithium]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-dilithium \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data":{
+	"dilithium public key": "eOUylAAO4CnCEQucRc2BCzRR2xllRjavEQzmeuFH9PneXL4yO/JRthF9ZHS+YqAzvk0LgNHIAXigY+MnAHdpLc32UGNO2P27g8jIPY5fuS3MbphfZUee0j6yrxUSpZzSYkAC/V0go0rqSOcCUomFb3JL3pM4zO28N6QSi0T8Hj4wxJhRAsdTMdLIGw2NS2J/6APJ1wZ/nkUI09CnTOswifylP/8MvxANuJffuh/OTIIP0nGutifyQ3seFftoshx+yiFD/NXgYwVmeXKBKxnoM53g2gDKnn1gYVYrkIeWqNvhonaIH2pYhMnnzUn3CURU/duE4gigGtiOmEnBlAqDt5uACOGybFc2s3aR50R9YC56P8T1FvCQTaptiJybQChkJgfcFN+FA98+0Fi+YBqxjGICiiOVPppmN38yOiYwmcgV+C2bBhqyuamU6NdCX8LqjgRUV9Oh+wNxVLp5IR7LWp8oAp+dDZgGfsORBBtUzUsJut//760oSYZgliDCgvzPu0jx2EYhwc/ddwqfA8aIZ8xxtRsn3Ijc5k9109/KVVAhWjLQDYqBugvyKmlTeWYiFSkZZGCnsfB8hyJO5pt+7kipYG5GtpQ/qmi0Q6tuDvLzE6yjZWPr2uJVlyUOW2rG2URLk/XheXRAL8yGFg9YONIE0DBIy1dBr6gMJXXZfgDPleMDlZwASegvgPSP69cpJccFI9N6eGCDLmclrTalnMI5/jCRWAQlbXEBo/abZ7BWVUMllMc0CPTpYzd484ZbIFIk13lYcrxOSoIbZWRorYWtK4A0Ja6JjuSrtSqmV+Ru6CzWSmQGQ0mL6voe2a/aiOuhNwDr8ndUPXbr1ILM5zrOvesamepjzOOqZphaNp7GtyYpGMBw1yezmsC5q+xaAlMwkfOGVfLnBfYvwbDtzeNlDmjpaWTk36xYgnp2Gv9f44SQ7tCmLnOY3BGuo/ELi9h1mhjLIy/yaGQcJefCNIEOESgT2kq+e8zZJ3csh0ZzXkUEy6kgD1n2fLKnoNYXpYi5pMKOLOmhAELI0gp5mFr8rj8T2JiSRIyKj6Z3pCxhgQQPMcYhqQWKdij2UknL1Q6U9fYvKsiYjFJPJkuunOb6cKMS0aGL53Y4MgIHI2xYNW1uhH59roMBi5HPVGqZR6nd734OTVLVtyL8pKGhPmcmojI1HPiiud6nYY5XYRwev4JdPtMZbcEIUGS0RcPUF3whm0uCZLmg9nFwXo7BSQiXh8PL/mOrDc1BO2b5wV0iZ5usJtdwbMUeQonMkaC0Uf9CH/obvi1SXb46ThRqv7gEbxos1oWwb+SJvAKgeA5y4RnZc4rc0nGlQU8e3pNojfLl2J58aa+5RI7MXltYTSDzlQBOb/RPrez01V58WgaIMnThl06y5g7v6TZX4Tafi2Qg3eBloB3ixd1wEYbe6Ax6/Mo6PbUoY1LW3pRqD8jzqaTm87mACSiO8MZiXYq0EYfTqFAln6RGIa4/PB+YSvd2xmPMivSVF1xvEMuuM2WYNj998hmf9GuefKs2ao1eeUGxwZu0s3JlCHMEp+SgboeitAF+l7hxK8l7goW35AS16auAD4zoZYkC0koKoWR6ScQ+kZfmeNLR02Tkgqcc5HP51QkWItbNSl3uS4n55CCU0bmF5YXkeHINWkGLmTDo/lJvCIMYfsrX8KKZbUrhuF+DAtQ2Cofx7y3wHjTGSdnwQ4rOWyJNLQ2pU7mmBb7At7HeYFMrq6XEe3YhUD1XLw==",
+	"asset": {
+		"data": {
+			"houses": [
+				{
+					"name": "Harry",
+					"team": "Gryffindor"
+				},
+				{
+					"name": "Draco",
+					"team": "Slytherin"
+				}
+			],
+			"number": 42
+		}
+	},
+	"dilithium signature": "UhL3rltmAGkzylTvU1VoYmOhau0o6Vv9EXC+F6JOj+rB9XMcVSFgvtBa7FUXA6viWmD617O9bsK/L+cvLBkP/1d+i9PLdxKqJYOb74CsOs85jwRW57BC33dhb8qMQIe1Aq3XfCnO8XnNwP4wjUEwSsU8VzSS4mpwsMciYMdVwKwUzHLTmUjFZAhSh0VifLD77LiN4ARbfvcLjfNqqJj8intK0i+K8yVbiW/FBMWKXC03zItVmGJsCQNFpy5jdaVClimU+RQxGl4fLGTT+P4bQa54OL0+8h1nlQWv1q813/sAN5e4LMtvsYpBvgw8U7gQxkoTtyLsQtQatufJyngNPuYs0Dqv5gzqSICNVmsayPav7iKk2qPPoe1WC4yI9Q+wYi+l4Vpk/iPVba8lMAaD2WmUYad5QFw6dQ6w6p/41Bv6IRi6sKBZPXkgBPBtr/s0T998Jhoh17O648TiDhySQ3zdrR6qoEQie8Zg/70oHLFi562Wqtid4N3ouK1jfASrkRoYbzGeHu8HGF4ew47jNJhdzkzKVCIV+5hIXfyw8wkQFqEmf8YuokKU1ME8b5OQ1471bnuxzRinx8V5TCi6khgYoW0oYA3Sc2Qkkz93B5cl41M2fravsXHLjUw628S2nM8TtQP6fiNdYijNKYOj60P0zOSfua5+wkLHRcfWNaKMEm7i+Xa6A9wqQz4klT34tf6GYH/hGkH3p/5wEo6vmT/ncp/HEhA9npYHU+JRAqOPYIXr9raurcBVJorUHgqcP0oRCK8CjBw2N3YfscnvzVeeLSGU19SJ4oRjZ6d8B/LGkz1P5U2JGgqxuTOdyHP7CDcG/PPlaE+ZnJo6jAEU93W5FiMiktuHWOV2TCcRK9QTkvEK37Uu6ktJRi4mIM9UO3zIDh5YyhnuHNOq1XOZznF40R/cb7uKSB/uVS/9vPspGqQZXrpsJhFF+F9diQT/23AUmlhUZrM5MTOPnmff9fh++wjKHkjXs3OjqUmlFWld5TELD7WL5iRZNFNZeNbN/ZUszjOLUtCTxtEIyUERGe1xs50Nyvapqvd2Ar7qVt8hFH5b0LNdp6v3yw6VQl1NhdqQ4wgHTBzEDWsfb/wf90b6CYEnHI1RI5rrbr7mLSKrm2dPbDORnHMBZWLizFc/mUVvgNAgY5r0Y/746IDLR9du7DBeF3oGO4afKQX5WdJ2aXUxLeF+bEAYked78AG/7+Cekt7K/gxqkjUU9OBwGCPkU7IcxmdXB0bJTXvlbgqLPBbXaRcmKh5liz+cvg/kAoDvw9paPAm8Gk5Oa1MwVOVZ3XI1GK0grAGD47WoozfxPW2LZcc5bk1htmhmUk49nTC10GMY6Uq5PkJzaOhCJxqniBALilRx7Fihu5yMiJbu4A6vpgjZ/Buh8gosAp4900TV2/JK5AGIUtdM0lC0Ft/1alHwkzWxcF9EIPK+0CgLNcgiJsgGcQsRXT+mMdArVZxRXziTLoJJxlOa5fxOep/f0JxwDqKnquKdpgERNIkFMtp4TuWtpEm5lXwCEwOL9CQdZCWPJEjOdX+dd+ipeppJKZdGVbXtnT7IAECFpDFZkRiKLhEEtQypxVuwqHumgls7G+xWjMK35M7wfBqboUMA3+z1q1znt6taNGt8i0+tk7BEhtuxh3McAVWPDgSaPc5YW/w8d+VpqPwR4u7lEb/OSgvHEDka/Fi+V0aIJ3tQoDAPGxXc8aH7yOjYtMkFAzLHDBygNn78ur4EzdfDZ2WAFpquiithwXlyEyWRK1287qZlRGGTv7hcDitaSbWjWcycWr2rIgz6BO4OOoE9T+raW8DqsTO36BF9ROcgx0/wyVNS/6nPxiv9Rv1qk5uggzJ1i9ncYyp28LD2OAmcLNd4/SfdbxYDlmhNtyNBzihyQVn1z9rJNNjvy9x2kiy7XESMHt9aqHSrZg6taePzeOv4AUMt40SHW71ZF3QE1OBrw9EAt/277DRcplTdlRS1p1GPx3h0y2B0/YYm9IMa6FT8MzGFk0wg8zUn3UR+iQUMCIeF7rXNjE4jt1AdyA/UkMLsu4tapLfBxg16cfxpMbJKUwuzQrj309jwBxelAKa1ytzuqOJl9gkuSgJASb8gUOxX4VvrdGUtcufEglCwibBTbbNJ9TsLAUyzPfIiQBHatOVRjGiWzfXG+KfvGq2Pf/F6yocLqjflPyY9aSW0qGeDGrgO4K/nvEXintKApc7h9cdc5OdmdAU1zSnEu79zkJ5ZgcdLw1X0x3F6eORnAXZRmld/JuBw3Kt2aFN+fNgWP/UVw/H084NoHnVH28DCkanK2qqnaFu8nxeAqKl3LHEUdD8BZWsEPusReFsrl63gpbdwlMCbBNH/vW9D0CrH+L4/RLz8C1086Fz6U8AQ4dW8TxbHlrygwariz3ERRDG368wu7KHScd7kp7kilUPpfrbyt/ry8Bp0QH8rCfJMFoqPuk237PwwEO6Bmirel69R65Gq6Y5BRWgfiVmxhju7/DG1vLSA+Y88f3lXRrStyPXlgbDFQfeYSp3U1ix2PYgXEzNgsPs56x1vTc+A9JS+G0VRFLC3bSR58Oea6UrVsdSYDQmcGx3nLEOHgetCmKbAk+sMG3upG0QQh9fs/mCixGsdGa0nhDIQziwy485reJQpc4io0SYDs3o5O6j3Bao9nZjat6WZaPpTBwpnbILuVMyO0wfTC7SMTKjfl9HC7bqLjxUYchNJI92B07kJUJjETWvVicVh/zicr8gJ2xBsiPRhmwF7Kb3rF+GFAfEoSgnj6CvyAuvUQ70TQl+fk46PXCrIoI/TANicxFjjQAz7UfPhQWXdeqO0ETDbeQVoSnnUnksyWax0pfPRDZ1GFkw2TkLLvhF8cWOe1+j5GSkzkBcEup/K+6CgA7Lq2fPGfxsXiiM18XYzVbe0whUONBm63uUOOdZRioyENS4BClETQBOzKsiRCSgmX/U+5h/pWv0l9Th9YzW0HKZ/mpJhIbUgEB4is/lcqhNfcNtFULpI7eguLHrG9CeBfu9ZeGEk4pJd1W3zdYxuLDI42Z5lrGT6V8nVmT6WuQ585OvhfXZiNk+O9xUWwc0R/7ghsk6X0OYX245L53f8L9jd9cFiSEcDBRotS3in1foBNEVNTmJojpHgDRIsLTeWnry+1+Hu8ff4+QkOFR46QWCH6gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkTIyw="
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-oracle-verify-ecdsa
+
+Verify a ecdsa signature.
+
+* **URL**
+
+  /api/zenswarm-oracle-verify-ecdsa
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `asset={data}`
+  `ecdsa signature={ecdsa signature of asset}`
+  `ecdsa public key={ecdsa public key}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "output": [
+      "The_ECDSA_signature_was_verified"
+   ]
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-verify-ecdsa]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-ecdsa \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data":{
+	"ecdsa public key": "BPEg2X6/Y+68oolE6ocCPDlLWQZLqdaBV00d/jJ5f0dRNQNBUcIh/JHGgfDotpM4p682MPZ5PKoC3vsjhI88OeE=",
+	"asset": {
+		"data": {
+			"houses": [
+				{
+					"name": "Harry",
+					"team": "Gryffindor"
+				},
+				{
+					"name": "Draco",
+					"team": "Slytherin"
+				}
+			],
+			"number": 42
+		}
+	},
+	"ecdsa signature": {
+		"r": "LaOiMWGYQrsc6gD1cs28O10Sk/S/6TXXxxsE5oX88GQ=",
+		"s": "FQlAyapkw4ynGFVw1Az+S0whR6wMINP3ece1QDwuFJQ="
+	}
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-oracle-verify-eddsa
+
+Verify a eddsa signature.
+
+* **URL**
+
+  /api/zenswarm-oracle-verify-eddsa
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `asset={data}`
+  `eddsa signature={eddsa signature of asset}`
+  `eddsa public key={eddsa public key}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "output": [
+      "The_EDDSA_signature_was_verified"
+   ]
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-verify-eddsa]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-eddsa \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data":{
+	"eddsa public key": "2s5wmQjZeYtpckyHakLiP5ujWKDL1M2b8CiP6vwajNrK",
+	"asset": {
+		"data": {
+			"houses": [
+				{
+					"name": "Harry",
+					"team": "Gryffindor"
+				},
+				{
+					"name": "Draco",
+					"team": "Slytherin"
+				}
+			],
+			"number": 42
+		}
+	},
+	"eddsa signature": "3TXz8EJYeZBX7criQGgwv3beuKUqY1n61gSDPTfPjANz5fSzJVMYTqm6Ksu7jcP4X6fhpdgTJXUZ4cyBGUjYnpzF"
+},
+  "keys": {}
+}'
+```
+
+
+---
+### zenswarm-oracle-verify-schnorr
+
+Verify a schnorr signature.
+
+* **URL**
+
+  /api/zenswarm-oracle-verify-schnorr
+
+* **Method:**
+
+  `POST`
+
+
+* **Data Params**
+
+  `asset={data}`
+  `schnorr signature={schnorr signature of asset}`
+  `schnorr public key={schnorr public key}`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+
+```json
+{
+   "output": [
+      "The_Schnorr_signature_was_verified"
+   ]
+}
+```
+
+ 
+* **Error Response:**
+
+ **Code**: 200 Error: Internal Server Error <br />
+    **Content:**
+    
+```json
+{
+  "zenroom_errors": {
+    "result": "",
+    "logs": " ***Zenroom ERROR logs*** " 
+  },
+  "result": "",
+  "exception": "[ZENROOM EXECUTION ERROR FOR CONTRACT zenswarm-oracle-verify-schnorr]\n\n\n Please check zenroom_errors logs"
+}
+```
+
+* **Sample Call:**
+
+```shell
+curl -X 'POST' \
+  'https://swarm2.dyne.org:20003/api/zenswarm-oracle-verify-schnorr \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data":{
+	"schnorr public key": "ABvYnIkrU1kl3GTaossmVIFQEWul3BIYwmrk8CSUOLd4hLI7ApBBMYSaOUDp0hyf",
+	"asset": {
+		"data": {
+			"houses": [
+				{
+					"name": "Harry",
+					"team": "Gryffindor"
+				},
+				{
+					"name": "Draco",
+					"team": "Slytherin"
+				}
+			],
+			"number": 42
+		}
+	},
+	"schnorr signature": "EI6d30GcjwwqpXUgmwnktFvD7rMhYCUQ65XsF9NEm/m34jspnK1oS521Ru8pCgIjLzhqN13TBOPCKPzPRuz+RbxfNFPnbNCHXW/AhrtZyEc="
+},
+  "keys": {}
+}'
+```
+
+
+
+
 
 
 
@@ -1135,6 +2055,29 @@ The following APIs contain the *business logic* of the Oracles and are used only
 /api/zenswarm-oracle-update
 
 /api/zenswarm-oracle-key-issuance-2
+
+/api/zenswarm-oracle-execute-zencode-planetmint-1
+
+/api/zenswarm-oracle-execute-zencode-planetmint-2
+
+/api/zenswarm-dilithium-1-extract-a-random-did
+
+/api/zenswarm-dilithium-2-resolve-did
+
+/api/zenswarm-dilithium-3-retrieve-dilithium-pk-and-endpoints
+
+/api/zenswarm-dilithium-4-dilithium-signature
+
+/api/zenswarm-dilithium-5-verify-dilithium-signature-on-planetmint
+
+/api/zenswarm-6-rand-oracles-1-extract-6-endpoints
+
+/api/zenswarm-6-rand-oracles-2-parrallel-post
+
+/api/zenswarm-write-on-ethereum-1
+
+/api/zenswarm-write-on-ethereum-2
+
 
 
 
