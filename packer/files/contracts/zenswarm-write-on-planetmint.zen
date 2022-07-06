@@ -1,0 +1,19 @@
+Rule unknown ignore
+
+Given I fetch the local timestamp and store it into 'timestamp'
+Given I have a planetmint endpoint named 'endpoint'
+
+Given I have a 'base58 dictionary' named 'ed25519 keypair'
+Given I have a 'string dictionary' named 'input'
+Given I have a 'string' named 'timestamp'
+Given I have a 'string dictionary' named 'metadata'
+
+
+When I rename the 'input' to 'asset'
+When I insert 'timestamp' in 'metadata'
+
+Then print the data
+
+Then I create the planetmint transaction to store asset named 'asset' with metadata 'metadata'
+Then I create the signed planetmint transaction of 'planetmint_transaction'
+Then ask planetmint to broadcast the 'signed_planetmint_transaction'

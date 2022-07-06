@@ -1,0 +1,7 @@
+Rule unknown ignore
+
+Given I have a planetmint endpoint named 'endpoint'
+Given I read the planetmint transaction 'txId' and save the output into 'output'
+
+Given I have a 'string dictionary' named 'output'
+Then print the 'output'
