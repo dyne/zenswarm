@@ -1,0 +1,12 @@
+Scenario qp: Verify the signature
+
+# Here we load the Dilithium public key, the message and the signature 
+Given I have a 'dilithium public key'
+Given I have a 'string dictionary' named 'asset'
+Given I have a 'dilithium signature'
+
+# Here we verify the signature
+When I verify the 'asset' has a dilithium signature in 'dilithium signature' by 'dilithium public key'
+
+# If the verification is successful, the next string is printed 
+Then print string 'The Dilithium signature was verified'

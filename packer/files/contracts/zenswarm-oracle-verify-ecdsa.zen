@@ -1,0 +1,12 @@
+Scenario ecdh: Verify the signature
+
+# Here we load the ECDSA public key, the message and the signature 
+Given I have a 'base64' named 'ecdsa public key'
+Given I have a 'string dictionary' named 'asset'
+Given I have a 'base64 dictionary' named 'ecdsa signature'
+
+# Here we verify the signature
+When I verify the 'asset' has a ecdh signature in 'ecdsa signature' by 'ecdsa public key'
+
+# If the verification is successful, the next string is printed 
+Then print string 'The ECDSA signature was verified'
