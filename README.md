@@ -1084,9 +1084,9 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-post-6-rand-oracles.chain
+### Consensus
 
-Set the random seed to the transaction id, choose 6 random Orcales and returns the json data containing the respons obtained from the POST made by the selected Oracles and a string that describe the result.
+Set the random seed to the transaction id, choose 6 random Orcales and returns the json data containing the responses obtained from the POST made by the selected Oracles and a string that describe the result.
 
 
 * **URL**
@@ -1226,7 +1226,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-read-from-fabric
+### Read from Fabric
 
 Retrieve a transaction in the fabric blockchain starting from its transaction id.
 
@@ -1292,7 +1292,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-write-on-fabric
+### Write on Fabric
 
 Store data on the fabric blockchain and return the transaction id.
 
@@ -1363,7 +1363,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-read-from-ethereum
+### Read from Ethereum
 
 Retrieve a transaction in the ethereum blockchain (fabchain) starting from its transaction id.
 
@@ -1429,9 +1429,9 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-write-on-ethereum.chain
+### Write on Ethereum
 
-Store data on the ethereum blockchain and return the transaction id.
+Store data on the ethereum blockchain (fabchain) and return the transaction id.
 
 * **URL**
 
@@ -1507,7 +1507,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-read-from-planetmint
+### Read from Planetmint
 
 Retrieve a transaction in the planetmint blockchain starting from its transaction id.
 
@@ -1583,7 +1583,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-write-on-planetmint
+### Write on Planetmint
 
 Store data on the planetmint blockchain and return the transaction id.
 
@@ -1666,7 +1666,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-oracle-verify-dilithium
+### Dilithium signature verification
 
 Verify a dilithium signature.
 
@@ -1748,7 +1748,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-oracle-verify-ecdsa
+### ECDSA signature verification
 
 Verify a ecdsa signature.
 
@@ -1833,7 +1833,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-oracle-verify-eddsa
+### EDDSA signature verification
 
 Verify a eddsa signature.
 
@@ -1915,7 +1915,7 @@ curl -X 'POST' \
 
 
 ---
-### zenswarm-oracle-verify-schnorr
+### Schnorr signature verification
 
 Verify a schnorr signature.
 
