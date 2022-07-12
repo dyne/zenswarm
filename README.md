@@ -355,7 +355,7 @@ Below a list of the APIs available on an Oracle
 
 ```shell
  curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-identity' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-get-identity' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -406,7 +406,7 @@ Below a list of the APIs available on an Oracle
 
 ```shell
  curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-ping' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-ping' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -453,7 +453,7 @@ Returns json data with a string, containing the timestamp fetched using the Java
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-timestamp' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-get-timestamp' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -504,15 +504,11 @@ Returns json data with a string, containing the timestamp fetched using the Java
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-get-signed-timestamp' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-get-signed-timestamp' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "data": {
-    "keyring": {
-      "ecdh": "mukeqwntoJPtAN94jgahUA/ID7NptMLNL84sMPJ++eY="
-    }
-  },
+  "data": {},
   "keys": {}
 }'
 ```
@@ -581,7 +577,7 @@ curl -X 'POST' \
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-dilithium' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-sign-dilithium' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -664,7 +660,7 @@ curl -X 'POST' \
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-ecdsa' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-sign-ecdsa' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -745,7 +741,7 @@ curl -X 'POST' \
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-eddsa' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-sign-eddsa' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -826,7 +822,7 @@ Returns json data contained in the **asset** along with the **Schnorr signature*
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-sign-schnorr' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-sign-schnorr' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -905,7 +901,7 @@ Returns json data containing the result of the POST performed by the Oracle
 
 ```shell
 curl -X 'POST' \
-  'https://swarm1.dyne.org:20003/api/zenswarm-oracle-http-post' \
+  'https://swarm1.dyne.org:20002/api/zenswarm-oracle-http-post' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
