@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python gather_addresses.py | python send_coins.py
+pipenv run python gather_addresses.py | pipenv run python send_coins.py
