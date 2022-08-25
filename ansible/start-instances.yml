@@ -55,6 +55,6 @@
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
     loop_control:
-      pause: 20
+      pause: 2
 
 

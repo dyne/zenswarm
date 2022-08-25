@@ -42,11 +42,12 @@
         DEANNOUNCE_URL="{{ deannounce_url | default('') }}"
         OPENAPI=true
         COUNTRY="{{ country }}"
-        HOST="{{ domain_name }}"
+        HOST="{{ hostname }}"
         PRIVATE_ZENCODE_DIR="{{ basepath }}/private-contracts"
         SUBSCRIPTIONS="{{ subscriptions[item].from | default('')}}"
         L0_DEST="{{ subscriptions[item].to | default('') }}"
         YML_EXT=yml
+        EXT_HOST="{{ ext_host }}"
         HTTP_PORT={{ item + base_port }}
         HTTPS_PORT={{ item + public_base_port }}
       path: "{{ wd }}/.env"
@@ -82,17 +83,9 @@
       create: true
       block: |
         server {
-          listen {{ public_base_port + item }} ssl;
+          listen {{ public_base_port + item }};
           root /var/www/html;
-          server_name swarm.dyne.org;
-          ssl_certificate /etc/letsencrypt/live/{{ domain_name}}/fullchain.pem;
-          ssl_certificate_key /etc/letsencrypt/live/{{ domain_name}}/privkey.pem;
 
-          include /etc/letsencrypt/options-ssl-nginx.conf;
-          # Redirect non-https traffic to https
-          if ($scheme != "https") {
-              return 301 https://$host$request_uri;
-          }
           location / {
             proxy_pass http://127.0.0.1:{{ base_port + item }}/;
           }
