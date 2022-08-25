@@ -16,6 +16,11 @@
     deannounce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-remove-oracle"
     pubkeys: pubkeys.json
   tasks:
+  - name: delete old logs
+    file:
+      path: "/home/zenswarm/.pm2/logs/"
+      state: absent
+
   - name: Update packages of vmlet
     community.general.yarn:
       path: "{{ wd }}"
@@ -39,6 +44,7 @@
     become: true
     uri:
       url: https://did.dyne.org/api/zenswarm-issuer-set-nonce.chain
+    run_once: true
 
   - name: Start oracles in pm2!
     command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
@@ -48,3 +54,7 @@
     vars:
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+    loop_control:
+      pause: 20
+
+
