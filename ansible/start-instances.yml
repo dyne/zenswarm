@@ -14,6 +14,7 @@
     country: DE
     announce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-create-oracle-DID.chain "
     deannounce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-remove-oracle"
+    pubkeys: pubkeys.json
   tasks:
   - name: Update packages of vmlet
     community.general.yarn:
@@ -24,10 +25,20 @@
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
 
+  - name: Copy issuer pubkeys
+    become: true
+    copy:
+      src: "{{ pubkeys }}"
+      dest: "{{ wd }}/contracts"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
   - name: Set current nonce into redis
     become: true
     uri:
-      url: https://did.dyne.org/api/zenswarm-issuer-set-nonce
+      url: https://did.dyne.org/api/zenswarm-issuer-set-nonce.chain
 
   - name: Start oracles in pm2!
     command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
