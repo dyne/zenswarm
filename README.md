@@ -2000,23 +2000,23 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "data":{
-	"schnorr public key": "ABvYnIkrU1kl3GTaossmVIFQEWul3BIYwmrk8CSUOLd4hLI7ApBBMYSaOUDp0hyf",
-	"asset": {
-		"data": {
-			"houses": [
-				{
-					"name": "Harry",
-					"team": "Gryffindor"
-				},
-				{
-					"name": "Draco",
-					"team": "Slytherin"
-				}
-			],
-			"number": 42
-		}
-	},
-	"schnorr signature": "EI6d30GcjwwqpXUgmwnktFvD7rMhYCUQ65XsF9NEm/m34jspnK1oS521Ru8pCgIjLzhqN13TBOPCKPzPRuz+RbxfNFPnbNCHXW/AhrtZyEc="
+   "asset": {
+      "data": {
+         "houses": [
+            {
+               "name": "Harry",
+               "team": "Gryffindor"
+            },
+            {
+               "name": "Draco",
+               "team": "Slytherin"
+            }
+         ],
+         "number": 42
+      }
+   },
+   "schnorr_public_key": "BOqptDEFEumM+RMlEYD0rbHOrxvbPh5kEGBNNtw0qpBjRmWKvlDGl5GfrJsklqrb",
+   "schnorr_signature": "EnFxUGn7E1iLfXE++WRmFwPNNXnRQk6yUMGHtGNzxWUzxQxNCveVrRfyZ0DiidUFI3j//1UuzmxYaJla0DUWxQBh2jb11X1oYzNm92UTxuA="
 },
   "keys": {}
 }'
