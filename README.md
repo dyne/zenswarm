@@ -1918,7 +1918,6 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "data":{
-	"eddsa public key": "2s5wmQjZeYtpckyHakLiP5ujWKDL1M2b8CiP6vwajNrK",
 	"asset": {
 		"data": {
 			"houses": [
@@ -1934,7 +1933,8 @@ curl -X 'POST' \
 			"number": 42
 		}
 	},
-	"eddsa signature": "3TXz8EJYeZBX7criQGgwv3beuKUqY1n61gSDPTfPjANz5fSzJVMYTqm6Ksu7jcP4X6fhpdgTJXUZ4cyBGUjYnpzF"
+	"eddsa_public_key": "7XKv9Fc5d2HSrtkwMPcxeUnVQSB8sQMhtiexhfA77rm4",
+	"eddsa_signature": "39HdhA9B5GpsNRbt8ikyKRoBBZvP6XAeKaGPUEkAy7WGEgqLf3yAqGpeMXzvoMMtjEHmaQurJ18TVJbEgH8x5ZjE"
 },
   "keys": {}
 }'
