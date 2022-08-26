@@ -1833,7 +1833,6 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "data":{
-	"ecdsa public key": "BPEg2X6/Y+68oolE6ocCPDlLWQZLqdaBV00d/jJ5f0dRNQNBUcIh/JHGgfDotpM4p682MPZ5PKoC3vsjhI88OeE=",
 	"asset": {
 		"data": {
 			"houses": [
@@ -1850,9 +1849,10 @@ curl -X 'POST' \
 		}
 	},
 	"ecdsa signature": {
-		"r": "LaOiMWGYQrsc6gD1cs28O10Sk/S/6TXXxxsE5oX88GQ=",
-		"s": "FQlAyapkw4ynGFVw1Az+S0whR6wMINP3ece1QDwuFJQ="
-	}
+		"r": "TOmfgO7blPNnuODhAtIBYWQEOqsv6vVhknLSbcDb0Dc=",
+		"s": "WirTGe4s1mbpCJ4N1y0nPwvi+q6bYAdDJq+q3EMDFGM="
+	},
+	"ecdh_public_key": "BGrFCQHQ9D3Nh7hN1xCubXrRUjJl/Uvg+76kdfY4pJRhezxREKQFSEvsghRCiavo5mQhnwfQ79oz03obR4FfdVc="
 },
   "keys": {}
 }'

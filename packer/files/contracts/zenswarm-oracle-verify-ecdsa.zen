@@ -1,7 +1,7 @@
 Scenario ecdh: Verify the signature
 
 # Here we load the ECDSA public key, the message and the signature 
-Given I have a 'base64' named 'ecdsa public key'
+Given I have a 'base64' named 'ecdh public key'
 Given I have a 'string dictionary' named 'asset'
 Given I have a 'base64 dictionary' named 'ecdsa signature'
 
