@@ -1852,7 +1852,7 @@ curl -X 'POST' \
 		"r": "TOmfgO7blPNnuODhAtIBYWQEOqsv6vVhknLSbcDb0Dc=",
 		"s": "WirTGe4s1mbpCJ4N1y0nPwvi+q6bYAdDJq+q3EMDFGM="
 	},
-	"ecdh_public_key": "BGrFCQHQ9D3Nh7hN1xCubXrRUjJl/Uvg+76kdfY4pJRhezxREKQFSEvsghRCiavo5mQhnwfQ79oz03obR4FfdVc="
+	"ecdsa_public_key": "BGrFCQHQ9D3Nh7hN1xCubXrRUjJl/Uvg+76kdfY4pJRhezxREKQFSEvsghRCiavo5mQhnwfQ79oz03obR4FfdVc="
 },
   "keys": {}
 }'
