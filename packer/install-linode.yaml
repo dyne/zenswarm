@@ -30,6 +30,7 @@
     repo: https://raw.githubusercontent.com/dyne/restroom-vmlet-template/main
     basepath: /zenswarm
     nodes: 5
+    project: ebsi
   tasks:
 
   - name: Create basepath
@@ -183,7 +184,7 @@
 
   - name: Copy contracts (permissions may be wrong)
     synchronize:
-      src: contracts
+      src: "{{ project }}/contracts"
       dest: "{{ wd }}"
       owner: no
       group: no
