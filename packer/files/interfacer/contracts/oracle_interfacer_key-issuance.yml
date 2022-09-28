@@ -1,0 +1,67 @@
+zenchain: 1.0
+start: oracle_interfacer_key-issuance_1_verify-signature.zen
+blocks:
+  oracle_interfacer_key-issuance_1_verify-signature.zen:
+    zenContent: >-
+      Rule caller restroom-mw
+
+      Scenario 'ecdh': verify signature
+
+
+      Given I read the content of 'contracts/pubkeys.json'
+
+
+      Given I have a 'base64' named 'schnorr'
+
+      Given I have a 'ecdh signature' named 'schnorr.signature'
+
+      Given I have a 'ecdh public key' from 'Issuer'
+
+
+      When I verify the 'schnorr' has a ecdh signature in 'schnorr.signature' by
+      'Issuer' 
+
+
+      When I create the keyring
+
+      When I insert 'schnorr' in 'keyring'
+
+
+      Then print the 'keyring'
+    next: >-
+      oracle_interfacer_key-issuance_2_sign-identity-schnorr.zen
+  oracle_interfacer_key-issuance_2_sign-identity-schnorr.zen:
+    zenContent: |+
+      Rule caller restroom-mw
+      Scenario 'schnorr': create Schnorr signature
+
+      Given I read the content of 'contracts/did.json'
+
+      Given I have a 'keyring'
+      Given I have a 'string dictionary' named 'did document'
+
+      When I create the schnorr signature of 'did document'
+      When I rename the 'schnorr signature' to 'schnorr.signature.did'
+
+      Then print the 'did document'
+      Then print the 'schnorr.signature.did'
+
+    next: >-
+      oracle_interfacer_key-issuance_3_sign-identity-eddsa.zen
+  oracle_interfacer_key-issuance_3_sign-identity-eddsa.zen:
+    zenContent: |-
+      Rule caller restroom-mw
+      Scenario 'eddsa': signature
+
+      Given I read the content of 'contracts/keyring.json'
+
+      Given I have a 'keyring'
+      Given I have a 'string dictionary' named 'did document'
+      Given I have a 'base64' named 'schnorr.signature.did'
+
+      When I create the eddsa signature of 'did document'
+      When I rename the 'eddsa signature' to 'eddsa.signature.did'
+
+      Then print the 'did document'
+      Then print the 'eddsa.signature.did'
+      Then print the 'schnorr.signature.did'
