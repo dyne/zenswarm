@@ -5,8 +5,8 @@
 
 After announcing to a DID controller, the Oracles provide a number of services, including:
  * Cryptographic signature
- * Blockchain notarization
- * Smart Contract execution
+ * Blockchain interoperability and notarization
+ * On and off chain smart contract execution
 
 <h1 align="center">
 Zenswarm
