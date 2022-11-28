@@ -11,8 +11,9 @@
     base_port: 25000
     public_base_port: 20000
     subs_file: subscriptions.csv
-    announce_url: "https://did.dyne.org/api/W3C-DID-controller-create-oracle-DID.chain "
-    deannounce_url: "https://did.dyne.org/api/W3C-DID-controller-remove-oracle"
+    faucet_url: "https://did.dyne.org/api/did-faucet.chain"
+    announce_url: "https://did.dyne.org/api/did-create.chain"
+    deannounce_url: "https://did.dyne.org/api/did-delete.chain"
   tasks:
   - name: Load subscriptions
     set_fact:
@@ -70,6 +71,19 @@
       cmd: "yarn run init"
     args:
       chdir: "{{ wd }}/"
+    loop: "{{ range(0, nodes) | list }}"
+    vars:
+      vmlet_name: "restroom-mw-{{ item }}"
+      wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
+
+  - name: Retrieve and store token
+    ansible.builtin.uri:
+      url: "{{ faucet_url }}"
+      return_content: yes
+    register: token
+    ansible.builtin.copy:
+      content: "{{ token }}"
+      dest: "{{ wd }}/token.json"
     loop: "{{ range(0, nodes) | list }}"
     vars:
       vmlet_name: "restroom-mw-{{ item }}"

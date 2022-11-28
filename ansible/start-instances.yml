@@ -12,8 +12,8 @@
     public_base_port: 20000
     subs_file: subscriptions.csv
     country: DE
-    announce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-create-oracle-DID.chain "
-    deannounce_url: "http://did.dyne.org:12000/api/W3C-DID-controller-remove-oracle"
+    announce_url: "https://did.dyne.org/api/did-create.chain "
+    deannounce_url: "https://did.dyne.org/api/did-delete.chain"
     pubkeys: pubkeys.json
   tasks:
   - name: delete old logs
@@ -39,12 +39,6 @@
     vars:
       vmlet_name: "restroom-mw-{{ item }}"
       wd: "{{ basepath }}/vmlets/{{ vmlet_name }}"
-
-  - name: Set current nonce into redis
-    become: true
-    uri:
-      url: https://did.dyne.org/api/zenswarm-issuer-set-nonce.chain
-    run_once: true
 
   - name: Start oracles in pm2!
     command: pm2 start yarn --update-env --name {{ vmlet_name }} --time -- start
