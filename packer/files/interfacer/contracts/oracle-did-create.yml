@@ -1,0 +1,490 @@
+zenchain: 1.0
+start: oracle_interfacer_create-did_1_read-APIs.zen
+blocks:
+  oracle_interfacer_create-did_1_read-APIs.zen:
+    zenContent: |
+      Rule caller restroom-mw
+
+      Given I read the content of 'contracts/identity.json'
+
+      Given I have a 'string' named 'baseUrl' in 'identity'
+      Given I have a 'string' named 'port_https' in 'identity'
+      Given I have a 'string array' named 'API' in 'identity'
+
+      When I set ':' to ':' as 'string'
+      When I append 'port_https' to ':'
+      When I append ':' to 'baseUrl'
+
+      Then print 'API'
+      Then print 'baseUrl'
+    next: >-
+      oracle_interfacer_create-did_2_for-each-API-create-url.zen
+  oracle_interfacer_create-did_2_for-each-API-create-url.zen:
+    forEach: API
+    index: temp
+    zenContent: |-
+      Given I have a 'string' named 'temp'
+      Given I have a 'string' named 'baseUrl'
+
+      When I append 'temp' to 'baseUrl'
+
+      Then print the 'baseUrl'
+    next: oracle_interfacer_create-did_3_flat-urls.zen
+  oracle_interfacer_create-did_3_flat-urls.zen:
+    zenContent: |
+      Given I have a 'string array' named 'API' 
+       
+      When I create the flat array of contents in 'API' 
+      When I rename the 'flat array' to 'service' 
+
+      Then print the 'service'
+    next: >-
+      oracle_interfacer_create-did_4_for-each-url-create-service.zen
+  oracle_interfacer_create-did_4_for-each-url-create-service.zen:
+    forEach: service
+    index: temp
+    zenContent: |
+      Given I have a 'string' named 'temp'
+
+      # id
+      When I set 'id' to 'did:dyne:zenswarm-api#' as 'string'
+      When I set '/' to '/' as 'string'
+      When I create the array by splitting 'temp' at '/'
+      When I create the copy of element '4' in array 'array'
+      When I append 'copy' to 'id'
+      # type
+      When I set 'type' to 'LinkedDomains' as 'string'
+      # serviceEndpoint
+      When I rename the 'temp' to 'serviceEndpoint'
+      #When I create the hash of 'temp'
+
+      Then print the 'id'
+      Then print the 'serviceEndpoint'
+      Then print the 'type'
+    next: oracle_interfacer_create-did_5_create-did-doc.zen
+  oracle_interfacer_create-did_5_create-did-doc.zen:
+    zenContent: >+
+      Rule caller restroom-mw
+
+      Scenario 'eddsa': sign the did document
+
+
+      # retrieve identity, keyring and token
+
+      Given I read the content of 'contracts/identity.json'
+
+      Given I read the content of 'contracts/keyring.json'
+
+      Given I read the content of 'contracts/token.json'
+
+
+      # services
+
+      Given I have a 'string array' named 'service'
+
+      # keyring
+
+      Given I am 'Issuer'
+
+      Given I have my 'keyring'
+
+      # identity
+
+      Given I have a 'string' named 'description' in 'identity'
+
+      Given I have a 'string' named 'ecdh_public_key' in 'identity'
+
+      Given I have a 'string' named 'reflow_public_key' in 'identity'
+
+      Given I have a 'string' named 'schnorr_public_key' in 'identity'
+
+      Given I have a 'string' named 'ethereum_address' in 'identity'
+
+      Given I have a 'string' named 'dilithium_public_key' in 'identity'
+
+      Given I have a 'string' named 'eddsa_public_key' in 'identity'
+
+      Given I have a 'string' named 'Country' in 'identity'
+
+      Given I have a 'string' named 'State' in 'identity'
+
+      Given I have a 'string' named 'baseUrl' in 'identity'
+
+      Given I have a 'string' named 'port_https' in 'identity'
+
+
+      # context and token
+
+      Given I have a 'string array' named '@context'
+
+      Given I have a 'string dictionary' named 'token'
+
+      # token key
+
+      Given I have a 'base58' named 'eddsa' inside 'token'
+
+
+      # create the copy of eddsa public key inside token
+
+      When I create the copy of 'eddsa public key' from dictionary 'token'
+
+      When I remove 'token'
+
+      When I rename the 'copy' to 'token'
+
+
+      ### DID-Document
+
+      When I create the 'string dictionary' named 'did document'
+
+
+      ## @context
+
+      When I insert '@context' in 'did document'
+
+
+      ## id
+
+      When I set 'did:dyne:id:' to 'did:dyne:oracle:' as 'string'
+
+      When I append 'token' to 'did:dyne:id:'
+
+      When I copy the 'did:dyne:id:' to 'id'
+
+      When I insert 'id' in 'did document'
+
+
+      ## alsoKnownAs
+
+      When I set 'alsoKnownAs' to 'did:dyne:ganache:' as 'string'
+
+      When I append 'token' to 'alsoKnownAs'
+
+      When I insert 'alsoKnownAs' in 'did document'
+
+
+      ## Country
+
+      When I insert 'Country' in 'did document'
+
+
+      ## State
+
+      When I insert 'State' in 'did document'
+
+
+      ## url
+
+      When I rename 'baseUrl' to 'url'
+
+      When I set ':' to ':' as 'string'
+
+      When I append ':' to 'url'
+
+      When I append 'port_https' to 'url'
+
+      When I insert 'url' in 'did document'
+
+
+      ## description
+
+      When I insert 'description' in 'did document'
+
+
+      ## veririfcationMethod
+
+      When I create the 'string array' named 'verificationMethod'
+
+
+      # 1-ecdsa public key
+
+      When I create the 'string dictionary' named 'verification-key1'
+
+      # pk
+
+      When I copy 'ecdh public key' to 'publicKeyBase64' 
+
+      When I insert 'publicKeyBase64' in 'verification-key1'
+
+      # type
+
+      When I set 'type' to 'EcdsaSecp256k1VerificationKey_b64' as 'string'
+
+      When I insert 'type' in 'verification-key1'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#key_ecdsa1' to '#key_ecdsa1' as 'string'
+
+      When I append '#key_ecdsa1' to 'id'
+
+      When I insert 'id' in 'verification-key1'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'verification-key1'
+
+      When I insert 'verification-key1' in 'verificationMethod'
+
+
+      # 2-reflow public key
+
+      When I create the 'string dictionary' named 'verification-key2'
+
+      # pk
+
+      When I copy 'reflow public key' to 'publicKeyBase64' 
+
+      When I insert 'publicKeyBase64' in 'verification-key2'
+
+      # type
+
+      When I set 'type' to 'ReflowBLS12381VerificationKey_b64' as 'string'
+
+      When I insert 'type' in 'verification-key2'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#key_reflow1' to '#key_reflow1' as 'string'
+
+      When I append '#key_reflow1' to 'id'
+
+      When I insert 'id' in 'verification-key2'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'verification-key2'
+
+      When I insert 'verification-key2' in 'verificationMethod'
+
+
+      # 3-schnorr public key
+
+      When I create the 'string dictionary' named 'verification-key3'
+
+      # pk
+
+      When I copy 'schnorr public key' to 'publicKeyBase64' 
+
+      When I insert 'publicKeyBase64' in 'verification-key3'
+
+      # type
+
+      When I set 'type' to 'SchnorrBLS12381VerificationKey_b64' as 'string'
+
+      When I insert 'type' in 'verification-key3'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#key_schnorr1' to '#key_schnorr1' as 'string'
+
+      When I append '#key_schnorr1' to 'id'
+
+      When I insert 'id' in 'verification-key3'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'verification-key3'
+
+      When I insert 'verification-key3' in 'verificationMethod'
+
+
+      # 4-dlithium public key
+
+      When I create the 'string dictionary' named 'dilithium-verification-key'
+
+      # pk
+
+      When I copy 'dilithium_public_key' to 'publicKeyBase64' 
+
+      When I insert 'publicKeyBase64' in 'dilithium-verification-key'
+
+      # type
+
+      When I set 'type' to 'Dilithium2VerificationKey_b64' as 'string'
+
+      When I insert 'type' in 'dilithium-verification-key'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#key_dilithium1' to '#key_dilithium1' as 'string'
+
+      When I append '#key_dilithium1' to 'id'
+
+      When I insert 'id' in 'dilithium-verification-key'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'dilithium-verification-key'
+
+      When I insert 'dilithium-verification-key' in 'verificationMethod'
+
+
+      # 5-eddsa public key
+
+      When I create the 'string dictionary' named 'eddsa-verification-key'
+
+      # pk
+
+      When I copy 'eddsa_public_key' to 'publicKeyBase58' 
+
+      When I insert 'publicKeyBase58' in 'eddsa-verification-key'
+
+      # type
+
+      When I set 'type' to 'Ed25519VerificationKey2018' as 'string'
+
+      When I insert 'type' in 'eddsa-verification-key'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#key_eddsa1' to '#key_eddsa1' as 'string'
+
+      When I append '#key_eddsa1' to 'id'
+
+      When I insert 'id' in 'eddsa-verification-key'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'eddsa-verification-key'
+
+      When I insert 'eddsa-verification-key' in 'verificationMethod'
+
+
+      # 6-ethereum address
+
+      When I create the 'string dictionary' named 'verification-key6'
+
+      # address
+
+      # this follows the
+      CAIP-10(https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md)
+      spec
+
+      # thus it is: namespace + ":" + chain_id + ":" + address
+
+      When I set 'blockchainAccountId' to 'eip155:1717658228:0x' as 'string'
+
+      When I append 'ethereum address' to 'blockchainAccountId' 
+
+      When I insert 'blockchainAccountId' in 'verification-key6'
+
+      # type
+
+      When I set 'type' to 'EcdsaSecp256k1RecoveryMethod2020' as 'string'
+
+      When I insert 'type' in 'verification-key6'
+
+      # id
+
+      When I copy 'did:dyne:id:' to 'id'
+
+      When I set '#fabchainAccountId' to '#fabchainAccountId' as 'string'
+
+      When I append '#fabchainAccountId' to 'id'
+
+      When I insert 'id' in 'verification-key6'
+
+      # controller
+
+      When I copy 'did:dyne:id:' to 'controller'
+
+      When I insert 'controller' in 'verification-key6'
+
+      When I insert 'verification-key6' in 'verificationMethod'
+
+
+      When I insert 'verificationMethod' in 'did document'
+
+
+      ## service
+
+      When I insert 'service' in 'did document'
+
+
+      ### DID-Document ended
+
+
+      When I create the json of 'did document'
+
+      # eddsa signature
+
+      When I create the eddsa signature of 'json'
+
+      When I rename the 'eddsa signature' to 'temp'
+
+      # token signature
+
+      When I remove the 'eddsa' from 'keyring'
+
+      When I create the eddsa key with secret 'eddsa'
+
+      When I create the eddsa signature of 'json'
+
+      When I rename the 'eddsa signature' to 'token singature'
+
+      When I rename the 'temp' to 'eddsa signature'
+
+
+      # prepare post
+
+      When I create the 'string dictionary' named 'post'
+
+      When I insert 'did document' in 'post'
+
+      When I insert 'eddsa signature' in 'post'
+
+      When I insert 'did document' in 'post'
+
+
+      ### save DID document
+
+      Then print the 'did document'
+
+      Then print the 'did document' as 'string' in 'post'
+
+      Then print the 'eddsa signature' as 'base58' in 'post'
+
+      Then print the 'token signature' as 'base58' in 'post'
+
+
+      Then store 'did document' in the file 'contracts/did.json'
+
+
+
+    keysFile: oracle_interfacer_create-did_5_create-did-doc.keys
+    next: oracle_interfacer_create-did_6_post.zen
+  oracle_interfacer_create-did_6_post.zen:
+    zenContent: >-
+      Rule caller restroom-mw
+
+
+      Given I connect to 'endpoint' and pass it the content of 'post' and save
+      the output into 'result'
+
+
+      Given I have a 'string' named 'result'
+
+
+      Then print the 'result'
+    keysFile: oracle_interfacer_create-did_6_post.keys
